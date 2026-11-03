@@ -173,3 +173,57 @@ a.card:hover .card-overlay {
   color: var(--muted);
   padding: 40px;
 }
+
+/* ---- Links-pagina ---- */
+.back-link {
+  display: inline-block;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.back-link:hover { color: var(--accent); }
+
+.intro {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+.links-grid {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.link-shot {
+  aspect-ratio: 16 / 10;
+  background: #1a1a20;
+  overflow: hidden;
+}
+.link-shot img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: cover;
+  object-position: top;
+}
+.link-shot-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  font-weight: 600;
+  color: rgba(201, 169, 106, 0.5);
+}
+.card-note:last-child { margin-bottom: 0; }
+
+/* Item zonder afbeelding in de hoofdgalerij */
+.card-placeholder {
+  aspect-ratio: 4 / 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(201, 169, 106, 0.08);
+}

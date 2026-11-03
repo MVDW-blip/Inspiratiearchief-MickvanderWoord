@@ -3,15 +3,29 @@
     "title": "Voorbeeld item",
     "image": "voorbeeld.jpg",
     "note": "Korte notitie over waarom dit inspireert.",
-    "tags": ["goud", "textuur"],
+    "tags": [
+      "goud",
+      "textuur"
+    ],
     "added": "2026-11-03"
   },
   {
     "title": "Connectors",
     "image": "connectors/17b4feeb85fd48e1f5d2afee4fe9df92.jpg",
     "note": "Verzameling connector-inspiratie — klik om alles te bekijken.",
-    "tags": ["connectors"],
+    "tags": [
+      "connectors"
+    ],
     "added": "2026-11-03",
     "link": "connectors.html"
+  },
+  {
+    "title": "Links",
+    "note": "Sites die me inspireren — klik om de lijst te bekijken.",
+    "tags": [
+      "links"
+    ],
+    "added": "2026-11-03",
+    "link": "links.html"
   }
 ]

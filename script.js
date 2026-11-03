@@ -22,11 +22,18 @@ function render() {
     card.className = "card";
     if (it.link) card.href = it.link;
 
-    const img = document.createElement("img");
-    img.src = "images/" + it.image;
-    img.alt = it.title || "";
-    img.loading = "lazy";
-    card.appendChild(img);
+    if (it.image) {
+      const img = document.createElement("img");
+      img.src = "images/" + it.image;
+      img.alt = it.title || "";
+      img.loading = "lazy";
+      card.appendChild(img);
+    } else {
+      const ph = document.createElement("div");
+      ph.className = "card-placeholder";
+      ph.textContent = it.title || "";
+      card.appendChild(ph);
+    }
 
     if (it.link) {
       const overlay = document.createElement("div");

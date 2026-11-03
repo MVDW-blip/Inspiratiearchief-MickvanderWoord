@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Links — Inspiratiearchief</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <a class="back-link" href="index.html">← Inspiratiearchief</a>
+    <h1>Links</h1>
+    <p class="intro">Sites die me inspireren. Klik om de site te openen.</p>
+  </header>
+
+  <main id="links" class="grid links-grid"></main>
+
+  <script>
+  // Lijst staat in data/links.json — voeg toe of pas een "url" aan, verder hoef je niets te doen.
+  // Lege "url" = nog onbekend adres; dan opent de kaart een zoekopdracht.
+  const el = document.getElementById("links");
+
+  function host(u) {
+    try { return new URL(u).hostname.replace(/^www\./, ""); } catch { return ""; }
+  }
+
+  fetch("data/links.json")
+    .then(r => r.json())
+    .then(list => {
+      list.forEach(it => {
+        const known = !!it.url;
+        const a = document.createElement("a");
+        a.className = "card link-card";
+        a.href = known ? it.url : "https://www.google.com/search?q=" + encodeURIComponent(it.title);
+        a.target = "_blank";
+        a.rel = "noopener";
+
+        const shot = document.createElement("div");
+        shot.className = "link-shot";
+        if (known) {
+          const img = document.createElement("img");
+          img.src = "https://s.wordpress.com/mshots/v1/" + encodeURIComponent(it.url) + "?w=800&h=500";
+          img.alt = "Voorpagina van " + it.title;
+          img.loading = "lazy";
+          img.onerror = () => {
+            img.remove();
+            shot.classList.add("link-shot-empty");
+            shot.textContent = it.title.charAt(0);
+          };
+          shot.appendChild(img);
+        } else {
+          shot.classList.add("link-shot-empty");
+          shot.textContent = it.title.charAt(0);
+        }
+        a.appendChild(shot);
+
+        const overlay = document.createElement("div");
+        overlay.className = "card-overlay";
+        overlay.textContent = known ? "Open site ↗" : "Zoek ↗";
+        a.appendChild(overlay);
+
+        const body = document.createElement("div");
+        body.className = "card-body";
+        body.innerHTML = '<p class="card-title"></p><p class="card-note"></p>';
+        body.querySelector(".card-title").textContent = it.title;
+        body.querySelector(".card-note").textContent = known ? host(it.url) : "adres nog toevoegen";
+        a.appendChild(body);
+
+        el.appendChild(a);
+      });
+    });
+  </script>
+</body>
+</html>
