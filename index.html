@@ -3,19 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inspiratiearchief</title>
+<title>Inspiratiearchief — Mick van der Woord</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header>
-    <h1>Inspiratiearchief</h1>
-    <div id="filters" class="filters"></div>
-  </header>
+<body data-page="home">
 
-  <main id="grid" class="grid"></main>
+  <section class="hero">
+    <h1 class="hero-title">Inspiratie&shy;archief</h1>
+    <p class="hero-sub">A playground of collected images, objects and references.<br>Mick van der Woord — 2026</p>
+    <div id="hero-covers" class="hero-covers"></div>
+  </section>
 
-  <p id="empty-msg" class="empty-msg" hidden>Nog niets hier — voeg een item toe in <code>data/items.json</code>.</p>
+  <section class="index">
+    <div class="index-head">
+      <span>Archive</span><span>↓</span>
+    </div>
+    <div id="index-list"></div>
+  </section>
 
-  <script src="script.js"></script>
+  <button class="to-top">Back to top</button>
+
+  <div id="hover-preview" class="hover-preview"><img alt=""></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
