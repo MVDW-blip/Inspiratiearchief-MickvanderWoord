@@ -1,5 +1,6 @@
 // Laadt data/items.json en bouwt de galerij + filters.
 // Nieuw item toevoegen? Zet de afbeelding in /images en voeg een regel toe in data/items.json.
+// Item met een "link" veld wordt klikbaar/hoverbaar naar die pagina.
 
 const grid = document.getElementById("grid");
 const filtersEl = document.getElementById("filters");
@@ -17,14 +18,22 @@ function render() {
   emptyMsg.hidden = visible.length > 0;
 
   visible.forEach(it => {
-    const card = document.createElement("div");
+    const card = document.createElement(it.link ? "a" : "div");
     card.className = "card";
+    if (it.link) card.href = it.link;
 
     const img = document.createElement("img");
     img.src = "images/" + it.image;
     img.alt = it.title || "";
     img.loading = "lazy";
     card.appendChild(img);
+
+    if (it.link) {
+      const overlay = document.createElement("div");
+      overlay.className = "card-overlay";
+      overlay.textContent = "Bekijk →";
+      card.appendChild(overlay);
+    }
 
     const body = document.createElement("div");
     body.className = "card-body";

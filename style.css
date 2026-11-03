@@ -1,16 +1,27 @@
 :root {
-  --bg: #fafaf8;
-  --ink: #1a1a1a;
-  --muted: #777;
-  --line: #e4e2dc;
-  --accent: #8a7352;
+  --bg: #0b0b10;
+  --ink: #f3f1ec;
+  --muted: #a3a0ad;
+  --line: rgba(255, 255, 255, 0.14);
+  --accent: #c9a96a;
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-strong: rgba(255, 255, 255, 0.1);
 }
 
 * { box-sizing: border-box; }
 
+html, body {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
   background: var(--bg);
+  background-image:
+    radial-gradient(600px 400px at 10% -5%, rgba(201, 169, 106, 0.18), transparent 60%),
+    radial-gradient(500px 500px at 90% 10%, rgba(120, 140, 200, 0.14), transparent 60%),
+    radial-gradient(700px 600px at 50% 100%, rgba(120, 80, 160, 0.12), transparent 60%);
+  background-attachment: fixed;
   color: var(--ink);
   font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
 }
@@ -26,6 +37,7 @@ h1 {
   font-weight: 600;
   margin: 0 0 16px;
   letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
 .filters {
@@ -36,7 +48,9 @@ h1 {
 
 .filter-btn {
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: var(--muted);
   padding: 6px 14px;
   border-radius: 999px;
@@ -53,7 +67,7 @@ h1 {
 .filter-btn.active {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: #1a1408;
 }
 
 .grid {
@@ -66,12 +80,29 @@ h1 {
 }
 
 .card {
-  background: #fff;
+  position: relative;
+  background: var(--glass);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 14px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+a.card {
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(201, 169, 106, 0.5);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
 }
 
 .card img {
@@ -79,17 +110,19 @@ h1 {
   aspect-ratio: 4 / 5;
   object-fit: cover;
   display: block;
-  background: #eee;
+  background: #1a1a20;
 }
 
 .card-body {
   padding: 12px 14px 14px;
+  position: relative;
 }
 
 .card-title {
   font-size: 14px;
   font-weight: 600;
   margin: 0 0 4px;
+  color: var(--ink);
 }
 
 .card-note {
@@ -108,9 +141,31 @@ h1 {
 .tag {
   font-size: 11px;
   color: var(--accent);
-  background: rgba(138, 115, 82, 0.1);
+  background: rgba(201, 169, 106, 0.15);
   padding: 2px 8px;
   border-radius: 999px;
+}
+
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 14, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+
+a.card:hover .card-overlay {
+  opacity: 1;
 }
 
 .empty-msg {
