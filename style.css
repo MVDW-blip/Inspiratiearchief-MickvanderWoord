@@ -49,6 +49,13 @@ body[data-page="index"] { overflow: hidden; }
   letter-spacing: 0.02em;
 }
 .pop { margin: 0; width: min(62vmin, 560px); }
+.pop-name {
+  display: block;
+  padding-bottom: 10px;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
 .pop-frame {
   position: relative;
   display: block;
@@ -72,7 +79,7 @@ body[data-page="index"] { overflow: hidden; }
   letter-spacing: 0.04em;
 }
 
-/* matglas: alleen zichtbaar als je erover beweegt */
+/* matglas: de beelden blijven altijd achter het glas */
 .frost img {
   filter: blur(18px) saturate(1.3);
   transform: scale(1.15); /* geen witte randen door de blur */
@@ -85,8 +92,6 @@ body[data-page="index"] { overflow: hidden; }
   background: linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.25));
   transition: opacity 0.15s ease;
 }
-.frost:hover img { filter: none; transform: none; }
-.frost:hover::after { opacity: 0; }
 
 /* zwevend 3D-object (object.js) */
 .object3d {
@@ -156,6 +161,7 @@ a.corner:hover { color: #444; }
   gap: 48px 40px;
   padding: 48px 0 0;
 }
+.link-gallery { padding-top: 72px; }
 .cell { margin: 0; display: flex; flex-direction: column; min-width: 0; }
 .cell-img {
   aspect-ratio: 1;
@@ -172,7 +178,8 @@ a.corner:hover { color: #444; }
 }
 
 /* Sleepbare afbeelding: positie via --x / --y (gezet in app.js) */
-.cell-img img {
+.cell-img img,
+.cell-img video {
   --x: 0px;
   --y: 0px;
   --s: 1;
@@ -187,8 +194,8 @@ a.corner:hover { color: #444; }
   transform: translate(var(--x), var(--y)) scale(var(--s));
   transition: transform 0.4s ease;
 }
-.cell-img img:hover { --s: 1.03; }
-.cell-img img.dragging { --s: 1.05; cursor: grabbing; transition: none; }
+.cell-img img:hover, .cell-img video:hover { --s: 1.03; }
+.cell-img img.dragging, .cell-img video.dragging { --s: 1.05; cursor: grabbing; transition: none; }
 
 /* ---------- Linkblok (zoals op Are.na) ---------- */
 .link-slot { position: relative; aspect-ratio: 1; }
@@ -240,6 +247,7 @@ a.corner:hover { color: #444; }
 }
 .link-preview.dragging { cursor: grabbing; }
 .cell-img img.floating,
+.cell-img video.floating,
 .link-preview.floating {
   position: fixed;
   left: 0;
@@ -300,7 +308,8 @@ a.corner:hover { color: #444; }
   justify-content: center;
 }
 .lightbox.show { display: flex; }
-.lightbox img { max-width: 80vw; max-height: 78vh; object-fit: contain; }
+.lightbox img, .lightbox video { max-width: 80vw; max-height: 78vh; object-fit: contain; }
+.lightbox [hidden] { display: none; }
 .lb-close, .lb-prev, .lb-next { position: absolute; font-size: 11px; letter-spacing: 0.04em; }
 .lb-close { top: var(--pad); right: var(--pad); }
 .lb-prev, .lb-next { top: 50%; transform: translateY(-50%); font-size: 18px; padding: 12px; }

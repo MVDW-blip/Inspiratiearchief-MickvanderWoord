@@ -6,6 +6,10 @@ const current = document.body.dataset.page; // "index" of "archief"
 const pad = (n, l = 2) => String(n).padStart(l, "0");
 const src = (c, f) => encodeURI(c.folder + "/" + f);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+const isVideo = f => /\.(mp4|webm|mov)$/i.test(f);
+// echte breedte/hoogte van een beeld of video
+const natW = el => el.naturalWidth || el.videoWidth || 0;
+const natH = el => el.naturalHeight || el.videoHeight || 0;
 const domain = url => { try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; } };
 
 /* ---------- Eigen bewerkingen (opgeslagen in deze browser) ---------- */
@@ -102,9 +106,11 @@ function makeImageBlock(c, f, i, items) {
   const cell = document.createElement("figure");
   cell.className = "cell";
   cell.innerHTML = `
-    <div class="cell-img"><img class="floater" src="${src(c, f)}" alt="" loading="lazy" draggable="false"></div>
+    <div class="cell-img">${isVideo(f)
+      ? `<video class="floater" src="${src(c, f)}" autoplay muted loop playsinline preload="metadata" draggable="false"></video>`
+      : `<img class="floater" src="${src(c, f)}" alt="" loading="lazy" draggable="false">`}</div>
     <figcaption>${pad(i + 1, 3)}</figcaption>`;
-  makeDraggable(cell.querySelector("img"), () => openLightbox(items, i));
+  makeDraggable(cell.querySelector(".floater"), () => openLightbox(items, i));
   return cell;
 }
 
@@ -144,19 +150,20 @@ function buildIndex() {
   const home = document.getElementById("home");
   // het vierkant toont de archief-thema's; connectors heeft zijn eigen zwevende 3D-object
   const items = all.filter(c => (c.page || "archief") === "archief")
-    .flatMap(c => c.images.map((f, i) => ({ c, f, n: i + 1 })));
+    .flatMap(c => c.images.map((f, i) => ({ c, f, n: i + 1 })))
+    .filter(it => !isVideo(it.f)); // het vierkant toont alleen stilstaande beelden
 
   home.innerHTML = `
-    <span class="corner">inspiratiearchief</span>
+    <span class="corner">inspiratiearchief Mick van der Woord</span>
     <figure class="pop">
+      <span class="pop-name">thema's</span>
       <a class="pop-frame frost" href="archief.html"><img alt="" draggable="false"></a>
-      <figcaption><span class="pop-num"></span><span class="pop-theme"></span></figcaption>
+      <figcaption><span class="pop-num"></span></figcaption>
     </figure>`;
 
   const frame = home.querySelector(".pop-frame");
   const img = frame.querySelector("img");
   const num = home.querySelector(".pop-num");
-  const theme = home.querySelector(".pop-theme");
 
   // alles vooraf laden, zodat elk beeld meteen verschijnt
   items.forEach(it => { new Image().src = src(it.c, it.f); });
@@ -172,7 +179,6 @@ function buildIndex() {
     img.src = src(it.c, it.f);
     frame.href = (it.c.page || "archief") + ".html#" + it.c.slug;
     num.textContent = pad(it.n, 3);
-    theme.textContent = it.c.title;
     frame.classList.remove("popped");
     frame.offsetWidth; // animatie opnieuw starten
     frame.classList.add("popped");
@@ -208,8 +214,14 @@ function buildArchief() {
     editable(p, c.slug + ".text", v => (c.text = v));
 
     const grid = sec.querySelector(".gallery");
-    links.forEach((l, i) => grid.appendChild(makeLinkBlock(c, l, i)));
     items.forEach((it, i) => grid.appendChild(makeImageBlock(c, it.f, i, items)));
+    // websites onderaan het thema, in een eigen rij
+    if (links.length) {
+      const linkGrid = document.createElement("div");
+      linkGrid.className = "gallery link-gallery";
+      links.forEach((l, i) => linkGrid.appendChild(makeLinkBlock(c, l, i)));
+      sec.appendChild(linkGrid);
+    }
     wrap.appendChild(sec);
   });
 }
@@ -324,7 +336,7 @@ function startChaos() {
     // vertrek precies vanaf de eigen plek in het raster (ook als die buiten beeld ligt)
     let r = img.getBoundingClientRect();
     if (!r.width) r = img.parentElement.getBoundingClientRect();
-    const aspect = img.naturalWidth ? img.naturalHeight / img.naturalWidth : r.height / r.width || 1;
+    const aspect = natW(img) ? natH(img) / natW(img) : r.height / r.width || 1;
     img.loading = "eager";
     img.classList.add("floating");
     img.style.width = r.width + "px";
@@ -345,7 +357,11 @@ function startChaos() {
       }
     };
     if (img.tagName === "IMG" && !img.complete) img.addEventListener("load", () => {
-      b.aspect = img.naturalHeight / img.naturalWidth || b.aspect;
+      b.aspect = natH(img) / natW(img) || b.aspect;
+      measure(b);
+    }, { once: true });
+    if (img.tagName === "VIDEO" && !img.videoWidth) img.addEventListener("loadedmetadata", () => {
+      b.aspect = natH(img) / natW(img) || b.aspect;
       measure(b);
     }, { once: true });
     bodies.set(img, b);
@@ -401,8 +417,8 @@ function tick() {
 // De plek (en maat) die een beeld in het raster inneemt, in schermcoördinaten
 function homeRect(img) {
   const p = img.parentElement.getBoundingClientRect();
-  if (img.tagName !== "IMG") return { x: p.left, y: p.top, w: p.width }; // linkblok vult zijn vak
-  const nw = img.naturalWidth || p.width, nh = img.naturalHeight || p.height;
+  if (img.tagName !== "IMG" && img.tagName !== "VIDEO") return { x: p.left, y: p.top, w: p.width }; // linkblok vult zijn vak
+  const nw = natW(img) || p.width, nh = natH(img) || p.height;
   const k = Math.min(p.width / nw, p.height / nh, 1);
   const w = nw * k, h = nh * k;
   return { x: p.left + (p.width - w) / 2, y: p.top + (p.height - h) / 2, w };
@@ -469,7 +485,7 @@ function stopChaos() {
 addEventListener("resize", () => bodies.forEach(measure));
 
 /* ---------- Lightbox ---------- */
-let lb, lbImg, lbCount, lbCap, lbItems, lbIndex;
+let lb, lbImg, lbVid, lbCount, lbCap, lbItems, lbIndex;
 
 function openLightbox(items, i) {
   if (!lb) {
@@ -479,10 +495,12 @@ function openLightbox(items, i) {
       <button class="lb-close">Close ×</button>
       <button class="lb-prev" aria-label="Previous">←</button>
       <img alt="">
+      <video controls loop playsinline hidden></video>
       <button class="lb-next" aria-label="Next">→</button>
       <div class="lb-foot"><span class="lb-cap"></span><span class="lb-count"></span></div>`;
     document.body.appendChild(lb);
     lbImg = lb.querySelector("img");
+    lbVid = lb.querySelector("video");
     lbCount = lb.querySelector(".lb-count");
     lbCap = lb.querySelector(".lb-cap");
     lb.querySelector(".lb-close").onclick = closeLightbox;
@@ -505,7 +523,11 @@ function openLightbox(items, i) {
 
 function showLightbox() {
   const it = lbItems[lbIndex];
-  lbImg.src = src(it.c, it.f);
+  const vid = isVideo(it.f);
+  lbImg.hidden = vid;
+  lbVid.hidden = !vid;
+  if (vid) { lbVid.src = src(it.c, it.f); lbVid.play().catch(() => {}); }
+  else { lbVid.pause(); lbVid.removeAttribute("src"); lbImg.src = src(it.c, it.f); }
   lbCap.textContent = it.c.title;
   lbCount.textContent = `${pad(lbIndex + 1, 3)} / ${pad(lbItems.length, 3)}`;
 }
@@ -518,6 +540,7 @@ function step(d) {
 
 function closeLightbox() {
   lb.classList.remove("show");
+  lbVid.pause();
   document.body.style.overflow = "";
 }
 
@@ -544,7 +567,7 @@ function startGlue() {
     // vertrekt vanaf de eigen plek in het raster
     let r = img.getBoundingClientRect();
     if (!r.width) r = img.parentElement.getBoundingClientRect();
-    const aspect = img.naturalWidth ? img.naturalHeight / img.naturalWidth : r.height / r.width || 1;
+    const aspect = natW(img) ? natH(img) / natW(img) : r.height / r.width || 1;
     img.loading = "eager";
     img.classList.add("floating");
     img.style.width = r.width + "px";
@@ -560,7 +583,10 @@ function startGlue() {
       tilt: rand(-12, 12)
     };
     if (img.tagName === "IMG" && !img.complete) img.addEventListener("load", () => {
-      b.aspect = img.naturalHeight / img.naturalWidth || b.aspect;
+      b.aspect = natH(img) / natW(img) || b.aspect;
+    }, { once: true });
+    if (img.tagName === "VIDEO" && !img.videoWidth) img.addEventListener("loadedmetadata", () => {
+      b.aspect = natH(img) / natW(img) || b.aspect;
     }, { once: true });
     bodies.set(img, b);
     place(b);
