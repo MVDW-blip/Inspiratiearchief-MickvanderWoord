@@ -1,14 +1,39 @@
 // Alle inhoud van het archief.
-// - title / text / links[].title kun je hier aanpassen, of op de site via de knop "Edit"
+// - title / question / text / links[].title kun je hier aanpassen, of op de site via de knop "Edit"
 //   (daarna "Save" en vervang dit bestand door de download).
 // - Nieuwe afbeelding? Zet hem in de map ("folder") en voeg de bestandsnaam toe aan "images".
+// - page: op welke pagina het staat ("archief" of "connectors").
 // - Nieuwe link? Voeg { title, url, image } toe aan "links" (image mag leeg blijven).
 
 window.COLLECTIONS = [
   {
+    "slug": "meerisminder",
+    "page": "archief",
+    "title": "+- is - en - is - paradox",
+    "question": "“Hoe verhouden we ons tot de gestoorde hoeveelheid informatie die dagelijks op ons wordt afgevuurd?”",
+    "text": "Bereiken we nu eenzelfde effect waar het ene moment iets verdween door het weg te nemen of te verbranden, nu hetzelfde effect bereikt door juist toe te voegen. Hoe meer informatie we erbij krijgen, hoe meer er in werkelijkheid verloren gaat.",
+    "links": [
+      {
+        "title": "Library of Alexandria",
+        "url": "https://en.wikipedia.org/wiki/Library_of_Alexandria",
+        "image": "images/links/library-of-alexandria.jpg"
+      }
+    ],
+    "folder": "images/moreisless",
+    "images": [
+      "1761500103-research_107.jpeg",
+      "1c572fe13415fb603fac62afe9611480.jpg",
+      "9b43f934bd129c2957aa3c58e27773ee.jpg",
+      "LAS-BESTIAS-SUAVE--PLA-200X150X10---IRENE-MOLINA--MAQUINAS-DESEANTES.jpg",
+      "fa635f0e8e929ec7b5d857f74246ab11.jpg"
+    ]
+  },
+  {
     "slug": "verdeeldeaandacht",
-    "title": "verdeeldeaandacht",
-    "text": "In wat voor manier verdelen we onze aandacht en in hoeverre zijn we bereid om een oogje te sluiten hiervoor, en welke wereld is vreemder hierin, degene die wij zelf hebben gemaakt of de daadwerkelijke wereld waar we in leven, hoe verhouden deze zich tot elkaar.",
+    "page": "archief",
+    "title": "Acceleratie van een gemaakte wereld",
+    "question": "Is er een soort acceleratie bezig waarbij de grens tussen wat echt en wat nep is vervaagt en hoe verhouden deze ‘gemaakte wereld’ en de ‘daadwerkelijke wereld’ zich tot elkaar? Hoe zou het zijn om te leven in een strakgetrokken wereld.",
+    "text": "",
     "links": [
       {
         "title": "Banner Depot 2000",
@@ -41,28 +66,10 @@ window.COLLECTIONS = [
     ]
   },
   {
-    "slug": "meerisminder",
-    "title": "meerisminder",
-    "text": "More is less paradox gevonden in hoe er nu zo veel informatie aankomt, hoe dit juist weghaalt, hoe dit zich verhoudt tot verbranden van boeken in de middeleeuwen.",
-    "links": [
-      {
-        "title": "Library of Alexandria",
-        "url": "https://en.wikipedia.org/wiki/Library_of_Alexandria",
-        "image": "images/links/library-of-alexandria.jpg"
-      }
-    ],
-    "folder": "images/moreisless",
-    "images": [
-      "1761500103-research_107.jpeg",
-      "1c572fe13415fb603fac62afe9611480.jpg",
-      "9b43f934bd129c2957aa3c58e27773ee.jpg",
-      "LAS-BESTIAS-SUAVE--PLA-200X150X10---IRENE-MOLINA--MAQUINAS-DESEANTES.jpg",
-      "fa635f0e8e929ec7b5d857f74246ab11.jpg"
-    ]
-  },
-  {
     "slug": "connectors",
+    "page": "connectors",
     "title": "connectors",
+    "question": "",
     "text": "",
     "links": [],
     "folder": "images/connectors",

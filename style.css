@@ -88,6 +88,33 @@ body[data-page="index"] { overflow: hidden; }
 .frost:hover img { filter: none; transform: none; }
 .frost:hover::after { opacity: 0; }
 
+/* zwevend 3D-object (object.js) */
+.object3d {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 40;
+  width: 220px;
+  height: 220px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  cursor: pointer;
+}
+.object3d.ready { opacity: 1; }
+.object3d canvas { display: block; }
+.object3d-label {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.object3d:hover .object3d-label { opacity: 1; }
+
 @media (prefers-reduced-motion: reduce) {
   .pop-frame.popped { animation: none; }
 }
@@ -112,7 +139,15 @@ a.corner:hover { color: #444; }
   font-size: 13px;
   line-height: 1.4;
 }
-.theme-text:empty { display: none; }
+.theme-q {
+  margin: 12px 0 0;
+  max-width: 560px;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.35;
+}
+.theme-text:empty, .theme-q:empty { display: none; }
+.editing .theme-q:empty, .editing .theme-text:empty { display: block; min-height: 1.3em; }
 
 /* ---------- Raster: blokken zonder randen ---------- */
 .gallery {
@@ -215,6 +250,9 @@ a.corner:hover { color: #444; }
   transition: none;
   will-change: transform;
 }
+
+/* Glue: de beelden hangen aan de cursor en zitten nergens in de weg */
+.glued .floating { pointer-events: none; }
 
 /* ---------- Gereedschap: vierkante werkbalk ---------- */
 .toolbar {

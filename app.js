@@ -16,6 +16,7 @@ const edits = JSON.parse(localStorage.getItem(EDIT_KEY) || "{}");
 all.forEach(c => {
   if (edits[c.slug + ".title"] != null) c.title = edits[c.slug + ".title"];
   if (edits[c.slug + ".text"] != null) c.text = edits[c.slug + ".text"];
+  if (edits[c.slug + ".question"] != null) c.question = edits[c.slug + ".question"];
   (c.links || []).forEach((l, i) => {
     if (edits[`${c.slug}.link.${i}`] != null) l.title = edits[`${c.slug}.link.${i}`];
   });
@@ -74,7 +75,7 @@ let editBtn, downloadBtn;
 
 // Klein grijs linkje terug naar de index, en de vierkante werkbalk met gereedschap.
 // Nieuw gereedschap? Maak een knop met class "tool" en zet hem in de werkbalk.
-function buildChrome() {
+function buildChrome(modeBtn) {
   document.body.insertAdjacentHTML("afterbegin", `<a class="corner" href="index.html">inspiratiearchief</a>`);
 
   editBtn = tool("Edit", "✎", () => setEditMode(!document.body.classList.contains("editing")));
@@ -84,7 +85,7 @@ function buildChrome() {
 
   const bar = document.createElement("div");
   bar.className = "toolbar";
-  bar.append(shuffleBtn, editBtn, resetBtn, downloadBtn);
+  bar.append(modeBtn, editBtn, resetBtn, downloadBtn);
   document.body.append(bar);
 }
 
@@ -141,7 +142,9 @@ const INTERVAL = 140; // milliseconden per beeld — lager is sneller
 
 function buildIndex() {
   const home = document.getElementById("home");
-  const items = all.flatMap(c => c.images.map((f, i) => ({ c, f, n: i + 1 })));
+  // het vierkant toont de archief-thema's; connectors heeft zijn eigen zwevende 3D-object
+  const items = all.filter(c => (c.page || "archief") === "archief")
+    .flatMap(c => c.images.map((f, i) => ({ c, f, n: i + 1 })));
 
   home.innerHTML = `
     <span class="corner">inspiratiearchief</span>
@@ -167,7 +170,7 @@ function buildIndex() {
     if (it === last && bag.length) { bag.unshift(it); it = bag.pop(); }
     last = it;
     img.src = src(it.c, it.f);
-    frame.href = "archief.html#" + it.c.slug;
+    frame.href = (it.c.page || "archief") + ".html#" + it.c.slug;
     num.textContent = pad(it.n, 3);
     theme.textContent = it.c.title;
     frame.classList.remove("popped");
@@ -182,7 +185,7 @@ function buildIndex() {
 function buildArchief() {
   const wrap = document.getElementById("archief");
 
-  all.forEach((c, ci) => {
+  all.filter(c => (c.page || "archief") === current).forEach((c, ci) => {
     const items = c.images.map(f => ({ c, f }));
     const links = c.links || [];
 
@@ -191,12 +194,16 @@ function buildArchief() {
     sec.id = c.slug;
     sec.innerHTML = `
       <h2 class="theme-title"></h2>
+      <p class="theme-q"></p>
       <p class="theme-text"></p>
       <div class="gallery"></div>`;
     const h = sec.querySelector(".theme-title");
     const p = sec.querySelector(".theme-text");
     h.textContent = c.title;
     p.textContent = c.text || "";
+    const q = sec.querySelector(".theme-q");
+    q.textContent = c.question || "";
+    editable(q, c.slug + ".question", v => (c.question = v));
     editable(h, c.slug + ".title", v => (c.title = v));
     editable(p, c.slug + ".text", v => (c.text = v));
 
@@ -278,6 +285,7 @@ const shuffleBtn = tool("Shuffle", "⁂", () => { if (!returning) setChaos(!docu
 
 const resetBtn = tool("Reset", "↺", () => {
   if (document.body.classList.contains("chaos")) return setChaos(false);
+  if (document.body.classList.contains("glued")) return setGlue(false);
   document.querySelectorAll(".floater").forEach(img => {
     img.style.removeProperty("--x");
     img.style.removeProperty("--y");
@@ -513,9 +521,83 @@ function closeLightbox() {
   document.body.style.overflow = "";
 }
 
+/* ---------- Glue: alle beelden plakken aan de cursor ---------- */
+const mouse = { x: innerWidth / 2, y: innerHeight / 2 };
+addEventListener("pointermove", e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+const glueBtn = tool("Glue", "✣", () => { if (!returning) setGlue(!document.body.classList.contains("glued")); });
+
+function setGlue(on) {
+  document.body.classList.toggle("glued", on);
+  glueBtn.querySelector("span").textContent = on ? "Unglue" : "Glue";
+  glueBtn.setAttribute("aria-pressed", on);
+  resetBtn.disabled = on || !document.querySelector('.floater[style*="--x"]');
+  on ? startGlue() : stopChaos(); // terug naar het raster gaat net als bij Shuffle
+}
+
+function startGlue() {
+  const imgs = [...document.querySelectorAll(".floater")];
+  // hoe meer beelden, hoe groter de tros rond de cursor
+  const spread = Math.min(280, 60 + imgs.length * 7);
+
+  imgs.forEach(img => {
+    // vertrekt vanaf de eigen plek in het raster
+    let r = img.getBoundingClientRect();
+    if (!r.width) r = img.parentElement.getBoundingClientRect();
+    const aspect = img.naturalWidth ? img.naturalHeight / img.naturalWidth : r.height / r.width || 1;
+    img.loading = "eager";
+    img.classList.add("floating");
+    img.style.width = r.width + "px";
+    img.style.zIndex = ++topZ;
+
+    const angle = rand(0, Math.PI * 2), dist = Math.sqrt(Math.random()) * spread;
+    const b = {
+      el: img,
+      x: r.left, y: r.top, w: r.width, h: r.width * aspect, aspect, r: 0,
+      ox: Math.cos(angle) * dist, oy: Math.sin(angle) * dist, // vaste plek in de tros
+      w1: rand(70, 150),                                       // maat aan de cursor
+      k: rand(0.05, 0.22),                                     // hoe strak hij volgt
+      tilt: rand(-12, 12)
+    };
+    if (img.tagName === "IMG" && !img.complete) img.addEventListener("load", () => {
+      b.aspect = img.naturalHeight / img.naturalWidth || b.aspect;
+    }, { once: true });
+    bodies.set(img, b);
+    place(b);
+  });
+
+  lastFrame = performance.now();
+  rafId = requestAnimationFrame(glueTick);
+}
+
+function glueTick() {
+  const now = performance.now();
+  const dt = Math.min((now - lastFrame) / 16.67, 3);
+  lastFrame = now;
+
+  bodies.forEach(b => {
+    const f = 1 - Math.pow(1 - b.k, dt); // zelfde gevoel bij elke framerate
+    b.w += (b.w1 - b.w) * (1 - Math.pow(0.88, dt));
+    b.h = b.w * b.aspect;
+    b.el.style.width = b.w + "px";
+    const tx = mouse.x + b.ox - b.w / 2, ty = mouse.y + b.oy - b.h / 2;
+    const dx = (tx - b.x) * f;
+    b.x += dx;
+    b.y += (ty - b.y) * f;
+    // kantelt mee met de beweging, als iets dat aan een touwtje hangt
+    b.r += (b.tilt + Math.max(-25, Math.min(25, dx * 0.6)) - b.r) * 0.15;
+    place(b);
+  });
+  rafId = requestAnimationFrame(glueTick);
+}
+
 /* ---------- Start ---------- */
 if (current === "index") buildIndex();
 if (current === "archief") {
   buildArchief();
-  buildChrome();
+  buildChrome(shuffleBtn);
+}
+if (current === "connectors") {
+  buildArchief();
+  buildChrome(glueBtn);
 }
