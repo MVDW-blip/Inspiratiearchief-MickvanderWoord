@@ -2,14 +2,14 @@
 // - title / question / text / links[].title kun je hier aanpassen, of op de site via de knop "Edit"
 //   (daarna "Save" en vervang dit bestand door de download).
 // - Nieuwe afbeelding? Zet hem in de map ("folder") en voeg de bestandsnaam toe aan "images".
-// - page: op welke pagina het staat ("archief", "connectors" of "presearch1").
+// - page: op welke pagina het staat ("themas", "connectors" of "presearch1").
 // - Pdf? Zet elke pagina als beeld in de map "pages" (naam-1.jpg, naam-2.jpg, ...) en het aantal bij "pages".
 // - Nieuwe link? Voeg { title, url, image } toe aan "links" (image mag leeg blijven).
 
 window.COLLECTIONS = [
   {
     "slug": "meerisminder",
-    "page": "archief",
+    "page": "themas",
     "title": "Wie de informatie",
     "question": "Wie de informatie bezit wordt gezien als degene die de macht in handen heeft. Maar hoe verhouden we ons als individuen ons tot de immense hoeveelheid informatie die dagelijks op ons wordt afgevuurd? Hoeveel kunnen we aan en hoeveel wordt er precies verwerkt in onze grijze massa? Hoever zitten wij nu in deze accelleratie en komen we in eenzelfde situatie als in de middeleeuwen waardoor door verbranding informatie werd weggenomen, nu door toe te voegen weg te nemen?",
     "text": "",
@@ -47,7 +47,7 @@ window.COLLECTIONS = [
   },
   {
     "slug": "verdeeldeaandacht",
-    "page": "archief",
+    "page": "themas",
     "title": "Accelleratie",
     "question": "Hoe verhoudt de ‘gemaakte wereld’ en de ‘daadwerkelijke wereld’ zich tot elkaar en tot onszelf? Wanneer nemen we een gemaakte wereld eerder voor lief dan een 'echte' wereld?",
     "text": "",

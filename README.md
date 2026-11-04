@@ -13,7 +13,7 @@ Wijzigingen pushen met GitHub Desktop → **Push origin**; na 1–3 minuten staa
 
 - `index.html` — de index: een vierkant met willekeurig opploppende beelden uit de thema's,
   een zwevend 3D-object (naar overige connecties) en een zwevende link naar presearch 1.
-- `archief.html` — de thema's op één pagina, elk met titel, vraag, tekst, beelden en
+- `themas.html` — de thema's op één pagina, elk met titel, vraag, tekst, beelden en
   onderaan de websites. Knop rechtsonder: **Shuffle** (alles gaat zweven, **Order** zet alles terug).
 - `connectors.html` — overige connecties, met **Glue** in plaats van Shuffle.
 - `presearch1.html` — presearch 1, op datum genummerd, zonder Shuffle. Pdf's en .ai-bestanden

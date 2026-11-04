@@ -2,7 +2,7 @@
 // plus bewerken, slepen, lightbox en de Shuffle-knop (alles gaat zweven).
 
 const all = window.COLLECTIONS || [];
-const current = document.body.dataset.page; // "index" of "archief"
+const current = document.body.dataset.page; // "index", "themas", "connectors" of "presearch1"
 const pad = (n, l = 2) => String(n).padStart(l, "0");
 const src = (c, f) => encodeURI(c.folder + "/" + f);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
@@ -156,7 +156,7 @@ const INTERVAL = 140; // milliseconden per beeld — lager is sneller
 function buildIndex() {
   const home = document.getElementById("home");
   // het vierkant toont de archief-thema's; connectors heeft zijn eigen zwevende 3D-object
-  const items = all.filter(c => (c.page || "archief") === "archief")
+  const items = all.filter(c => (c.page || "themas") === "themas")
     .flatMap(c => c.images.map((f, i) => ({ c, f, n: i + 1 })))
     .filter(it => !isVideo(it.f)); // het vierkant toont alleen stilstaande beelden
 
@@ -164,7 +164,7 @@ function buildIndex() {
     <span class="corner">inspiratiearchief Mick van der Woord</span>
     <figure class="pop">
       <span class="pop-name">thema's</span>
-      <a class="pop-frame frost" href="archief.html"><img alt="" draggable="false"></a>
+      <a class="pop-frame frost" href="themas.html"><img alt="" draggable="false"></a>
       <figcaption><span class="pop-num"></span></figcaption>
     </figure>`;
 
@@ -184,7 +184,7 @@ function buildIndex() {
     if (it === last && bag.length) { bag.unshift(it); it = bag.pop(); }
     last = it;
     img.src = src(it.c, it.f);
-    frame.href = (it.c.page || "archief") + ".html#" + it.c.slug;
+    frame.href = (it.c.page || "themas") + ".html#" + it.c.slug;
     num.textContent = pad(it.n, 3);
     frame.classList.remove("popped");
     frame.offsetWidth; // animatie opnieuw starten
@@ -249,7 +249,7 @@ function drift(label, href, speed = 0.9) {
 function buildArchief() {
   const wrap = document.getElementById("archief");
 
-  all.filter(c => (c.page || "archief") === current).forEach((c, ci) => {
+  all.filter(c => (c.page || "themas") === current).forEach((c, ci) => {
     const items = c.images.map(f => ({ c, f }));
     const links = c.links || [];
 
@@ -692,7 +692,7 @@ function glueTick() {
 
 /* ---------- Start ---------- */
 if (current === "index") buildIndex();
-if (current === "archief") {
+if (current === "themas") {
   buildArchief();
   buildChrome(shuffleBtn);
 }
