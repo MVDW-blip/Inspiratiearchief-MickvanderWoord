@@ -3,27 +3,21 @@
 Een eenvoudige, zelf-gehoste galerij. Jij bezit alle bestanden; er draait geen
 server en je hebt geen domein nodig.
 
-## Eenmalig instellen (GitHub Pages)
+## Online
 
-1. Maak een gratis account op https://github.com (als je er nog geen hebt).
-2. Maak een nieuwe **repository** aan, bijv. `inspiratiearchief`. Zet hem op
-   "Public" (nodig voor gratis Pages-hosting; de inhoud is verder gewoon van jou).
-3. Upload deze hele map (via "Add file" → "Upload files" op de repo-pagina, of
-   met git als je dat kent).
-4. Ga naar **Settings → Pages** in de repository. Zet bij "Source" de branch
-   op `main` en de map op `/ (root)`. Sla op.
-5. Na ~1 minuut staat je site live op:
-   `https://<jouw-gebruikersnaam>.github.io/inspiratiearchief/`
-
-Geen domein, geen hostingkosten, geen server om te onderhouden.
+De site staat live op **https://mvdw-blip.github.io/Inspiratiearchief-MickvanderWoord/**
+(GitHub Pages, repository `MVDW-blip/Inspiratiearchief-MickvanderWoord`, branch `main`, map `/ (root)`).
+Wijzigingen pushen met GitHub Desktop → **Push origin**; na 1–3 minuten staat het online.
 
 ## Structuur
 
-- `index.html` — de indexpagina (nog leeg).
-- `archief.html` — alles op één pagina: verdeeldeaandacht, meerisminder en
-  connectors, elk met titel, tekst, links en beelden.
-- Rechtsonder staat een vierkante werkbalk met **Shuffle**, Edit, Reset en Save. Shuffle: alles gaat zweven. Je kunt beelden nog steeds
-  slepen en gooien. Klik op **Order** om alles terug te zetten.
+- `index.html` — de index: een vierkant met willekeurig opploppende beelden uit de thema's,
+  een zwevend 3D-object (naar overige connecties) en een zwevende link naar presearch 1.
+- `archief.html` — de thema's op één pagina, elk met titel, vraag, tekst, beelden en
+  onderaan de websites. Werkbalk rechtsonder: **Shuffle** (alles gaat zweven), Edit, Reset, Save.
+- `connectors.html` — overige connecties, met **Glue** in plaats van Shuffle.
+- `presearch1.html` — presearch 1, op datum genummerd, zonder Shuffle. Pdf's en .ai-bestanden
+  kun je pagina voor pagina doorbladeren.
 
 ## Teksten aanpassen
 
@@ -39,7 +33,8 @@ Geen domein, geen hostingkosten, geen server om te onderhouden.
    de bestandsnaam toe aan `images` in `data.js`.
 2. Een link: voeg `{ "title": "...", "url": "...", "image": "images/links/....jpg" }`
    toe aan `links`. Het voorbeeldplaatje mag je weglaten.
-3. Upload de wijziging naar GitHub — binnen een minuut staat hij live.
+3. Video: gebruik `.mp4` (H.264). Pdf: zet elke pagina als beeld in `pages/` (zie data.js).
+4. Push de wijziging met GitHub Desktop — binnen een paar minuten staat hij live.
 
 ## Zonder GitHub, lokaal testen
 
