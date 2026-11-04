@@ -6,6 +6,14 @@ const current = document.body.dataset.page; // "index" of "archief"
 const pad = (n, l = 2) => String(n).padStart(l, "0");
 const src = (c, f) => encodeURI(c.folder + "/" + f);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+// pdf en illustrator (.ai, pdf-compatibel): bladeren door de pagina's
+const isPdf = f => /\.(pdf|ai)$/i.test(f);
+// pdf's: elke pagina staat als beeld in de map "pages" (naam-1.jpg, naam-2.jpg, ...); het aantal staat in data.js bij "pages"
+const pageCount = (c, f) => (c.pages && c.pages[f]) || 1;
+const pageSrc = (c, f, n) => encodeURI(c.folder + "/pages/" + f.replace(/\.(pdf|ai)$/i, "") + "-" + n + ".jpg");
+// wat er in het raster te zien is: bij een pdf de eerste pagina
+const view = (c, f) => isPdf(f) ? pageSrc(c, f, 1) : src(c, f);
+const pdfLink = (c, f) => /\.pdf$/i.test(f) ? ` <a class="pdf-link" href="${src(c, f)}" target="_blank" rel="noopener">pdf ↗</a>` : "";
 const isVideo = f => /\.(mp4|webm|mov)$/i.test(f);
 // echte breedte/hoogte van een beeld of video
 const natW = el => el.naturalWidth || el.videoWidth || 0;
@@ -89,7 +97,7 @@ function buildChrome(modeBtn) {
 
   const bar = document.createElement("div");
   bar.className = "toolbar";
-  bar.append(modeBtn, editBtn, resetBtn, downloadBtn);
+  bar.append(...[modeBtn, editBtn, resetBtn, downloadBtn].filter(Boolean));
   document.body.append(bar);
 }
 
@@ -108,8 +116,8 @@ function makeImageBlock(c, f, i, items) {
   cell.innerHTML = `
     <div class="cell-img">${isVideo(f)
       ? `<video class="floater" src="${src(c, f)}" autoplay muted loop playsinline preload="metadata" draggable="false"></video>`
-      : `<img class="floater" src="${src(c, f)}" alt="" loading="lazy" draggable="false">`}</div>
-    <figcaption>${pad(i + 1, 3)}</figcaption>`;
+      : `<img class="floater" src="${view(c, f)}" alt="" loading="lazy" draggable="false">`}</div>
+    <figcaption>${pad(i + 1, 3)}${pdfLink(c, f)}</figcaption>`;
   makeDraggable(cell.querySelector(".floater"), () => openLightbox(items, i));
   return cell;
 }
@@ -185,6 +193,57 @@ function buildIndex() {
   };
   next();
   setInterval(next, INTERVAL);
+
+  // zwevende tekstlinks naar losse pagina's
+  drift("presearch 1", "presearch1.html");
+}
+
+/* ---------- Zwevende tekstlink op de index (drijft om het vierkant heen) ---------- */
+function drift(label, href, speed = 0.9) {
+  const a = document.createElement("a");
+  a.className = "drift";
+  a.href = href;
+  a.textContent = label;
+  document.body.appendChild(a);
+
+  let x = innerWidth * (0.55 + Math.random() * 0.3), y = innerHeight * (0.1 + Math.random() * 0.2);
+  let ang = Math.random() * Math.PI * 2, vx = Math.cos(ang) * speed, vy = Math.sin(ang) * speed;
+  let hover = false, last = performance.now();
+  a.addEventListener("pointerenter", () => (hover = true));
+  a.addEventListener("pointerleave", () => (hover = false));
+
+  const step = () => {
+    const now = performance.now(), dt = Math.min((now - last) / 16.67, 3);
+    last = now;
+    const w = a.offsetWidth, h = a.offsetHeight;
+    if (!hover) {
+      vx += (Math.random() - 0.5) * 0.06 * dt;
+      vy += (Math.random() - 0.5) * 0.06 * dt;
+      const sp = Math.hypot(vx, vy) || 1;
+      vx = vx / sp * speed; vy = vy / sp * speed;
+      x += vx * dt; y += vy * dt;
+    }
+    const W = document.documentElement.clientWidth, H = innerHeight;
+    if (x < 0) { x = 0; vx = Math.abs(vx); }
+    if (y < 0) { y = 0; vy = Math.abs(vy); }
+    if (x > W - w) { x = W - w; vx = -Math.abs(vx); }
+    if (y > H - h) { y = H - h; vy = -Math.abs(vy); }
+    // om het vierkant heen
+    const r = document.querySelector(".pop")?.getBoundingClientRect();
+    if (r) {
+      const m = 12;
+      const ox = Math.min(x + w, r.right + m) - Math.max(x, r.left - m);
+      const oy = Math.min(y + h, r.bottom + m) - Math.max(y, r.top - m);
+      if (ox > 0 && oy > 0) {
+        const left = x + w / 2 < r.left + r.width / 2, above = y + h / 2 < r.top + r.height / 2;
+        if (ox < oy) { x += left ? -ox : ox; vx = left ? -Math.abs(vx) : Math.abs(vx); }
+        else { y += above ? -oy : oy; vy = above ? -Math.abs(vy) : Math.abs(vy); }
+      }
+    }
+    a.style.transform = `translate(${x}px, ${y}px)`;
+    requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
 }
 
 /* ---------- Archief: alles op één pagina ---------- */
@@ -485,7 +544,7 @@ function stopChaos() {
 addEventListener("resize", () => bodies.forEach(measure));
 
 /* ---------- Lightbox ---------- */
-let lb, lbImg, lbVid, lbCount, lbCap, lbItems, lbIndex;
+let lb, lbImg, lbVid, lbCount, lbCap, lbPage, lbItems, lbIndex, lbP = 1;
 
 function openLightbox(items, i) {
   if (!lb) {
@@ -497,12 +556,15 @@ function openLightbox(items, i) {
       <img alt="">
       <video controls loop playsinline hidden></video>
       <button class="lb-next" aria-label="Next">→</button>
-      <div class="lb-foot"><span class="lb-cap"></span><span class="lb-count"></span></div>`;
+      <div class="lb-foot"><span class="lb-cap"></span><span class="lb-page"></span><span class="lb-count"></span></div>`;
     document.body.appendChild(lb);
     lbImg = lb.querySelector("img");
     lbVid = lb.querySelector("video");
     lbCount = lb.querySelector(".lb-count");
     lbCap = lb.querySelector(".lb-cap");
+    lbPage = lb.querySelector(".lb-page");
+    // klik op een pdf-pagina: volgende pagina
+    lbImg.addEventListener("click", () => { if (isPdf(lbItems[lbIndex].f)) step(1); });
     lb.querySelector(".lb-close").onclick = closeLightbox;
     lb.querySelector(".lb-prev").onclick = () => step(-1);
     lb.querySelector(".lb-next").onclick = () => step(1);
@@ -516,6 +578,7 @@ function openLightbox(items, i) {
   }
   lbItems = items;
   lbIndex = i;
+  lbP = 1;
   showLightbox();
   lb.classList.add("show");
   document.body.style.overflow = "hidden";
@@ -527,14 +590,25 @@ function showLightbox() {
   lbImg.hidden = vid;
   lbVid.hidden = !vid;
   if (vid) { lbVid.src = src(it.c, it.f); lbVid.play().catch(() => {}); }
-  else { lbVid.pause(); lbVid.removeAttribute("src"); lbImg.src = src(it.c, it.f); }
-  lbCap.textContent = it.c.title;
+  else { lbVid.pause(); lbVid.removeAttribute("src"); lbImg.src = isPdf(it.f) ? pageSrc(it.c, it.f, lbP) : src(it.c, it.f); }
+  const pages = isPdf(it.f) ? pageCount(it.c, it.f) : 0;
+  lbPage.textContent = pages ? `pagina ${lbP} / ${pages}` : "";
+  lbImg.classList.toggle("lb-pdf", pages > 1);
+  // volgende pagina alvast laden
+  if (pages && lbP < pages) new Image().src = pageSrc(it.c, it.f, lbP + 1);
+  lbCap.innerHTML = esc(it.c.title) + pdfLink(it.c, it.f);
   lbCount.textContent = `${pad(lbIndex + 1, 3)} / ${pad(lbItems.length, 3)}`;
 }
 
+// pijltjes: eerst door de pagina's van een pdf, daarna naar het volgende item
 function step(d) {
+  const it = lbItems[lbIndex];
+  const pages = isPdf(it.f) ? pageCount(it.c, it.f) : 1;
+  if (lbP + d >= 1 && lbP + d <= pages) { lbP += d; return showLightbox(); }
   const n = lbItems.length;
   lbIndex = (lbIndex + d + n) % n;
+  const nx = lbItems[lbIndex];
+  lbP = d < 0 && isPdf(nx.f) ? pageCount(nx.c, nx.f) : 1;
   showLightbox();
 }
 
@@ -622,6 +696,10 @@ if (current === "index") buildIndex();
 if (current === "archief") {
   buildArchief();
   buildChrome(shuffleBtn);
+}
+if (current === "presearch1") {
+  buildArchief();
+  buildChrome(null); // geen Shuffle: alles blijft op volgorde
 }
 if (current === "connectors") {
   buildArchief();

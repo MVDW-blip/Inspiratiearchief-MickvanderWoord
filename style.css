@@ -7,7 +7,11 @@
   --muted: #8a8a8a;
   --soft: #f2f2f2;
   --mid: #d9d9d9;
-  --pad: 20px;
+  --pad: clamp(12px, 1.6vw, 32px);
+  /* kleinste breedte van een beeldvak; het raster past zoveel kolommen in als er passen */
+  --tile: clamp(130px, 12vw + 70px, 300px);
+  --gap-x: clamp(16px, 2.6vw, 48px);
+  --gap-y: clamp(28px, 3.4vw, 64px);
 }
 
 * { box-sizing: border-box; }
@@ -93,6 +97,26 @@ body[data-page="index"] { overflow: hidden; }
   transition: opacity 0.15s ease;
 }
 
+/* zwevende tekstlink op de index */
+.drift {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 50;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  padding: 6px;
+  will-change: transform;
+}
+.drift:hover { color: #444; }
+
+/* link naar de pdf onder een voorvertoning */
+.pdf-link { margin-left: 8px; }
+.pdf-link:hover { color: #444; }
+
 /* zwevend 3D-object (object.js) */
 .object3d {
   position: fixed;
@@ -108,6 +132,7 @@ body[data-page="index"] { overflow: hidden; }
 .object3d.ready { opacity: 1; }
 .object3d canvas { display: block; }
 .object3d-label {
+  white-space: nowrap;
   position: absolute;
   left: 50%;
   bottom: 6px;
@@ -127,13 +152,13 @@ body[data-page="index"] { overflow: hidden; }
 a.corner:hover { color: #444; }
 
 /* ---------- Archief ---------- */
-#archief { padding: 64px var(--pad) 160px; }
-.theme { padding-top: 96px; scroll-margin-top: 24px; }
+#archief { padding: clamp(40px, 5vw, 80px) var(--pad) 160px; }
+.theme { padding-top: clamp(64px, 7vw, 128px); scroll-margin-top: 24px; }
 .theme:first-child { padding-top: 0; }
 .theme-title {
   margin: 0;
   font-weight: 700;
-  font-size: 22px;
+  font-size: clamp(18px, 1.2vw + 12px, 28px);
   letter-spacing: -0.01em;
   color: var(--ink);
 }
@@ -148,7 +173,7 @@ a.corner:hover { color: #444; }
   margin: 12px 0 0;
   max-width: 560px;
   font-weight: 700;
-  font-size: 15px;
+  font-size: clamp(14px, 0.3vw + 12px, 17px);
   line-height: 1.35;
 }
 .theme-text:empty, .theme-q:empty { display: none; }
@@ -157,11 +182,11 @@ a.corner:hover { color: #444; }
 /* ---------- Raster: blokken zonder randen ---------- */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 48px 40px;
-  padding: 48px 0 0;
+  grid-template-columns: repeat(auto-fill, minmax(min(var(--tile), 100%), 1fr));
+  gap: var(--gap-y) var(--gap-x);
+  padding: clamp(28px, 3.4vw, 56px) 0 0;
 }
-.link-gallery { padding-top: 72px; }
+.link-gallery { padding-top: calc(var(--gap-y) * 1.5); }
 .cell { margin: 0; display: flex; flex-direction: column; min-width: 0; }
 .cell-img {
   aspect-ratio: 1;
@@ -219,6 +244,9 @@ a.corner:hover { color: #444; }
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 12px;
+  text-align: center;
+  overflow-wrap: anywhere;
   font-weight: 700;
 }
 .link-tag {
@@ -310,6 +338,8 @@ a.corner:hover { color: #444; }
 .lightbox.show { display: flex; }
 .lightbox img, .lightbox video { max-width: 80vw; max-height: 78vh; object-fit: contain; }
 .lightbox [hidden] { display: none; }
+.lightbox img.lb-pdf { cursor: pointer; }
+.lb-page { position: absolute; left: 50%; transform: translateX(-50%); }
 .lb-close, .lb-prev, .lb-next { position: absolute; font-size: 11px; letter-spacing: 0.04em; }
 .lb-close { top: var(--pad); right: var(--pad); }
 .lb-prev, .lb-next { top: 50%; transform: translateY(-50%); font-size: 18px; padding: 12px; }
@@ -328,13 +358,7 @@ a.corner:hover { color: #444; }
 }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 1100px) {
-  .gallery { grid-template-columns: repeat(4, 1fr); }
-}
-@media (max-width: 800px) {
-  .gallery { grid-template-columns: repeat(3, 1fr); gap: 32px 24px; }
-}
+/* het raster schaalt vanzelf mee (zie --tile); alleen de lightbox krijgt op kleine schermen meer ruimte */
 @media (max-width: 560px) {
-  :root { --pad: 12px; }
-  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .lightbox img, .lightbox video { max-width: 92vw; max-height: 72vh; }
 }

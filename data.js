@@ -2,7 +2,8 @@
 // - title / question / text / links[].title kun je hier aanpassen, of op de site via de knop "Edit"
 //   (daarna "Save" en vervang dit bestand door de download).
 // - Nieuwe afbeelding? Zet hem in de map ("folder") en voeg de bestandsnaam toe aan "images".
-// - page: op welke pagina het staat ("archief" of "connectors").
+// - page: op welke pagina het staat ("archief", "connectors" of "presearch1").
+// - Pdf? Zet elke pagina als beeld in de map "pages" (naam-1.jpg, naam-2.jpg, ...) en het aantal bij "pages".
 // - Nieuwe link? Voeg { title, url, image } toe aan "links" (image mag leeg blijven).
 
 window.COLLECTIONS = [
@@ -36,7 +37,12 @@ window.COLLECTIONS = [
       "9b43f934bd129c2957aa3c58e27773ee.jpg",
       "LAS-BESTIAS-SUAVE--PLA-200X150X10---IRENE-MOLINA--MAQUINAS-DESEANTES.jpg",
       "fa635f0e8e929ec7b5d857f74246ab11.jpg",
-      "schermopname-2026-11-04.mp4"
+      "schermopname-2026-11-04.mp4",
+      "IMG_0937.jpeg",
+      "IMG_0947.mp4",
+      "IMG_0948.jpeg",
+      "IMG_0949.jpeg",
+      "IMG_0967.jpeg"
     ]
   },
   {
@@ -109,7 +115,7 @@ window.COLLECTIONS = [
   {
     "slug": "connectors",
     "page": "connectors",
-    "title": "connectors",
+    "title": "overige connecties",
     "question": "",
     "text": "",
     "links": [],
@@ -139,5 +145,53 @@ window.COLLECTIONS = [
       "Speelgoedautomaatje_01.jpg",
       "IMG_9414.jpeg"
     ]
+  },
+  {
+    "slug": "presearch1",
+    "page": "presearch1",
+    "title": "presearch 1",
+    "question": "",
+    "text": "",
+    "links": [],
+    "folder": "images/presearch1",
+    "images": [
+      "01_lorusso_essay_MickvanderWoord.pdf",
+      "02_IMG_9189.jpeg",
+      "03_IMG_9273.jpeg",
+      "04_adobe-scan-18-sep-2026.pdf",
+      "05_untitled-1.ai",
+      "06_sneeuwvlokje.pdf",
+      "07_TCGmick.ai",
+      "08_container2.png",
+      "09_container3.png",
+      "10_container4.png",
+      "11_mick.mp4",
+      "12_mick2.mp4",
+      "13_biobibliografie_mickvanderwoord.pdf",
+      "14_tekening1.png",
+      "15_render1.png",
+      "16_render2.png",
+      "17_render3.png",
+      "18_render4.png",
+      "19_render5.png",
+      "20_presentatielogo.pdf",
+      "21_IMG_9406.jpeg",
+      "22_image-asset.png",
+      "23_hydrogen-electron-probability.jpg",
+      "24_afbeelding.jpeg",
+      "25_diagram_mick.pdf",
+      "26_bronnen_200woorden.pdf"
+    ],
+    "pages": {
+      "01_lorusso_essay_MickvanderWoord.pdf": 2,
+      "04_adobe-scan-18-sep-2026.pdf": 1,
+      "05_untitled-1.ai": 1,
+      "06_sneeuwvlokje.pdf": 1,
+      "07_TCGmick.ai": 1,
+      "13_biobibliografie_mickvanderwoord.pdf": 3,
+      "20_presentatielogo.pdf": 1,
+      "25_diagram_mick.pdf": 3,
+      "26_bronnen_200woorden.pdf": 3
+    }
   }
 ];

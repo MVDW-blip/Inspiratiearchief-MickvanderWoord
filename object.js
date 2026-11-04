@@ -17,8 +17,8 @@ const SPEED = 1.6;   // drijfsnelheid (px per frame)
 const box = document.createElement("a");
 box.className = "object3d";
 box.href = LINK;
-box.setAttribute("aria-label", "connectors");
-box.innerHTML = `<span class="object3d-label">connectors</span>`;
+box.setAttribute("aria-label", "overige connecties");
+box.innerHTML = `<span class="object3d-label">overige connecties</span>`;
 document.body.appendChild(box);
 
 /* ---------- Scene ---------- */
