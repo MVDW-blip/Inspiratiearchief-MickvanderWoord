@@ -10,9 +10,9 @@ window.COLLECTIONS = [
   {
     "slug": "meerisminder",
     "page": "archief",
-    "title": "+- is - en - is - paradox",
-    "question": "“Hoe verhouden we ons tot de gestoorde hoeveelheid informatie die dagelijks op ons wordt afgevuurd?”",
-    "text": "Bereiken we nu eenzelfde effect waar het ene moment iets verdween door het weg te nemen of te verbranden, nu hetzelfde effect bereikt door juist toe te voegen. Hoe meer informatie we erbij krijgen, hoe meer er in werkelijkheid verloren gaat.",
+    "title": "Wie de informatie",
+    "question": "Wie de informatie bezit wordt gezien als degene die de macht in handen heeft. Maar hoe verhouden we ons als individuen ons tot de immense hoeveelheid informatie die dagelijks op ons wordt afgevuurd? Hoeveel kunnen we aan en hoeveel wordt er precies verwerkt in onze grijze massa? Hoever zitten wij nu in deze accelleratie en komen we in eenzelfde situatie als in de middeleeuwen waardoor door verbranding informatie werd weggenomen, nu door toe te voegen weg te nemen?",
+    "text": "",
     "links": [
       {
         "title": "Library of Alexandria",
@@ -48,8 +48,8 @@ window.COLLECTIONS = [
   {
     "slug": "verdeeldeaandacht",
     "page": "archief",
-    "title": "Acceleratie van een gemaakte wereld",
-    "question": "Is er een soort acceleratie bezig waarbij de grens tussen wat echt en wat nep is vervaagt en hoe verhouden deze ‘gemaakte wereld’ en de ‘daadwerkelijke wereld’ zich tot elkaar? Hoe zou het zijn om te leven in een strakgetrokken wereld.",
+    "title": "Accelleratie",
+    "question": "Hoe verhoudt de ‘gemaakte wereld’ en de ‘daadwerkelijke wereld’ zich tot elkaar en tot onszelf? Wanneer nemen we een gemaakte wereld eerder voor lief dan een 'echte' wereld?",
     "text": "",
     "links": [
       {
