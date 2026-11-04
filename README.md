@@ -14,18 +14,14 @@ Wijzigingen pushen met GitHub Desktop → **Push origin**; na 1–3 minuten staa
 - `index.html` — de index: een vierkant met willekeurig opploppende beelden uit de thema's,
   een zwevend 3D-object (naar overige connecties) en een zwevende link naar presearch 1.
 - `archief.html` — de thema's op één pagina, elk met titel, vraag, tekst, beelden en
-  onderaan de websites. Werkbalk rechtsonder: **Shuffle** (alles gaat zweven), Edit, Reset, Save.
+  onderaan de websites. Knop rechtsonder: **Shuffle** (alles gaat zweven, **Order** zet alles terug).
 - `connectors.html` — overige connecties, met **Glue** in plaats van Shuffle.
 - `presearch1.html` — presearch 1, op datum genummerd, zonder Shuffle. Pdf's en .ai-bestanden
   kun je pagina voor pagina doorbladeren.
 
 ## Teksten aanpassen
 
-- Klik op **Edit** in de werkbalk rechtsonder, klik op een titel, tekst of linknaam en typ.
-  Dit wordt alleen in jouw browser bewaard.
-- Klik daarna op **Save** (downloadt data.js) en vervang het bestand in deze map
-  (en op GitHub) zodat iedereen de nieuwe teksten ziet.
-- Of pas `data.js` direct aan.
+Pas titel, vraag en tekst van een thema aan in `data.js` en push de wijziging.
 
 ## Een afbeelding of link toevoegen
 

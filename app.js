@@ -22,7 +22,9 @@ const domain = url => { try { return new URL(url).hostname.replace(/^www\./, "")
 
 /* ---------- Eigen bewerkingen (opgeslagen in deze browser) ---------- */
 const EDIT_KEY = "inspiratiearchief-edits";
-const edits = JSON.parse(localStorage.getItem(EDIT_KEY) || "{}");
+// De Edit-knop is van de site gehaald: oude bewerkingen uit de browser worden niet meer toegepast,
+// zodat iedereen precies de teksten uit data.js ziet.
+const edits = {};
 
 // Pas opgeslagen bewerkingen toe op de data. Sleutels: "slug.title", "slug.text", "slug.link.0"
 all.forEach(c => {
@@ -90,14 +92,11 @@ let editBtn, downloadBtn;
 function buildChrome(modeBtn) {
   document.body.insertAdjacentHTML("afterbegin", `<a class="corner" href="index.html">inspiratiearchief</a>`);
 
-  editBtn = tool("Edit", "✎", () => setEditMode(!document.body.classList.contains("editing")));
-  downloadBtn = tool("Save", "↓", downloadData);
-  downloadBtn.title = "Download data.js met je bewerkingen";
-  updateDownload();
-
+  // alleen nog de knop van de pagina zelf (Shuffle of Glue); geen Edit, Save of Reset
+  if (!modeBtn) return;
   const bar = document.createElement("div");
   bar.className = "toolbar";
-  bar.append(...[modeBtn, editBtn, resetBtn, downloadBtn].filter(Boolean));
+  bar.append(modeBtn);
   document.body.append(bar);
 }
 

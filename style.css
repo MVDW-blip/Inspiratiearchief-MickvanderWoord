@@ -297,7 +297,8 @@ a.corner:hover { color: #444; }
   bottom: var(--pad);
   z-index: 9999;
   display: grid;
-  grid-template-columns: repeat(2, 56px);
+  grid-auto-flow: column;
+  grid-auto-columns: 56px;
   grid-auto-rows: 56px;
   gap: 2px;
   padding: 2px;
