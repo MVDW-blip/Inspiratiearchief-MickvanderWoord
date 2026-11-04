@@ -10,7 +10,7 @@ window.COLLECTIONS = [
   {
     "slug": "meerisminder",
     "page": "themas",
-    "title": "Wie de informatie",
+    "title": "Informatieoverschot",
     "question": "Wie de informatie bezit wordt gezien als degene die de macht in handen heeft. Maar hoe verhouden we ons als individuen ons tot de immense hoeveelheid informatie die dagelijks op ons wordt afgevuurd? Hoeveel kunnen we aan en hoeveel wordt er precies verwerkt in onze grijze massa? Hoever zitten wij nu in deze accelleratie en komen we in eenzelfde situatie als in de middeleeuwen waardoor door verbranding informatie werd weggenomen, nu door toe te voegen weg te nemen?",
     "text": "",
     "links": [

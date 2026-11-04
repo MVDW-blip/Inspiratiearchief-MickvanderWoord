@@ -90,7 +90,7 @@ let editBtn, downloadBtn;
 // Klein grijs linkje terug naar de index, en de vierkante werkbalk met gereedschap.
 // Nieuw gereedschap? Maak een knop met class "tool" en zet hem in de werkbalk.
 function buildChrome(modeBtn) {
-  document.body.insertAdjacentHTML("afterbegin", `<a class="corner" href="index.html">inspiratiearchief</a>`);
+  document.body.insertAdjacentHTML("afterbegin", `<a class="corner" href="index.html">inspiratiearchief Mick van der Woord</a>`);
 
   // alleen nog de knop van de pagina zelf (Shuffle of Glue); geen Edit, Save of Reset
   if (!modeBtn) return;
