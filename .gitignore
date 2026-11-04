@@ -1,1 +1,4 @@
 .DS_Store
+
+# originelen en losse bestanden: blijven op je computer, gaan niet naar GitHub
+_originelen/
