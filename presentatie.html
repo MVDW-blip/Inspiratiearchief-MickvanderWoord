@@ -86,7 +86,7 @@ body { user-select: none; }
   background: var(--bg);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 3s ease;
+  transition: opacity 3s ease, filter 1.2s ease;
 }
 #next.show { opacity: 1; }
 #next.live { pointer-events: auto; }
@@ -172,6 +172,7 @@ function show(n) {
   if (cur >= LAST - 1) prepareNext();      // alvast laden, zodat hij klaar is
   if (frame) frame.classList.toggle("show", cur === LAST);
   if (cur === LAST) startZand(SLIDES[LAST].word); else stopZand();
+  setBlur(cur === LAST ? 1 : 0);
 }
 
 /* ---------- Zandbak: letters vliegen in beeld, de cursor veegt ze weg ---------- */
@@ -277,6 +278,17 @@ function zandTick(now) {
   zand.raf = requestAnimationFrame(zandTick);
 }
 
+// de index achter "zandbak" is wazig; elke letter die wegvliegt neemt een deel van de waas mee
+const BLUR = 28; // px, zolang alle letters er nog staan
+function setBlur(part) {
+  if (frame) frame.style.filter = part > 0 ? `blur(${BLUR * part}px)` : "";
+}
+function updateBlur() {
+  if (!zand) return;
+  const staying = zand.letters.filter(L => L.state === "in" || L.state === "rust").length;
+  setBlur(staying / zand.letters.length);
+}
+
 // wegvliegende letters botsen op elkaar en op de letters die nog staan
 // (elke letter is een cirkel rond zijn midden; staande letters geven niet mee)
 function body(L) {
@@ -322,6 +334,7 @@ function fling(L, dx, dy) {
   if (sp < 0.5) { dx = rand(-5, 5); dy = -min; }
   else if (sp < min) { dx = dx / sp * min; dy = dy / sp * min; }
   L.state = "weg";
+  updateBlur();
   L.vx = Math.max(Math.min(dx * 1.1, 60), -60);
   L.vy = Math.max(Math.min(dy * 1.1 - 6, 60), -60);
   L.vr = rand(-14, 14) + dx * 0.4;
@@ -363,6 +376,7 @@ function enter() {
   entered = true;
   document.body.classList.add("done");
   frame.classList.add("show", "live");
+  setBlur(0);
   frame.removeAttribute("aria-hidden");
   frame.removeAttribute("tabindex");
   setTimeout(() => {
