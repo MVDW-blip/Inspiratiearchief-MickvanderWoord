@@ -62,6 +62,35 @@ body { user-select: none; }
   transition: opacity 0.35s ease;
 }
 
+/* dia's met beeld: tekst links, beelden rechts (zoals het raster op de site) */
+.slide.has-media {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: clamp(24px, 5vw, 96px);
+}
+.slide-body { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.slide-media {
+  display: grid;
+  gap: clamp(8px, 1vw, 18px);
+  justify-self: end;
+  width: 100%;
+}
+.slide-media .m {
+  aspect-ratio: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* een paar beelden (Tom Putman): staand en groter */
+.slide-media.few .m { aspect-ratio: 3 / 4; }
+.slide-media img, .slide-media video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
 /* zandbak: de letters vliegen het beeld in en veeg je met de cursor weer weg */
 .slide.zandbak { pointer-events: none; }
 #zand { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
@@ -98,6 +127,7 @@ body { user-select: none; }
 <span class="corner">inspiratiearchief Mick van der Woord</span>
 <span class="slide-num"></span>
 
+<script src="data.js"></script>
 <script>
 /* ---------- De dia's ---------- */
 const SLIDES = [
@@ -109,13 +139,16 @@ const SLIDES = [
     "Opzoek naar nieuwe paden – combinaties – niet stil staan" ] },
   { label: "terugblik / vooruitblik", title: "Workshops – connectie goed", lines: [
     "Onderzoekend – combinaties – digitale + fysieke kwam weer naar voren",
-    "Tom putman – specifiek iets in proces – koesteren, tot je zetten" ] },
+    "Tom putman – specifiek iets in proces – koesteren, tot je zetten" ],
+    media: { slug: "verdeeldeaandacht", only: f => /tom_?putman/i.test(f) } },
   { label: "Proces/thema’s", title: "Proces – extreem chaotisch heel breed", lines: [
     "Eindelijk knoop doorgehakt – connectie naar observeren" ] },
   { label: "2 themas", title: "Informatie overschot", text:
-    "Wie de informatie bezit wordt gezien als degene die de macht in handen heeft. Maar hoe verhouden we ons als individuen ons tot de immense hoeveelheid informatie die dagelijks op ons wordt afgevuurd? Hoeveel kunnen we aan en hoeveel wordt er precies verwerkt in onze grijze massa? Hoever zitten wij nu in deze accelleratie en komen we in eenzelfde situatie als in de middeleeuwen waar door verbranding informatie werd weggenomen, nu door toe te voegen weg wordt genomen?" },
+    "Wie de informatie bezit wordt gezien als degene die de macht in handen heeft. Maar hoe verhouden we ons als individuen ons tot de immense hoeveelheid informatie die dagelijks op ons wordt afgevuurd? Hoeveel kunnen we aan en hoeveel wordt er precies verwerkt in onze grijze massa? Hoever zitten wij nu in deze accelleratie en komen we in eenzelfde situatie als in de middeleeuwen waar door verbranding informatie werd weggenomen, nu door toe te voegen weg wordt genomen?",
+    media: { slug: "meerisminder" } },
   { label: "2 themas", title: "Accelleratie", text:
-    "Hoe verhoudt de ‘gemaakte wereld’ en de ‘daadwerkelijke wereld’ zich tot elkaar en tot onszelf? Wanneer nemen we een gemaakte wereld eerder voor lief dan een 'echte' wereld?" },
+    "Hoe verhoudt de ‘gemaakte wereld’ en de ‘daadwerkelijke wereld’ zich tot elkaar en tot onszelf? Wanneer nemen we een gemaakte wereld eerder voor lief dan een 'echte' wereld?",
+    media: { slug: "verdeeldeaandacht" } },
   { word: "zandbak", zandbak: true },
 ];
 
@@ -124,17 +157,50 @@ const pad = n => String(n).padStart(3, "0");
 const num = document.querySelector(".slide-num");
 const LAST = SLIDES.length - 1;
 
+// de beelden komen uit data.js, precies zoals in het archief
+const isVideo = f => /\.(mp4|webm|mov)$/i.test(f);
+function mediaFor(m) {
+  const c = (window.COLLECTIONS || []).find(c => c.slug === m.slug);
+  if (!c) return [];
+  return c.images.filter(f => !/\.(pdf|ai)$/i.test(f)).filter(m.only || (() => true))
+    .map(f => ({ src: encodeURI(c.folder + "/" + f), video: isVideo(f) }));
+}
+
 const els = SLIDES.map(s => {
   const el = document.createElement("section");
-  el.className = "slide" + (s.zandbak ? " zandbak" : "");
-  el.innerHTML = `
+  const media = s.media ? mediaFor(s.media) : [];
+  el.className = "slide" + (s.zandbak ? " zandbak" : "") + (media.length ? " has-media" : "");
+  const body = `
     ${s.label ? `<p class="slide-label">${esc(s.label)}</p>` : ""}
     ${s.title ? `<h1 class="slide-title">${esc(s.title)}</h1>` : ""}
     ${s.lines ? `<ul class="slide-lines">${s.lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}
     ${s.text ? `<p class="slide-text">${esc(s.text)}</p>` : ""}`;
+  if (!media.length) { el.innerHTML = body; document.body.appendChild(el); return el; }
+
+  // zo veel kolommen dat alles in de hoogte past
+  const n = media.length;
+  const cols = n <= 3 ? n : Math.ceil(Math.sqrt(n * 1.1));
+  const rows = Math.ceil(n / cols);
+  el.innerHTML = `<div class="slide-body">${body}</div>
+    <div class="slide-media${n <= 3 ? " few" : ""}" style="grid-template-columns: repeat(${cols}, minmax(0, 1fr)); max-width: calc(72vh * ${cols} / ${rows} * ${n <= 3 ? 0.75 : 1})">
+      ${media.map(m => `<div class="m">${m.video
+        ? `<video data-src="${m.src}" muted loop playsinline preload="none"></video>`
+        : `<img data-src="${m.src}" alt="" draggable="false">`}</div>`).join("")}
+    </div>`;
   document.body.appendChild(el);
   return el;
 });
+
+// beelden pas laden als de dia (bijna) aan de beurt is; video's spelen alleen op hun eigen dia
+function loadMedia(i) {
+  const el = els[i];
+  if (!el) return;
+  el.querySelectorAll("[data-src]").forEach(m => { m.src = m.dataset.src; m.removeAttribute("data-src"); });
+}
+function playMedia(i) {
+  document.querySelectorAll(".slide video").forEach(v => v.pause());
+  els[i].querySelectorAll("video").forEach(v => v.play().catch(() => {}));
+}
 
 /* ---------- De index, die bij "zandbak" achter het woord verschijnt ---------- */
 let frame = null;
@@ -169,6 +235,8 @@ function show(n) {
   els[cur].classList.add("on");
   num.textContent = `${pad(cur + 1)} / ${pad(SLIDES.length)}`;
   history.replaceState(null, "", "#" + (cur + 1));
+  [cur - 1, cur, cur + 1].forEach(loadMedia);
+  playMedia(cur);
   if (cur >= LAST - 1) prepareNext();      // alvast laden, zodat hij klaar is
   if (frame) frame.classList.toggle("show", cur === LAST);
   if (cur === LAST) startZand(SLIDES[LAST].word); else stopZand();
