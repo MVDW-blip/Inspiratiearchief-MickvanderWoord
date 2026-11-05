@@ -221,7 +221,7 @@ function startZand(word) {
       el, w, h, hx: x, hy: y,
       sx: innerWidth / 2 + Math.cos(a) * d - w / 2, sy: innerHeight / 2 + Math.sin(a) * d - h / 2,
       sr: rand(-540, 540),
-      t0: performance.now() + 150 + i * 110, dur: rand(900, 1300),
+      t0: performance.now() + 300 + i * 260, dur: rand(2000, 2800), // rustig binnenzweven
       x: 0, y: 0, rot: 0, vx: 0, vy: 0, vr: 0,
       state: "in", // in → rust → weg → op
     };
@@ -272,8 +272,47 @@ function zandTick(now) {
       L.el.style.transform = `translate(${L.x}px, ${L.y}px) rotate(${L.rot}deg)`;
     }
   });
+  collide(zand.letters);
   if (!left) { stopZand(); enter(); return; }
   zand.raf = requestAnimationFrame(zandTick);
+}
+
+// wegvliegende letters botsen op elkaar en op de letters die nog staan
+// (elke letter is een cirkel rond zijn midden; staande letters geven niet mee)
+function body(L) {
+  return { x: L.x + L.w / 2, y: L.y + L.h * 0.55, r: Math.min(L.w, L.h * 0.7) * 0.48 };
+}
+function collide(letters) {
+  const act = letters.filter(L => L.state === "weg" || L.state === "rust");
+  for (let i = 0; i < act.length; i++) for (let j = i + 1; j < act.length; j++) {
+    let A = act[i], B = act[j];
+    if (A.state === "rust" && B.state === "rust") continue;
+    if (A.state === "rust") [A, B] = [B, A]; // A vliegt altijd
+    const a = body(A), b = body(B);
+    let nx = b.x - a.x, ny = b.y - a.y;
+    const d = Math.hypot(nx, ny) || 0.01, overlap = a.r + b.r - d;
+    if (overlap <= 0) continue;
+    nx /= d; ny /= d;
+    const e = 0.85; // hoe stuiterig
+    if (B.state === "rust") {
+      // tegen een staande letter: terugkaatsen
+      A.x -= nx * overlap; A.y -= ny * overlap;
+      const vn = A.vx * nx + A.vy * ny;
+      if (vn > 0) { A.vx -= (1 + e) * vn * nx; A.vy -= (1 + e) * vn * ny; A.vr = -A.vr * 0.8 + rand(-6, 6); }
+    } else {
+      // twee vliegende letters: zwaardere letter (groter) duwt harder
+      const ma = a.r * a.r, mb = b.r * b.r, tot = ma + mb;
+      A.x -= nx * overlap * mb / tot; A.y -= ny * overlap * mb / tot;
+      B.x += nx * overlap * ma / tot; B.y += ny * overlap * ma / tot;
+      const vn = (B.vx - A.vx) * nx + (B.vy - A.vy) * ny;
+      if (vn < 0) {
+        const jimp = -(1 + e) * vn / tot;
+        A.vx -= jimp * mb * nx; A.vy -= jimp * mb * ny;
+        B.vx += jimp * ma * nx; B.vy += jimp * ma * ny;
+        A.vr += rand(-8, 8); B.vr += rand(-8, 8);
+      }
+    }
+  }
 }
 
 // een letter wegslaan in de richting van de beweging
