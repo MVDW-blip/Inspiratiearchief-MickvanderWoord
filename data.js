@@ -42,7 +42,9 @@ window.COLLECTIONS = [
       "IMG_0947.mp4",
       "IMG_0948.jpeg",
       "IMG_0949.jpeg",
-      "IMG_0967.jpeg"
+      "IMG_0967.jpeg",
+      "1.mp4",
+      "Scherm_afbeelding 2026-11-05 om 14.36.05.png"
     ]
   },
   {
@@ -109,7 +111,9 @@ window.COLLECTIONS = [
       "20_tomputman_thisartfair2022.jpg",
       "21_tomputman_thisartfair2022.jpg",
       "28_tom_putman_lantern.jpg",
-      "6c7e13280caf35fa6cf44566d863cf52.jpg"
+      "6c7e13280caf35fa6cf44566d863cf52.jpg",
+      "Scherm_afbeelding 2026-11-05 om 14.35.41.png",
+      "Scherm_afbeelding 2026-11-05 om 14.35.50.png"
     ]
   },
   {
@@ -143,7 +147,24 @@ window.COLLECTIONS = [
       "pvc_glove-901779833.jpg",
       "rat-vision-a-lesson-in.jpg",
       "Speelgoedautomaatje_01.jpg",
-      "IMG_9414.jpeg"
+      "IMG_9414.jpeg",
+      "Doppelschluessel.jpg",
+      "GLA002008512.jpg",
+      "GLA002017072.jpg",
+      "GLA004003976.jpg",
+      "GLA004008057.jpg",
+      "Mii-2266542084.jpeg",
+      "NS_37_68648dee3ccef.jpg",
+      "Nokia_7600.jpg",
+      "Scherm_afbeelding 2026-09-21 om 13.53.35.png",
+      "Scherm_afbeelding 2026-09-21 om 15.14.45.png",
+      "Scherm_afbeelding 2026-09-21 om 15.15.39.png",
+      "Scherm_afbeelding 2026-09-21 om 15.16.35.png",
+      "Scherm_afbeelding 2026-09-21 om 15.29.04.png",
+      "Warded_locked.png",
+      "arecibo-message-and-decoded-key-science-photo-library-4123547883.jpg",
+      "launch-4-1920x.jpeg",
+      "maxresdefault-893663769.jpg"
     ]
   },
   {
