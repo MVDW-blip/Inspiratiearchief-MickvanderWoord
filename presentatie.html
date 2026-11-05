@@ -62,8 +62,19 @@ body { user-select: none; }
   transition: opacity 0.35s ease;
 }
 
-/* zandbak: het woord in het midden, de index komt erachter tevoorschijn */
-.slide.zandbak { align-items: center; text-align: center; pointer-events: none; }
+/* zandbak: de letters vliegen het beeld in en veeg je met de cursor weer weg */
+.slide.zandbak { pointer-events: none; }
+#zand { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+.zl {
+  position: fixed;
+  left: 0;
+  top: 0;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--ink);
+  white-space: pre;
+  will-change: transform;
+}
 
 #next {
   position: fixed;
@@ -105,7 +116,7 @@ const SLIDES = [
     "Wie de informatie bezit wordt gezien als degene die de macht in handen heeft. Maar hoe verhouden we ons als individuen ons tot de immense hoeveelheid informatie die dagelijks op ons wordt afgevuurd? Hoeveel kunnen we aan en hoeveel wordt er precies verwerkt in onze grijze massa? Hoever zitten wij nu in deze accelleratie en komen we in eenzelfde situatie als in de middeleeuwen waar door verbranding informatie werd weggenomen, nu door toe te voegen weg wordt genomen?" },
   { label: "2 themas", title: "Accelleratie", text:
     "Hoe verhoudt de ‘gemaakte wereld’ en de ‘daadwerkelijke wereld’ zich tot elkaar en tot onszelf? Wanneer nemen we een gemaakte wereld eerder voor lief dan een 'echte' wereld?" },
-  { title: "zandbak", zandbak: true },
+  { word: "zandbak", zandbak: true },
 ];
 
 const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
@@ -118,7 +129,7 @@ const els = SLIDES.map(s => {
   el.className = "slide" + (s.zandbak ? " zandbak" : "");
   el.innerHTML = `
     ${s.label ? `<p class="slide-label">${esc(s.label)}</p>` : ""}
-    <h1 class="slide-title">${esc(s.title)}</h1>
+    ${s.title ? `<h1 class="slide-title">${esc(s.title)}</h1>` : ""}
     ${s.lines ? `<ul class="slide-lines">${s.lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}
     ${s.text ? `<p class="slide-text">${esc(s.text)}</p>` : ""}`;
   document.body.appendChild(el);
@@ -160,9 +171,154 @@ function show(n) {
   history.replaceState(null, "", "#" + (cur + 1));
   if (cur >= LAST - 1) prepareNext();      // alvast laden, zodat hij klaar is
   if (frame) frame.classList.toggle("show", cur === LAST);
+  if (cur === LAST) startZand(SLIDES[LAST].word); else stopZand();
 }
 
-// vanaf "zandbak" nog één klik: het woord verdwijnt en je zit in de site
+/* ---------- Zandbak: letters vliegen in beeld, de cursor veegt ze weg ---------- */
+const rand = (a, b) => a + Math.random() * (b - a);
+let zand = null; // { layer, letters, raf }
+
+function startZand(word) {
+  stopZand();
+  // eerst de letter laden, anders kloppen de maten niet
+  if (document.fonts && document.fonts.status !== "loaded") {
+    document.fonts.ready.then(() => { if (cur === LAST && !zand && !entered) startZand(word); });
+    return;
+  }
+  const layer = document.createElement("div");
+  layer.id = "zand";
+  document.body.appendChild(layer);
+
+  // lettergrootte: het woord vult bijna de hele breedte
+  const probe = document.createElement("span");
+  probe.className = "zl";
+  probe.style.fontSize = "100px";
+  probe.textContent = word;
+  layer.appendChild(probe);
+  const size = Math.min(100 * innerWidth * 0.9 / probe.getBoundingClientRect().width, innerHeight * 0.62);
+  probe.style.fontSize = size + "px";
+  const total = probe.getBoundingClientRect();
+  probe.remove();
+
+  // elke letter op zijn eigen plek in het woord, gecentreerd
+  const spans = [...word].map(ch => {
+    const el = document.createElement("span");
+    el.className = "zl";
+    el.style.fontSize = size + "px";
+    el.textContent = ch;
+    layer.appendChild(el);
+    return el;
+  });
+  const widths = spans.map(el => el.getBoundingClientRect().width);
+  const h = total.height;
+  let x = (innerWidth - widths.reduce((a, b) => a + b, 0)) / 2;
+  const y = (innerHeight - h) / 2;
+  const letters = spans.map((el, i) => {
+    const w = widths[i];
+    // ergens buiten beeld beginnen
+    const a = rand(0, Math.PI * 2), d = Math.hypot(innerWidth, innerHeight) * rand(0.7, 1);
+    const L = {
+      el, w, h, hx: x, hy: y,
+      sx: innerWidth / 2 + Math.cos(a) * d - w / 2, sy: innerHeight / 2 + Math.sin(a) * d - h / 2,
+      sr: rand(-540, 540),
+      t0: performance.now() + 150 + i * 110, dur: rand(900, 1300),
+      x: 0, y: 0, rot: 0, vx: 0, vy: 0, vr: 0,
+      state: "in", // in → rust → weg → op
+    };
+    L.x = L.sx; L.y = L.sy; L.rot = L.sr;
+    L.el.style.transform = `translate(${L.x}px, ${L.y}px) rotate(${L.rot}deg)`;
+    x += w;
+    return L;
+  });
+  zand = { layer, letters, raf: 0, last: performance.now() };
+  zand.raf = requestAnimationFrame(zandTick);
+}
+
+function stopZand() {
+  if (!zand) return;
+  cancelAnimationFrame(zand.raf);
+  zand.layer.remove();
+  zand = null;
+}
+
+// landt met een klein naveertje
+const easeOutBack = t => { const c = 1.4; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+
+function zandTick(now) {
+  if (!zand) return;
+  const dt = Math.min((now - zand.last) / 16.67, 3);
+  zand.last = now;
+  let left = 0;
+  zand.letters.forEach(L => {
+    if (L.state === "in") {
+      const p = Math.min(Math.max((now - L.t0) / L.dur, 0), 1), e = easeOutBack(p);
+      L.x = L.sx + (L.hx - L.sx) * e;
+      L.y = L.sy + (L.hy - L.sy) * e;
+      L.rot = L.sr * (1 - e);
+      if (p >= 1) { L.state = "rust"; L.x = L.hx; L.y = L.hy; L.rot = 0; }
+    } else if (L.state === "weg") {
+      L.vy += 0.45 * dt; // zwaartekracht
+      L.x += L.vx * dt;
+      L.y += L.vy * dt;
+      L.rot += L.vr * dt;
+      const m = Math.max(L.w, L.h);
+      if (L.y > innerHeight + m || L.y < -m * 3 || L.x < -m * 2 || L.x > innerWidth + m) {
+        L.state = "op";
+        L.el.remove();
+      }
+    }
+    if (L.state !== "op") {
+      left++;
+      L.el.style.transform = `translate(${L.x}px, ${L.y}px) rotate(${L.rot}deg)`;
+    }
+  });
+  if (!left) { stopZand(); enter(); return; }
+  zand.raf = requestAnimationFrame(zandTick);
+}
+
+// een letter wegslaan in de richting van de beweging
+function fling(L, dx, dy) {
+  const min = 14, sp = Math.hypot(dx, dy);
+  // langzaam erover: toch een flinke duw, in dezelfde richting
+  if (sp < 0.5) { dx = rand(-5, 5); dy = -min; }
+  else if (sp < min) { dx = dx / sp * min; dy = dy / sp * min; }
+  L.state = "weg";
+  L.vx = Math.max(Math.min(dx * 1.1, 60), -60);
+  L.vy = Math.max(Math.min(dy * 1.1 - 6, 60), -60);
+  L.vr = rand(-14, 14) + dx * 0.4;
+}
+
+// raakt de cursor een letter (een beetje ruim gemeten), dan vliegt hij weg
+function hitLetters(px, py, dx, dy) {
+  if (!zand) return;
+  zand.letters.forEach(L => {
+    if (L.state !== "rust") return;
+    const padX = L.w * 0.08, top = L.h * 0.18, bottom = L.h * 0.1;
+    if (px > L.x - padX && px < L.x + L.w + padX && py > L.y + top && py < L.y + L.h - bottom) fling(L, dx, dy);
+  });
+}
+
+let lastPX = null, lastPY = null;
+addEventListener("pointermove", e => {
+  if (lastPX !== null) {
+    // tussenpunten, zodat een snelle veeg geen letter overslaat
+    const dx = e.clientX - lastPX, dy = e.clientY - lastPY, steps = Math.ceil(Math.hypot(dx, dy) / 20) || 1;
+    for (let i = 1; i <= steps; i++) hitLetters(lastPX + dx * i / steps, lastPY + dy * i / steps, dx, dy);
+  }
+  lastPX = e.clientX; lastPY = e.clientY;
+});
+
+// met de afstandsbediening of het toetsenbord: alles in één keer wegblazen
+function blowAway() {
+  if (!zand) return;
+  zand.letters.forEach(L => {
+    if (L.state === "op" || L.state === "weg") return;
+    L.state = "rust";
+    fling(L, rand(-30, 30), rand(-34, -14));
+  });
+}
+
+// zijn alle letters weg, dan verdwijnt de rest en zit je in de site
 function enter() {
   if (entered) return;
   entered = true;
@@ -179,9 +335,14 @@ function enter() {
   }, 800);
 }
 
-const forward = () => (cur === LAST ? enter() : show(cur + 1));
+// op "zandbak" haal je de letters met de cursor weg; verder-toets blaast ze allemaal weg
+const forward = () => (cur === LAST ? blowAway() : show(cur + 1));
 
-addEventListener("click", e => { if (e.button === 0) forward(); });
+addEventListener("click", e => {
+  if (e.button !== 0) return;
+  if (cur === LAST) hitLetters(e.clientX, e.clientY, rand(-20, 20), -20); // klik op een letter: weg
+  else forward();
+});
 addEventListener("keydown", e => {
   if (entered) return;
   if (["ArrowRight", "ArrowDown", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); forward(); }
