@@ -83,6 +83,9 @@ body { user-select: none; }
   align-items: center;
   justify-content: center;
 }
+/* één beeld of video: eigen verhouding, zo groot als past */
+.slide-media.one { display: flex; justify-content: flex-end; align-items: center; }
+.slide-media.one img, .slide-media.one video { width: 100%; height: auto; max-height: calc(100vh - 2 * clamp(40px, 6vw, 120px)); }
 /* een paar beelden (Tom Putman): staand en groter */
 .slide-media.few .m { aspect-ratio: 3 / 4; }
 .slide-media img, .slide-media video {
@@ -127,7 +130,6 @@ body { user-select: none; }
 <span class="corner">inspiratiearchief Mick van der Woord</span>
 <span class="slide-num"></span>
 
-<script src="data.js"></script>
 <script>
 /* ---------- De dia's ---------- */
 const SLIDES = [
@@ -140,15 +142,14 @@ const SLIDES = [
   { label: "terugblik / vooruitblik", title: "Workshops – connectie goed", lines: [
     "Onderzoekend – combinaties – digitale + fysieke kwam weer naar voren",
     "Tom putman – specifiek iets in proces – koesteren, tot je zetten" ],
-    media: { slug: "verdeeldeaandacht", only: f => /tom_?putman/i.test(f) } },
+    media: ["tom.mp4"] },
   { label: "Proces/thema’s", title: "Proces – extreem chaotisch heel breed", lines: [
-    "Eindelijk knoop doorgehakt – connectie naar observeren" ] },
+    "Eindelijk knoop doorgehakt – connectie naar observeren" ],
+    media: ["chaosarchief.mp4"] },
   { label: "2 themas", title: "Informatie overschot", text:
-    "Wie de informatie bezit wordt gezien als degene die de macht in handen heeft. Maar hoe verhouden we ons als individuen ons tot de immense hoeveelheid informatie die dagelijks op ons wordt afgevuurd? Hoeveel kunnen we aan en hoeveel wordt er precies verwerkt in onze grijze massa? Hoever zitten wij nu in deze accelleratie en komen we in eenzelfde situatie als in de middeleeuwen waar door verbranding informatie werd weggenomen, nu door toe te voegen weg wordt genomen?",
-    media: { slug: "meerisminder" } },
+    "Wie de informatie bezit wordt gezien als degene die de macht in handen heeft. Maar hoe verhouden we ons als individuen ons tot de immense hoeveelheid informatie die dagelijks op ons wordt afgevuurd? Hoeveel kunnen we aan en hoeveel wordt er precies verwerkt in onze grijze massa? Hoever zitten wij nu in deze accelleratie en komen we in eenzelfde situatie als in de middeleeuwen waar door verbranding informatie werd weggenomen, nu door toe te voegen weg wordt genomen?" },
   { label: "2 themas", title: "Accelleratie", text:
-    "Hoe verhoudt de ‘gemaakte wereld’ en de ‘daadwerkelijke wereld’ zich tot elkaar en tot onszelf? Wanneer nemen we een gemaakte wereld eerder voor lief dan een 'echte' wereld?",
-    media: { slug: "verdeeldeaandacht" } },
+    "Hoe verhoudt de ‘gemaakte wereld’ en de ‘daadwerkelijke wereld’ zich tot elkaar en tot onszelf? Wanneer nemen we een gemaakte wereld eerder voor lief dan een 'echte' wereld?" },
   { word: "zandbak", zandbak: true },
 ];
 
@@ -157,14 +158,10 @@ const pad = n => String(n).padStart(3, "0");
 const num = document.querySelector(".slide-num");
 const LAST = SLIDES.length - 1;
 
-// de beelden komen uit data.js, precies zoals in het archief
+// beeld voor de presentatie: alleen uit de map images/presentatiebeeld
+const MEDIA_DIR = "images/presentatiebeeld/";
 const isVideo = f => /\.(mp4|webm|mov)$/i.test(f);
-function mediaFor(m) {
-  const c = (window.COLLECTIONS || []).find(c => c.slug === m.slug);
-  if (!c) return [];
-  return c.images.filter(f => !/\.(pdf|ai)$/i.test(f)).filter(m.only || (() => true))
-    .map(f => ({ src: encodeURI(c.folder + "/" + f), video: isVideo(f) }));
-}
+const mediaFor = files => files.map(f => ({ src: encodeURI(MEDIA_DIR + f), video: isVideo(f) }));
 
 const els = SLIDES.map(s => {
   const el = document.createElement("section");
@@ -179,6 +176,15 @@ const els = SLIDES.map(s => {
 
   // zo veel kolommen dat alles in de hoogte past
   const n = media.length;
+  if (n === 1) {
+    const m = media[0];
+    el.innerHTML = `<div class="slide-body">${body}</div>
+      <div class="slide-media one">${m.video
+        ? `<video data-src="${m.src}" muted loop playsinline preload="none"></video>`
+        : `<img data-src="${m.src}" alt="" draggable="false">`}</div>`;
+    document.body.appendChild(el);
+    return el;
+  }
   const cols = n <= 3 ? n : Math.ceil(Math.sqrt(n * 1.1));
   const rows = Math.ceil(n / cols);
   el.innerHTML = `<div class="slide-body">${body}</div>

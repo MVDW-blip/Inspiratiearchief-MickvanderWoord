@@ -2,3 +2,6 @@
 
 # originelen en losse bestanden: blijven op je computer, gaan niet naar GitHub
 _originelen/
+
+# originele .mov-bestanden van de presentatie: de site gebruikt de .mp4-versies
+images/presentatiebeeld/*.mov
