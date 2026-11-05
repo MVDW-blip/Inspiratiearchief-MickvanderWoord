@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>presentatie — Inspiratiearchief</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/png" sizes="32x32" href="images/icon/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="images/icon/favicon-512.png">
+<link rel="apple-touch-icon" href="images/icon/favicon-180.png">
+<style>
+/* Presentatie — in dezelfde stijl als de rest van de site.
+   Klik, spatie, → of PageDown: verder. ← of PageUp: terug. F: volledig scherm.
+   Bij "zandbak" komt de index achter het woord tevoorschijn; nog één klik en je zit in de site. */
+
+html, body { height: 100%; overflow: hidden; }
+body { user-select: none; }
+
+.slide {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(40px, 6vw, 120px) clamp(24px, 8vw, 160px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+}
+.slide.on { opacity: 1; visibility: visible; transition: opacity 0.35s ease; }
+
+.slide-label {
+  margin: 0 0 clamp(10px, 1vw, 18px);
+  font-size: clamp(11px, 0.85vw, 15px);
+  letter-spacing: 0.04em;
+}
+.slide-title { margin: 0; }
+.slide-lines { margin: 0.4em 0 0; padding: 0; list-style: none; font-size: clamp(17px, 1.75vw, 32px); }
+/* kop, regels en tekst: allemaal dezelfde letter */
+.slide-title,
+.slide-lines li,
+.slide-text {
+  max-width: 40em;
+  font-weight: 300;
+  font-size: clamp(17px, 1.75vw, 32px);
+  line-height: 1.4;
+}
+.slide-lines li + li { margin-top: 0.4em; }
+.slide-text { margin: 0.4em 0 0; }
+
+.slide-num {
+  position: fixed;
+  z-index: 3;
+  right: var(--pad);
+  bottom: var(--pad);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  transition: opacity 0.35s ease;
+}
+
+/* zandbak: het woord in het midden, de index komt erachter tevoorschijn */
+.slide.zandbak { align-items: center; text-align: center; pointer-events: none; }
+
+#next {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 3s ease;
+}
+#next.show { opacity: 1; }
+#next.live { pointer-events: auto; }
+.done .slide, .done .slide-num, .done .corner { opacity: 0 !important; transition: opacity 0.8s ease !important; }
+</style>
+</head>
+<body>
+
+<span class="corner">inspiratiearchief Mick van der Woord</span>
+<span class="slide-num"></span>
+
+<script>
+/* ---------- De dia's ---------- */
+const SLIDES = [
+  { label: "terugblik / vooruitblik", title: "Existentieel", lines: [
+    "Veel gepraat met makers en klasgenoten",
+    "Auteur blijven – zelf keuzes maken" ] },
+  { label: "terugblik / vooruitblik", title: "Gesprekjes – Veel interesses (grafisch werk, illustratie, 3d)", lines: [
+    "Alles proberen – balans vinden",
+    "Opzoek naar nieuwe paden – combinaties – niet stil staan" ] },
+  { label: "terugblik / vooruitblik", title: "Workshops – connectie goed", lines: [
+    "Onderzoekend – combinaties – digitale + fysieke kwam weer naar voren",
+    "Tom putman – specifiek iets in proces – koesteren, tot je zetten" ] },
+  { label: "Proces/thema’s", title: "Proces – extreem chaotisch heel breed", lines: [
+    "Eindelijk knoop doorgehakt" ] },
+  { label: "2 themas", title: "Informatie overschot", text:
+    "Wie de informatie bezit wordt gezien als degene die de macht in handen heeft. Maar hoe verhouden we ons als individuen ons tot de immense hoeveelheid informatie die dagelijks op ons wordt afgevuurd? Hoeveel kunnen we aan en hoeveel wordt er precies verwerkt in onze grijze massa? Hoever zitten wij nu in deze accelleratie en komen we in eenzelfde situatie als in de middeleeuwen waar door verbranding informatie werd weggenomen, nu door toe te voegen weg wordt genomen?" },
+  { label: "2 themas", title: "Accelleratie", text:
+    "Hoe verhoudt de ‘gemaakte wereld’ en de ‘daadwerkelijke wereld’ zich tot elkaar en tot onszelf? Wanneer nemen we een gemaakte wereld eerder voor lief dan een 'echte' wereld?" },
+  { title: "zandbak", zandbak: true },
+];
+
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+const pad = n => String(n).padStart(3, "0");
+const num = document.querySelector(".slide-num");
+const LAST = SLIDES.length - 1;
+
+const els = SLIDES.map(s => {
+  const el = document.createElement("section");
+  el.className = "slide" + (s.zandbak ? " zandbak" : "");
+  el.innerHTML = `
+    ${s.label ? `<p class="slide-label">${esc(s.label)}</p>` : ""}
+    <h1 class="slide-title">${esc(s.title)}</h1>
+    ${s.lines ? `<ul class="slide-lines">${s.lines.map(l => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}
+    ${s.text ? `<p class="slide-text">${esc(s.text)}</p>` : ""}`;
+  document.body.appendChild(el);
+  return el;
+});
+
+/* ---------- De index, die bij "zandbak" achter het woord verschijnt ---------- */
+let frame = null;
+function prepareNext() {
+  if (frame) return;
+  frame = document.createElement("iframe");
+  frame.id = "next";
+  frame.src = "index.html";
+  frame.tabIndex = -1;
+  frame.setAttribute("aria-hidden", "true");
+  document.body.prepend(frame);
+  frame.addEventListener("load", () => {
+    // links in de index openen als echte pagina
+    try {
+      frame.contentDocument.addEventListener("click", e => {
+        const a = e.target.closest && e.target.closest("a[href]");
+        if (!a || a.target === "_blank") return;
+        e.preventDefault();
+        location.href = a.href;
+      }, true);
+    } catch (err) { /* lokaal als bestand geopend: links werken dan binnen het frame */ }
+  });
+}
+
+/* ---------- Bladeren ---------- */
+let cur = -1, entered = false;
+
+function show(n) {
+  if (entered || n < 0 || n > LAST || n === cur) return;
+  if (cur >= 0) els[cur].classList.remove("on");
+  cur = n;
+  els[cur].classList.add("on");
+  num.textContent = `${pad(cur + 1)} / ${pad(SLIDES.length)}`;
+  history.replaceState(null, "", "#" + (cur + 1));
+  if (cur >= LAST - 1) prepareNext();      // alvast laden, zodat hij klaar is
+  if (frame) frame.classList.toggle("show", cur === LAST);
+}
+
+// vanaf "zandbak" nog één klik: het woord verdwijnt en je zit in de site
+function enter() {
+  if (entered) return;
+  entered = true;
+  document.body.classList.add("done");
+  frame.classList.add("show", "live");
+  frame.removeAttribute("aria-hidden");
+  frame.removeAttribute("tabindex");
+  setTimeout(() => {
+    try {
+      document.title = frame.contentDocument.title;
+      history.replaceState(null, "", "index.html"); // vernieuwen opent gewoon de index
+    } catch (err) { /* lokaal als bestand geopend */ }
+    frame.focus();
+  }, 800);
+}
+
+const forward = () => (cur === LAST ? enter() : show(cur + 1));
+
+addEventListener("click", e => { if (e.button === 0) forward(); });
+addEventListener("keydown", e => {
+  if (entered) return;
+  if (["ArrowRight", "ArrowDown", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); forward(); }
+  else if (["ArrowLeft", "ArrowUp", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); show(cur - 1); }
+  else if (e.key === "Home") show(0);
+  else if (e.key === "End") show(LAST);
+  else if (e.key === "f" || e.key === "F") {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen?.();
+  }
+});
+
+show(Math.min(Math.max((parseInt(location.hash.slice(1), 10) || 1) - 1, 0), LAST));
+</script>
+</body>
+</html>
