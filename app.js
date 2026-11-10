@@ -2,7 +2,7 @@
 // plus bewerken, slepen, lightbox en de Shuffle-knop (alles gaat zweven).
 
 const all = window.COLLECTIONS || [];
-const current = document.body.dataset.page; // "index", "themas", "connectors" of "presearch1"
+const current = document.body.dataset.page; // "index", "themas", "connectors", "24days" of "presearch1"
 const pad = (n, l = 2) => String(n).padStart(l, "0");
 const src = (c, f) => encodeURI(c.folder + "/" + f);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
@@ -699,6 +699,10 @@ if (current === "themas") {
 if (current === "presearch1") {
   buildArchief();
   buildChrome(null); // geen Shuffle: alles blijft op volgorde
+}
+if (current === "24days") {
+  buildArchief();
+  buildChrome(null); // één beeld, geen Shuffle
 }
 if (current === "connectors") {
   buildArchief();

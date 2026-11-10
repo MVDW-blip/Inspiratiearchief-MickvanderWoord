@@ -2,7 +2,7 @@
 // - title / question / text / links[].title kun je hier aanpassen, of op de site via de knop "Edit"
 //   (daarna "Save" en vervang dit bestand door de download).
 // - Nieuwe afbeelding? Zet hem in de map ("folder") en voeg de bestandsnaam toe aan "images".
-// - page: op welke pagina het staat ("themas", "connectors" of "presearch1").
+// - page: op welke pagina het staat ("themas", "connectors", "24days" of "presearch1").
 // - Pdf? Zet elke pagina als beeld in de map "pages" (naam-1.jpg, naam-2.jpg, ...) en het aantal bij "pages".
 // - Nieuwe link? Voeg { title, url, image } toe aan "links" (image mag leeg blijven).
 
@@ -165,6 +165,18 @@ window.COLLECTIONS = [
       "arecibo-message-and-decoded-key-science-photo-library-4123547883.jpg",
       "launch-4-1920x.jpeg",
       "maxresdefault-893663769.jpg"
+    ]
+  },
+  {
+    "slug": "24days",
+    "page": "24days",
+    "title": "24 days challenge",
+    "question": "",
+    "text": "",
+    "links": [],
+    "folder": "images/24days",
+    "images": [
+      "dag1.jpg"
     ]
   },
   {
