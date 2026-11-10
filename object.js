@@ -42,7 +42,7 @@ async function loadBuffer(o) {
 }
 
 // Van bestand naar een metalen object, gecentreerd en passend in beeld
-async function loadModel(o, metal) {
+async function loadModel(o, metal, inner) {
   const buf = await loadBuffer(o);
   let obj;
   if (/\.obj$/i.test(o.model)) {
@@ -55,6 +55,17 @@ async function loadModel(o, metal) {
   } else {
     obj = new THREE.Mesh(new STLLoader().parse(buf), metal);
   }
+  // glas: onder het heldere oppervlak een binnenkant die de omgeving breekt
+  if (inner) {
+    const meshes = [];
+    obj.traverse(m => m.isMesh && meshes.push(m));
+    meshes.forEach(m => {
+      const body = new THREE.Mesh(m.geometry, inner);
+      body.renderOrder = 0;
+      m.renderOrder = 1;
+      m.add(body);
+    });
+  }
   const bb = new THREE.Box3().setFromObject(obj);
   const center = bb.getCenter(new THREE.Vector3());
   const size = bb.getSize(new THREE.Vector3());
@@ -63,6 +74,39 @@ async function loadModel(o, metal) {
   holder.add(obj);
   holder.scale.setScalar(1.6 / Math.max(size.x, size.y, size.z));
   return holder;
+}
+
+// Een "fotostudio" voor glas: donkere vloer, lichte lucht en een paar felle lichtbakken.
+// Glas laat zien wat eromheen is; op een witte pagina heb je dat contrast nodig om het te zien.
+function studioScene() {
+  const sc = new THREE.Scene();
+  const dome = new THREE.Mesh(
+    new THREE.SphereGeometry(10, 48, 24),
+    new THREE.ShaderMaterial({
+      side: THREE.BackSide,
+      vertexShader: "varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
+      fragmentShader: `varying vec3 vP;
+        void main(){
+          float h = vP.y;
+          vec3 floorC = vec3(0.16, 0.18, 0.21), skyC = vec3(0.96, 0.97, 0.99), band = vec3(0.42, 0.46, 0.52);
+          vec3 c = mix(floorC, skyC, smoothstep(-0.25, 0.35, h));
+          c = mix(c, band, smoothstep(0.08, 0.0, abs(h - 0.12)) * 0.8); // donkere horizonlijn
+          gl_FragColor = vec4(c, 1.0);
+        }`
+    })
+  );
+  sc.add(dome);
+  const strip = (w, h, x, y, z) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(4, 4, 4), side: THREE.DoubleSide }));
+    m.position.set(x, y, z);
+    m.lookAt(0, 0, 0);
+    sc.add(m);
+  };
+  strip(1.2, 6, 5, 2, 3);
+  strip(1.2, 6, -5, 1, 2);
+  strip(8, 1, 0, 6, -3);
+  strip(0.6, 4, 1, 0, -6);
+  return sc;
 }
 
 function makeFloater(o, i) {
@@ -86,7 +130,9 @@ function makeFloater(o, i) {
   const scene = new THREE.Scene();
   // omgeving voor de reflecties: daar komt de metaalglans vandaan
   const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  // glas krijgt scherpere reflecties (minder vervaagd) dan metaal
+  const studio = o.glass ? studioScene() : null;
+  scene.environment = o.glass ? pmrem.fromScene(studio, 0).texture : pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
   const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 100);
   camera.position.set(0, 0, 3.2);
@@ -102,18 +148,21 @@ function makeFloater(o, i) {
   const metal = o.glass ? new THREE.MeshPhysicalMaterial({
     color: 0xffffff,
     metalness: 0,
-    roughness: 0.04,
-    transmission: 1,     // licht gaat erdoorheen
-    thickness: 0.35,
-    ior: 1.5,
+    roughness: 0,
+    transmission: 1,      // licht gaat erdoorheen
+    thickness: 1.4,       // dik glas: buigt het licht meer
+    ior: 1.75,
+    dispersion: 4,        // regenboograndjes, zoals bij geslepen glas
+    iridescence: 0.5,     // zachte kleurschijn op het oppervlak
+    iridescenceIOR: 1.3,
+    iridescenceThicknessRange: [200, 600],
     transparent: true,
-    opacity: 1,
-    envMapIntensity: 1.6,
+    envMapIntensity: 2.6, // sterke weerspiegelingen
     clearcoat: 1,
-    clearcoatRoughness: 0.05,
+    clearcoatRoughness: 0,
     specularIntensity: 1,
-    attenuationColor: new THREE.Color(0xdfe9f2), // heel licht blauwig, zoals dik glas
-    attenuationDistance: 1.2,
+    attenuationColor: new THREE.Color(0xcfe3f0), // licht blauwig in de dikte
+    attenuationDistance: 0.6,
     side: THREE.DoubleSide
   }) : new THREE.MeshPhysicalMaterial({
     color: 0xb4b9c2,     // koel zilver
@@ -127,7 +176,24 @@ function makeFloater(o, i) {
 
   const pivot = new THREE.Group();
   scene.add(pivot);
-  loadModel(o, metal).then(m => {
+  if (o.glass) pivot.rotation.set(0.45, -0.6, 0);
+  // glas: een binnenkant die de kamer eromheen breekt, zodat je ziet dat het licht erdoor buigt
+  let inner = null;
+  if (o.glass) {
+    const cubeRT = new THREE.WebGLCubeRenderTarget(256);
+    new THREE.CubeCamera(0.1, 100, cubeRT).update(renderer, studio);
+    cubeRT.texture.mapping = THREE.CubeRefractionMapping;
+    inner = new THREE.MeshBasicMaterial({
+      envMap: cubeRT.texture,
+      refractionRatio: 0.66,
+      color: 0xdde8f0,        // licht blauwgrijs glas
+      transparent: true,
+      opacity: 0.75,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+  }
+  loadModel(o, metal, inner).then(m => {
     pivot.add(m);
     box.classList.add("ready");
   }).catch(err => console.warn("3D-object niet geladen:", o.model, err));
