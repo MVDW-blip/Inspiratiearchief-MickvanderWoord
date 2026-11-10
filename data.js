@@ -171,7 +171,7 @@ window.COLLECTIONS = [
     "slug": "24days",
     "page": "24days",
     "title": "24 days challenge",
-    "question": "",
+    "question": "Elke dag spelen met de overgang van transparantie, deels transparantie of totaal geen transparantie, en daarbij kijken hoe dit kan spelen met onze verwachtingen / de context.",
     "text": "",
     "links": [],
     "folder": "images/24days",
