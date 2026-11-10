@@ -3,6 +3,8 @@
 // en een klik erop opent hun eigen pagina.
 // Nieuw object? Voeg een regel toe aan OBJECTS onderaan (stl of obj).
 
+// glass: true maakt een object van glas in plaats van metaal.
+
 // Gewoon script (geen module), zodat het ook werkt als je index.html direct vanuit de map opent.
 (async () => {
 const THREE = await import("three");
@@ -17,7 +19,7 @@ const OBJECTS = [
   { model: "images/connectors/connectors.stl", fallback: "images/connectors/connectors.stl.js",
     link: "connectors.html", label: "overige connecties", start: [0.12, 0.65] },
   { model: "images/24days/Asset 1.obj",
-    link: "24days.html", label: "24 days challenge", start: [0.78, 0.7] },
+    link: "24days.html", label: "24 days challenge", start: [0.78, 0.7], glass: true },
 ];
 
 // Model laden. Stl: online via het bestand, direct vanuit de map via de kopie in .stl.js
@@ -96,7 +98,24 @@ function makeFloater(o, i) {
   rim.position.set(-3, -1, -2);
   scene.add(rim);
 
-  const metal = new THREE.MeshPhysicalMaterial({
+  // metaal, of (met glass: true) helder glas waar je doorheen kijkt
+  const metal = o.glass ? new THREE.MeshPhysicalMaterial({
+    color: 0xffffff,
+    metalness: 0,
+    roughness: 0.04,
+    transmission: 1,     // licht gaat erdoorheen
+    thickness: 0.35,
+    ior: 1.5,
+    transparent: true,
+    opacity: 1,
+    envMapIntensity: 1.6,
+    clearcoat: 1,
+    clearcoatRoughness: 0.05,
+    specularIntensity: 1,
+    attenuationColor: new THREE.Color(0xdfe9f2), // heel licht blauwig, zoals dik glas
+    attenuationDistance: 1.2,
+    side: THREE.DoubleSide
+  }) : new THREE.MeshPhysicalMaterial({
     color: 0xb4b9c2,     // koel zilver
     metalness: 1,
     roughness: 0.14,
