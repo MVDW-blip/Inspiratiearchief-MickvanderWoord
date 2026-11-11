@@ -30,6 +30,21 @@ window.COLLECTIONS = [
         "title": "Osiris",
         "url": "https://osirisai.live/?layers=maritime,cctv,cctv_previews,live_news,earthquakes,global_incidents,day_night,cables,sdk_sea,sdk_air,sdk_naval,wind_controls,rain_controls",
         "image": "images/links/osiris-ai.jpg"
+      },
+      {
+        "title": "Simon Denny",
+        "url": "https://simondenny.net/",
+        "image": "images/links/simon-denny.jpg"
+      },
+      {
+        "title": "Peim van der Sloot",
+        "url": "https://peim.cargo.site/",
+        "image": ""
+      },
+      {
+        "title": "Katja Novitskova",
+        "url": "https://www.katjanovi.net/",
+        "image": "images/links/katja-novitskova.jpg"
       }
     ],
     "folder": "images/moreisless",
@@ -46,7 +61,10 @@ window.COLLECTIONS = [
       "IMG_0949.jpeg",
       "IMG_0967.jpeg",
       "1.mp4",
-      "Scherm_afbeelding 2026-11-05 om 14.36.05.png"
+      "Scherm_afbeelding 2026-11-05 om 14.36.05.png",
+      "670ac9e1f28153ca29c5b579c3196a2b.jpg",
+      "69fefa1143d0f97c41b2f24f_1909 Kraupa Tuskany Zeidler4633 photo__def_image-web.jpg",
+      "a6676da070cc64c31ee908159558e0e5.jpg"
     ]
   },
   {
@@ -115,7 +133,12 @@ window.COLLECTIONS = [
       "28_tom_putman_lantern.jpg",
       "6c7e13280caf35fa6cf44566d863cf52.jpg",
       "Scherm_afbeelding 2026-11-05 om 14.35.41.png",
-      "Scherm_afbeelding 2026-11-05 om 14.35.50.png"
+      "Scherm_afbeelding 2026-11-05 om 14.35.50.png",
+      "60312ca914e5e0b2de99bce2_Katja Novitskova Approximation (2jk40 chimera surface ligand, fruit fly).jpg",
+      "60312f8a56323c3bac691bf6_Katja Novitskova approximation (trail camera vision, hyena).jpg",
+      "60313625bbbc281759ff3dc6_Katja Novitskova Approximation (C elegans dendrite endings AWA, AWB, AWC, AFD).jpg",
+      "69b01409c0d9fd5ecd2adb71_SHF_eb00258266-edit-web.jpg",
+      "afebf337ebdd1513ef224dadef25f01b.jpg"
     ]
   },
   {
@@ -253,7 +276,9 @@ window.COLLECTIONS = [
       "23_hydrogen-electron-probability.jpg",
       "24_afbeelding.jpeg",
       "25_diagram_mick.pdf",
-      "26_bronnen_200woorden.pdf"
+      "26_bronnen_200woorden.pdf",
+      "27_tienstappen_mick.pdf",
+      "28_mewethey_MickvanderWoord.pdf"
     ],
     "pages": {
       "01_lorusso_essay_MickvanderWoord.pdf": 2,
@@ -264,7 +289,9 @@ window.COLLECTIONS = [
       "13_biobibliografie_mickvanderwoord.pdf": 3,
       "20_presentatielogo.pdf": 1,
       "25_diagram_mick.pdf": 3,
-      "26_bronnen_200woorden.pdf": 3
+      "26_bronnen_200woorden.pdf": 3,
+      "27_tienstappen_mick.pdf": 1,
+      "28_mewethey_MickvanderWoord.pdf": 1
     }
   }
 ];
