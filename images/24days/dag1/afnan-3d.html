@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Afnan Water Factory – 3D X-ray</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #9fc3e6; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; transition: background .8s; }
+  body.xray { background: #0b0806; }
+  canvas { display: block; }
+  button {
+    position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%);
+    padding: 14px 30px; border: 0; border-radius: 999px; cursor: pointer;
+    font: 600 16px/1 inherit; letter-spacing: .08em; color: #fff;
+    background: rgba(20,20,20,.75); backdrop-filter: blur(8px);
+    box-shadow: 0 6px 24px rgba(0,0,0,.4), inset 0 0 0 1px rgba(255,255,255,.18);
+    transition: background .3s, box-shadow .3s;
+  }
+  body.xray button { background: #e8650f; box-shadow: 0 0 28px rgba(255,120,20,.7), inset 0 0 0 1px rgba(255,255,255,.3); }
+  .credit { position: fixed; right: 8px; bottom: 6px; font-size: 10px; color: rgba(255,255,255,.75); text-shadow: 0 1px 2px #000; }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<button id="toggle" aria-pressed="false">X-RAY OFF</button>
+<div class="credit">Imagery: Esri, Maxar, Earthstar Geographics · oil pockets are illustrative · drag to rotate, scroll to zoom</div>
+
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+// ---------- basics ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(40, innerWidth / innerHeight, 1, 6000);
+camera.position.set(760, 600, 820);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, -60, 0);
+controls.enableDamping = true;
+controls.minDistance = 60; controls.maxDistance = 2600;
+controls.update();
+
+scene.add(new THREE.HemisphereLight(0xdfeeff, 0x8a6a45, 1.3));
+const sun = new THREE.DirectionalLight(0xfff2dd, 2.6);
+sun.position.set(-300, 600, 250);
+sun.castShadow = true;
+sun.shadow.mapSize.set(4096, 4096);
+Object.assign(sun.shadow.camera, { left: -500, right: 500, top: 500, bottom: -500, near: 10, far: 2000 });
+sun.shadow.bias = -0.0005;
+scene.add(sun);
+
+// ---------- satellite photo (Esri World Imagery, zoom 18) ----------
+const Z = 18, TX0 = 165431, TY0 = 112789, N = 7, SIZE = 256 * N;
+const CROP = [9, 71.4, 1663.1, 1736.7];   // pixels of the ±450 m square inside the 7×7 tile mosaic
+const R = 450;
+const cvs = document.createElement("canvas"); cvs.width = cvs.height = SIZE;
+const ctx = cvs.getContext("2d"); ctx.fillStyle = "#a07a4d"; ctx.fillRect(0, 0, SIZE, SIZE);
+const satTex = new THREE.CanvasTexture(cvs);
+satTex.colorSpace = THREE.SRGBColorSpace;
+satTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+  const img = new Image(); img.crossOrigin = "anonymous";
+  img.onload = () => { ctx.drawImage(img, i * 256, j * 256); satTex.needsUpdate = true; };
+  img.src = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${Z}/${TY0 + j}/${TX0 + i}`;
+}
+// map position (x east, n north, metres) -> texture uv
+const uvOf = (x, n) => [
+  (CROP[0] + (x + R) / (2 * R) * (CROP[2] - CROP[0])) / SIZE,
+  1 - (CROP[1] + (R - n) / (2 * R) * (CROP[3] - CROP[1])) / SIZE
+];
+const pxToMap = (px, py) => [
+  -R + (px - CROP[0]) / (CROP[2] - CROP[0]) * 2 * R,
+   R - (py - CROP[1]) / (CROP[3] - CROP[1]) * 2 * R
+];
+
+// ground
+const groundGeo = new THREE.PlaneGeometry(2 * R, 2 * R).rotateX(-Math.PI / 2);
+{ const p = groundGeo.attributes.position, uv = groundGeo.attributes.uv;
+  for (let k = 0; k < p.count; k++) uv.setXY(k, ...uvOf(p.getX(k), -p.getZ(k))); }
+const groundMat = new THREE.MeshStandardMaterial({ map: satTex, roughness: 1, transparent: true });
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.receiveShadow = true;
+scene.add(ground);
+
+// ---------- buildings traced from the photo ----------
+const TH = 36.87 * Math.PI / 180;
+const B = [ // x, y(north), length along road, width across, height
+  [11.8,20.5,111,78,13],[-12.9,-84.2,45,15,5],[-84,111,158,135,13],[50.9,113,16,35,7],[16.9,151.3,17,50,6],
+  [-19.7,196.3,15,15,5],[-24,278.7,25,45,7],[48.1,315.3,25,70,6],[72,355,100,30,6],[107,189.5,18,30,5],
+  [225,159.7,15,60,6],[203.9,147,12,50,6],[161.4,121.5,30,30,5],[104.4,136.8,15,15,4],[178.4,56,12,10,4],
+  [97.8,22,15,12,4],[-287,-56.2,132,214,13],[-369,-135.2,53,192,12],[-422,-190,45,170,12],[-420,-288,45,150,12],
+  [-162.2,-110.8,25,18,6],[-314,-250,40,40,4],[-259.4,-262.7,30,15,5],[-293.4,-288.2,35,15,5],[-323.2,-322.2,20,12,4],
+  [-229.6,-207.5,12,55,5]
+];
+const wallMat = new THREE.MeshStandardMaterial({ color: 0xc9c3b6, roughness: 0.55, metalness: 0.25 });
+const roofMat = new THREE.MeshStandardMaterial({ map: satTex, roughness: 0.7 });
+for (const [x, n, L, W, H] of B) {
+  const g = new THREE.BoxGeometry(L, H, W).rotateY(TH).translate(x, H / 2, -n);
+  const p = g.attributes.position, uv = g.attributes.uv;
+  for (let k = 8; k < 12; k++) uv.setXY(k, ...uvOf(p.getX(k), -p.getZ(k)));   // top face shows the real roof
+  const m = new THREE.Mesh(g, [wallMat, wallMat, roofMat, wallMat, wallMat, wallMat]);
+  m.castShadow = m.receiveShadow = true;
+  scene.add(m);
+}
+
+// ---------- underground (depth compressed) ----------
+const layers = [[-0.5,-18,0xb48a55],[-18,-70,0xd2c7a8],[-70,-105,0x7c9db5],[-105,-145,0x5a5552],[-145,-230,0x9c8162],[-230,-260,0x4d3933]];
+const layerMeshes = layers.map(([top, bot, c]) => {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(2 * R, top - bot, 2 * R).translate(0, (top + bot) / 2, 0),
+                           new THREE.MeshStandardMaterial({ color: c, roughness: 0.95 }));
+  m.receiveShadow = true; scene.add(m); return m;
+});
+const outline = new THREE.LineSegments(
+  new THREE.EdgesGeometry(new THREE.BoxGeometry(2 * R, 260, 2 * R).translate(0, -130, 0)),
+  new THREE.LineBasicMaterial({ color: 0xff9a40, transparent: true, opacity: 0 }));
+scene.add(outline);
+
+// ---------- crude oil pockets (same as the Blender model) ----------
+const big = [
+  [191,"665,794 712,753 727,746 741,739 758,737 790,737 806,739 837,749 848,759 860,770 870,783 883,824 863,863 845,888 819,903 790,915 773,918 739,914 702,909 687,879 666,839"],
+  [214,"1149,1445 1151,1409 1162,1378 1201,1339 1224,1331 1234,1336 1275,1369 1293,1391 1301,1425 1287,1493 1278,1526 1245,1545 1201,1549 1188,1549 1179,1538 1160,1514 1152,1498 1151,1481"],
+  [212,"973,750 979,723 982,709 986,696 990,683 1016,650 1061,661 1079,671 1091,678 1110,719 1116,750 1111,765 1087,815 1065,854 1040,855 982,807 973,780"],
+  [193,"674,983 687,950 718,896 729,881 854,901 883,921 896,952 896,1000 889,1030 879,1043 867,1054 822,1078 788,1086 699,1042 675,999"],
+  [188,"1368,232 1378,207 1407,190 1430,184 1495,169 1512,169 1532,172 1581,189 1606,210 1623,231 1605,279 1582,299 1563,307 1511,314 1455,319 1414,312 1372,255"],
+  [201,"569,442 572,425 576,410 598,359 639,343 661,339 726,328 751,331 832,371 855,423 871,464 797,541 751,552 704,553 681,551 608,516 591,506 575,475"],
+  [216,"1353,1080 1360,1041 1374,995 1383,982 1407,959 1421,949 1516,918 1537,924 1558,932 1565,957 1589,1059 1592,1076 1581,1092 1572,1107 1560,1120 1546,1134 1531,1143 1491,1146 1379,1124 1362,1113"],
+  [217,"1103,1413 1115,1376 1121,1367 1142,1358 1166,1348 1178,1347 1189,1350 1241,1375 1251,1382 1251,1404 1249,1422 1244,1441 1231,1458 1216,1474 1205,1481 1178,1479 1128,1455 1118,1449 1109,1442 1105,1432 1104,1423"],
+  [213,"300,607 307,574 311,563 333,545 385,526 488,530 504,538 516,546 527,556 546,584 539,605 528,634 514,642 444,658 427,656 341,641 309,628"]
+];
+const small = [[1281,1194,16,169],[413,1261,19,174],[1446,1123,27,181],[1020,1078,24,188],[672,555,23,187],[809,1303,23,183],
+  [985,1093,28,198],[1436,432,22,210],[989,1022,22,219],[979,1210,20,214],[512,287,17,212],[943,1450,30,202],[150,1618,28,165],[569,166,24,222]];
+
+const oilMat = new THREE.MeshStandardMaterial({ color: 0x100703, roughness: 0.08, metalness: 0.4, emissive: 0xc8460a, emissiveIntensity: 0 });
+const oil = new THREE.Group(); scene.add(oil);
+for (const [depth, s] of big) {
+  const pts = s.split(" ").map(q => pxToMap(...q.split(",").map(Number)));
+  const shape = new THREE.Shape(new THREE.SplineCurve(pts.map(([x, n]) => new THREE.Vector2(x, n)).concat([new THREE.Vector2(...pts[0])])).getPoints(80));
+  const xs = pts.map(p => p[0]), ns = pts.map(p => p[1]);
+  const size = Math.min(Math.max(...xs) - Math.min(...xs), Math.max(...ns) - Math.min(...ns));
+  const t = Math.max(6, size * 0.12);
+  const g = new THREE.ExtrudeGeometry(shape, { depth: t, bevelEnabled: true, bevelThickness: t * 0.8, bevelSize: Math.min(10, size * 0.12), bevelSegments: 6, curveSegments: 40 });
+  g.rotateX(-Math.PI / 2).translate(0, -depth - t / 2, 0);   // shape's y (north) becomes -z
+  oil.add(new THREE.Mesh(g, oilMat));
+}
+for (const [px, py, r, depth] of small) {
+  const [x, n] = pxToMap(px, py), rm = r * 0.55;
+  const m = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), oilMat);
+  m.scale.set(rm, rm * 0.45, rm * 0.8); m.position.set(x, -depth, -n); m.rotation.y = px;
+  oil.add(m);
+}
+
+// ---------- X-ray toggle ----------
+let xray = false, t = 0;
+const btn = document.getElementById("toggle");
+function toggle() {
+  xray = !xray;
+  document.body.classList.toggle("xray", xray);
+  btn.textContent = xray ? "X-RAY ON" : "X-RAY OFF";
+  btn.setAttribute("aria-pressed", xray);
+}
+btn.addEventListener("click", toggle);
+addEventListener("keydown", e => { if (e.key.toLowerCase() === "x") toggle(); });
+
+// ---------- loop ----------
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(() => {
+  const dt = clock.getDelta();
+  t += ((xray ? 1 : 0) - t) * Math.min(1, dt * 4);          // smooth fade
+  groundMat.opacity = 1 - 0.85 * t;
+  groundMat.depthWrite = t < 0.5;
+  for (const m of layerMeshes) m.visible = t < 0.5;
+  outline.material.opacity = 0.6 * t;
+  oilMat.emissiveIntensity = t * (0.55 + 0.25 * Math.sin(clock.elapsedTime * 2.6));
+  controls.update();
+  renderer.render(scene, camera);
+});
+addEventListener("resize", () => {
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
