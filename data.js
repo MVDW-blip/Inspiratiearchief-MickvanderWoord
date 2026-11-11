@@ -5,6 +5,8 @@
 // - page: op welke pagina het staat ("themas", "connectors", "24days" of "presearch1").
 // - Pdf? Zet elke pagina als beeld in de map "pages" (naam-1.jpg, naam-2.jpg, ...) en het aantal bij "pages".
 // - Nieuwe link? Voeg { title, url, image } toe aan "links" (image mag leeg blijven).
+// - Eigen html (een test-out)? Voeg { title, url } toe aan "embeds": hij draait dan in de pagina, tussen beelden en links.
+// - In "text" maakt \n een nieuwe regel.
 
 window.COLLECTIONS = [
   {
@@ -175,8 +177,46 @@ window.COLLECTIONS = [
     "text": "",
     "links": [],
     "folder": "images/24days",
+    "images": []
+  },
+  {
+    "slug": "dag1",
+    "page": "24days",
+    "title": "dag 1",
+    "question": "REAL WORLD HACKS",
+    "text": "Ongeveer de helft van alle winbare olie is al opgepompt: sinds 1900 zo’n 1,6 biljoen vaten. Er zit nog ongeveer evenveel in de grond die we kunnen winnen, rond de 1,5 tot 1,8 biljoen vaten.\n\nDe wereld verbruikt zo’n 102,5 miljoen vaten olie per dag. In dat tempo hebben we nog ongeveer 47 jaar olie over. Daarbij zijn alleen de bewezen reserves meegeteld, gemeten naar het verbruik van 2024.\nMeer dan de helft van de reserves ligt in drie landen:\n– Venezuela: 303,2 miljard vaten\n– Saoedi-Arabië: 267,2 miljard vaten\n– Iran: 208,6 miljard vaten\n\nWat als digitale hacks in games zoals XRAY vision - zouden worden toegepast in deze wereld. Gaat er een punt komen dat dit een soort realiteit kan zijn.\n– een xray voor inbrekers\n– een xray voor de precieze waarde van mensen\n– een xray waar je precies ziet waar de olie ligt.",
+    "folder": "images/24days",
     "images": [
-      "dag1.jpg"
+      "dag1.jpg",
+      "dag1/inbreken.jpg",
+      "dag1/waardevanmensenhack.jpg",
+      "dag1/Scherm_afbeelding 2026-11-11 om 12.10.15.jpg",
+      "dag1/Scherm_afbeelding 2026-11-11 om 12.42.48.jpg",
+      "dag1/Scherm_afbeelding 2026-11-11 om 12.40.33.jpg",
+      "dag1/Scherm_afbeelding 2026-11-11 om 12.40.42.jpg"
+    ],
+    "embeds": [
+      {
+        "title": "X-ray test-out: Afnan Water Factory",
+        "url": "images/24days/dag1/afnan-xray.html"
+      }
+    ],
+    "links": [
+      {
+        "title": "OPEC nudges up global oil reserves estimate despite capex fears",
+        "url": "https://www.spglobal.com/energy/en/news-research/latest-news/crude-oil/070225-opec-nudges-up-global-oil-reserves-estimate-despite-capex-fears",
+        "image": ""
+      },
+      {
+        "title": "Rystad: World’s proven oil reserves equal 14 years of production",
+        "url": "https://dieselnet.com/news/2025/08rystad.php",
+        "image": ""
+      },
+      {
+        "title": "Venezuela, Saudi Arabia, and Iran hold over 50% of the world’s 1.57 trillion barrels in recoverable crude oil reserves",
+        "url": "https://intelpoint.co/insights/venezuela-saudi-arabia-and-iran-hold-over-50-of-the-worlds-1-57-trillion-barrels-in-recoverable-crude-oil-reserves-with-nigeria-among-top-10/",
+        "image": ""
+      }
     ]
   },
   {

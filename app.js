@@ -273,6 +273,20 @@ function buildArchief() {
 
     const grid = sec.querySelector(".gallery");
     items.forEach((it, i) => grid.appendChild(makeImageBlock(c, it.f, i, items)));
+    // eigen html-werk (bijv. een test-out): draait gewoon in de pagina, na de beelden
+    if (c.embeds && c.embeds.length) {
+      const eg = document.createElement("div");
+      eg.className = "embed-gallery";
+      c.embeds.forEach(e => {
+        const fig = document.createElement("figure");
+        fig.className = "embed";
+        fig.innerHTML = `
+          <div class="embed-frame"><iframe src="${encodeURI(e.url)}" title="${esc(e.title)}" loading="lazy" allowfullscreen></iframe></div>
+          <figcaption><span>${esc(e.title)}</span><a href="${encodeURI(e.url)}" target="_blank" rel="noopener">open ↗</a></figcaption>`;
+        eg.appendChild(fig);
+      });
+      sec.appendChild(eg);
+    }
     // websites onderaan het thema, in een eigen rij
     if (links.length) {
       const linkGrid = document.createElement("div");

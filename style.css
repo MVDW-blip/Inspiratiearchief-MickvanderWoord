@@ -176,6 +176,7 @@ a.corner:hover { color: #444; }
   font-size: clamp(14px, 0.3vw + 12px, 17px);
   line-height: 1.35;
 }
+.theme-text { white-space: pre-line; } /* nieuwe regels uit data.js blijven staan */
 .theme-text:empty, .theme-q:empty { display: none; }
 .editing .theme-q:empty, .editing .theme-text:empty { display: block; min-height: 1.3em; }
 
@@ -221,6 +222,22 @@ a.corner:hover { color: #444; }
 }
 .cell-img img:hover, .cell-img video:hover { --s: 1.03; }
 .cell-img img.dragging, .cell-img video.dragging { --s: 1.05; cursor: grabbing; transition: none; }
+
+/* ---------- Eigen html-werk in de pagina (embeds) ---------- */
+.embed-gallery { padding-top: calc(var(--gap-y) * 1.5); }
+.embed { margin: 0; max-width: 1000px; }
+.embed-frame { aspect-ratio: 16 / 10; background: var(--soft); }
+.embed-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
+.embed figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 10px;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+}
+.embed figcaption a:hover { color: #444; }
 
 /* ---------- Linkblok (zoals op Are.na) ---------- */
 .link-slot { position: relative; aspect-ratio: 1; }
