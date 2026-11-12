@@ -6,6 +6,7 @@
 // - Pdf? Zet elke pagina als beeld in de map "pages" (naam-1.jpg, naam-2.jpg, ...) en het aantal bij "pages".
 // - Nieuwe link? Voeg { title, url, image } toe aan "links" (image mag leeg blijven).
 // - Eigen html (een test-out)? Voeg { title, url } toe aan "embeds": hij draait dan in de pagina, tussen beelden en links.
+//   Onder de test-out staat alleen "open ↗"; de title is niet zichtbaar (alleen voor schermlezers).
 // - In "text" maakt \n een nieuwe regel.
 
 window.COLLECTIONS = [
