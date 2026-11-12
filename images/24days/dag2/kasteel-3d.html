@@ -3,14 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kasteel van matglas – 3D</title>
+<title>digitale transparantie studie1 – 3D</title>
 <style>
-  html, body { margin: 0; height: 100%; overflow: hidden; background: #f2f2f2;
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #fff;
     font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
-  canvas { display: block; cursor: grab; }
+  canvas { display: block; cursor: grab; touch-action: none; }
   canvas:active { cursor: grabbing; }
-  .hint, .status { position: fixed; font-size: 11px; letter-spacing: .04em; color: #8a8a8a; pointer-events: none; }
+  .hint, .status, .label { position: fixed; font-size: 11px; letter-spacing: .04em; color: #8a8a8a; pointer-events: none; }
   .hint { left: 12px; bottom: 10px; transition: opacity .8s; }
+  .label { left: 12px; top: 10px; }
   .status { inset: 0; display: grid; place-items: center; }
 </style>
 <!-- dezelfde three.js als de rest van de site -->
@@ -23,27 +24,38 @@
 </head>
 <body>
 <div class="status" id="status">laden…</div>
-<div class="hint" id="hint">sleep om te draaien</div>
+<div class="label" id="label" hidden>digitale transparantie studie1</div>
+<div class="hint" id="hint">sleep om te draaien · sleep een object om het te verschuiven</div>
 
 <script type="module">
-// Het kasteel uit de tekening, in matglas. Slepen = draaien; staat hij stil, dan draait hij langzaam zelf.
-// Model: kasteeltranspa.obj (geëxporteerd uit Blender). Het matglas wordt hier gemaakt, de .mtl wordt niet gebruikt.
+// digitale transparantie, studie 1: het kasteel, een lijst en een melkpak, alle drie in hetzelfde matglas,
+// op wit. Slepen in de ruimte = draaien; een object slepen = het over de vloer verschuiven, zodat de
+// objecten achter elkaar komen te staan en je ziet hoe het licht door meerdere lagen glas gaat.
+// Staat alles stil, dan draait het beeld langzaam zelf.
+// Modellen: .obj uit Blender. Het matglas wordt hier gemaakt, de .mtl-bestanden worden niet gebruikt.
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 
-const MODEL = "kasteeltranspa.obj";
+// ---------- de objecten (hier kun je mee spelen) ----------
+// breedte of hoogte = hoe groot hij in beeld komt, pos = [links/rechts, voor/achter] op de vloer,
+// draai = hoe hij staat (in radialen). Positieve "voor/achter" = dichter bij de kijker.
+const OBJECTS = [
+  { file: "kasteeltranspa.obj",            breedte: 3.0, pos: [0, -0.9],     draai: 0 },
+  { file: "fancy_picture_frame_02_1k.obj", hoogte: 2.3,  pos: [-1.45, 0.95], draai: 0.35 },
+  { file: "long_life_food_1k.obj",         hoogte: 1.9,  pos: [1.4, 0.8],    draai: -0.45 },
+];
 
-// ---------- instellingen voor het matglas (hier kun je mee spelen) ----------
+// ---------- het matglas, voor alle objecten hetzelfde ----------
 const FROST = {
   kleur: 0xffffff,     // glaskleur
   helderheid: 1.0,     // 0 = melkwit en dicht, 1 = zo helder mogelijk
   mat: 0.4,            // 0 = gepolijst, 1 = heel mat (hoe vager je erdoorheen kijkt)
-  dikte: 0.9,          // hoe sterk het glas het licht buigt
-  tint: 0xc3ced9,      // kleur die het glas krijgt waar het dik is
+  dikte: 0.3,          // hoe sterk het glas het licht buigt
+  tint: 0xc3ced9,      // kleur die het glas krijgt waar het dik is (of waar objecten achter elkaar staan)
   korrel: 0.4,         // hoe sterk de korrelige structuur is
-  korrelgrootte: 0.9,  // kleiner getal = grotere korrels
+  korrelgrootte: 2.9,  // kleiner getal = grotere korrels
 };
 
 // ---------- basis ----------
@@ -53,44 +65,18 @@ renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.NeutralToneMapping;
 renderer.toneMappingExposure = 1.0;
-document.body.prepend(renderer.domElement);
+const canvas = renderer.domElement;
+document.body.prepend(canvas);
 
 const scene = new THREE.Scene();
-
-// Achtergrond: zacht verloop van licht naar iets donkerder, zodat het glas iets heeft om te laten zien
-function gradientTexture() {
-  const c = document.createElement("canvas");
-  c.width = 4; c.height = 256;
-  const g = c.getContext("2d");
-  const grd = g.createLinearGradient(0, 0, 0, 256);
-  grd.addColorStop(0.0, "#f8f8f8");
-  grd.addColorStop(0.5, "#e4e4e4");
-  grd.addColorStop(1.0, "#b3b6ba");
-  g.fillStyle = grd; g.fillRect(0, 0, 4, 256);
-  const t = new THREE.CanvasTexture(c);
-  t.colorSpace = THREE.SRGBColorSpace;
-  return t;
-}
-scene.background = gradientTexture();
+scene.background = new THREE.Color(0xffffff);   // wit, net als de pagina eromheen
 
 // omgeving voor zachte reflecties
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 scene.environmentIntensity = 0.9;
 
-const camera = new THREE.PerspectiveCamera(32, innerWidth / innerHeight, 0.05, 100);
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
-controls.enablePan = false;
-controls.rotateSpeed = 0.8;
-controls.maxPolarAngle = Math.PI * 0.53;   // niet onder de vloer kijken
-// zoomen alleen als de pagina los geopend is, zodat scrollen door het archief niet blijft haken
-const standalone = window.self === window.top;
-controls.enableZoom = standalone;
-if (standalone) document.getElementById("hint").textContent = "sleep om te draaien · scroll om te zoomen";
-controls.autoRotate = true;
-controls.autoRotateSpeed = 0.9;
+const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.05, 100);
 
 // licht
 scene.add(new THREE.HemisphereLight(0xffffff, 0xd0d4da, 0.6));
@@ -101,10 +87,149 @@ const rim = new THREE.DirectionalLight(0xe6edff, 1.6);   // koele rand van achte
 rim.position.set(4, 2.5, -5);
 scene.add(rim);
 
-// zachte schaduw op de vloer (een vervaagde vlek, draait mee met het kasteel)
-function shadowBlob() {
+// ---------- objecten verschuiven ----------
+// Dit luistert vóór het draaien (OrbitControls), zodat een klik op een object dat object pakt
+// en een klik ernaast het beeld draait.
+const items = [];                       // { holder, meshes, along, r, h }
+const ray = new THREE.Raycaster();
+const ndc = new THREE.Vector2();
+const floor = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+const hitP = new THREE.Vector3();
+const LIMIT = 4.5;                      // zo ver mogen objecten van het midden af
+let drag = null;                        // { item, offset, pointerId }
+
+function aim(e) {
+  const r = canvas.getBoundingClientRect();
+  ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  ray.setFromCamera(ndc, camera);
+}
+function pick(e) {
+  aim(e);
+  const hit = ray.intersectObjects(items.flatMap(it => it.meshes), false)[0];
+  return hit ? items.find(it => it.meshes.includes(hit.object)) : null;
+}
+
+canvas.addEventListener("pointerdown", e => {
+  if (e.pointerType === "mouse" && e.button !== 0) return;
+  const item = pick(e);
+  if (!item || !ray.ray.intersectPlane(floor, hitP)) return;
+  drag = { item, pointerId: e.pointerId, offset: item.holder.position.clone().sub(hitP) };
+  controls.enabled = false;
+  pauseAutoRotate();
+  try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* geen actieve aanwijzer: slepen werkt dan zonder capture */ }
+  canvas.style.cursor = "grabbing";
+  e.preventDefault();
+  e.stopImmediatePropagation();         // niet ook nog het beeld laten draaien
+});
+
+canvas.addEventListener("pointermove", e => {
+  if (drag && e.pointerId === drag.pointerId) {
+    aim(e);
+    if (ray.ray.direction.y > -0.02 || !ray.ray.intersectPlane(floor, hitP)) return; // bijna horizontaal kijken: niet springen
+    const p = drag.item.holder.position;
+    p.x = hitP.x + drag.offset.x;
+    p.z = hitP.z + drag.offset.z;
+    const d = Math.hypot(p.x, p.z);
+    if (d > LIMIT) { p.x *= LIMIT / d; p.z *= LIMIT / d; }
+    separate(drag.item);
+    return;
+  }
+  if (e.pointerType === "mouse" && !e.buttons) canvas.style.cursor = pick(e) ? "move" : "";
+});
+
+function endDrag(e) {
+  if (!drag || e.pointerId !== drag.pointerId) return;
+  if (canvas.hasPointerCapture(e.pointerId)) canvas.releasePointerCapture(e.pointerId);
+  drag = null;
+  controls.enabled = true;
+  canvas.style.cursor = "";
+  restartAutoRotate();
+}
+canvas.addEventListener("pointerup", endDrag);
+canvas.addEventListener("pointercancel", endDrag);
+
+// Objecten gaan achter elkaar langs, niet door elkaar heen. Elk object is op de vloer een "capsule":
+// een lijnstuk langs zijn lange kant met een dikte eromheen.
+function segment(it) {
+  const p = it.holder.position, a = it.holder.rotation.y;
+  const d = it.along === "x" ? [Math.cos(a), -Math.sin(a)] : [Math.sin(a), Math.cos(a)];
+  return [[p.x - d[0] * it.h, p.z - d[1] * it.h], [p.x + d[0] * it.h, p.z + d[1] * it.h]];
+}
+const clamp01 = v => Math.min(Math.max(v, 0), 1);
+// dichtstbijzijnde punten tussen twee lijnstukken (p1-q1 en p2-q2)
+function closest(p1, q1, p2, q2) {
+  const d1 = [q1[0] - p1[0], q1[1] - p1[1]], d2 = [q2[0] - p2[0], q2[1] - p2[1]], r = [p1[0] - p2[0], p1[1] - p2[1]];
+  const a = d1[0] * d1[0] + d1[1] * d1[1], e = d2[0] * d2[0] + d2[1] * d2[1], f = d2[0] * r[0] + d2[1] * r[1];
+  let s = 0, t = 0;
+  if (a > 1e-9 || e > 1e-9) {
+    if (a <= 1e-9) t = clamp01(f / e);
+    else {
+      const c = d1[0] * r[0] + d1[1] * r[1];
+      if (e <= 1e-9) s = clamp01(-c / a);
+      else {
+        const b = d1[0] * d2[0] + d1[1] * d2[1], den = a * e - b * b;
+        s = den > 1e-9 ? clamp01((b * f - c * e) / den) : 0;
+        t = (b * s + f) / e;
+        if (t < 0) { t = 0; s = clamp01(-c / a); }
+        else if (t > 1) { t = 1; s = clamp01((b - c) / a); }
+      }
+    }
+  }
+  return [[p1[0] + d1[0] * s, p1[1] + d1[1] * s], [p2[0] + d2[0] * t, p2[1] + d2[1] * t]];
+}
+function separate(moving) {
+  const p = moving.holder.position;
+  for (let pass = 0; pass < 4; pass++) for (const other of items) {
+    if (other === moving) continue;
+    const [a0, a1] = segment(moving), [b0, b1] = segment(other);
+    const [ca, cb] = closest(a0, a1, b0, b1);
+    let dx = ca[0] - cb[0], dz = ca[1] - cb[1], d = Math.hypot(dx, dz);
+    const min = moving.r + other.r;
+    if (d >= min) continue;
+    let push = min - d;
+    if (d < 1e-6) {                     // precies op elkaar: wegduwen vanuit de middens
+      dx = p.x - other.holder.position.x; dz = p.z - other.holder.position.z;
+      d = Math.hypot(dx, dz);
+      if (d < 1e-6) { dx = 1; dz = 0; d = 1; }
+      push = min;
+    }
+    p.x += dx / d * push;
+    p.z += dz / d * push;
+  }
+}
+
+// ---------- draaien ----------
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.enablePan = false;
+controls.rotateSpeed = 0.8;
+controls.maxPolarAngle = Math.PI * 0.49;   // niet onder de vloer kijken
+// zoomen alleen als de pagina los geopend is, zodat scrollen door het archief niet blijft haken
+const standalone = window.self === window.top;
+controls.enableZoom = standalone;
+const hint = document.getElementById("hint");
+if (standalone) {
+  hint.textContent += " · scroll om te zoomen";
+  document.getElementById("label").hidden = false;
+}
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.9;
+
+// na loslaten weer rustig verder draaien
+let idleTimer;
+function pauseAutoRotate() { controls.autoRotate = false; clearTimeout(idleTimer); hint.style.opacity = 0; }
+function restartAutoRotate() { clearTimeout(idleTimer); idleTimer = setTimeout(() => (controls.autoRotate = true), 3500); }
+controls.addEventListener("start", pauseAutoRotate);
+controls.addEventListener("end", restartAutoRotate);
+
+// ---------- zachte schaduw op de vloer ----------
+// Vermenigvuldigt met de witte vloer: schaduwen die over elkaar vallen worden samen donkerder,
+// en omdat hij niet doorzichtig is, zie je hem ook door het glas heen.
+const blobTexture = (() => {
   const c = document.createElement("canvas"); c.width = c.height = 256;
   const g = c.getContext("2d");
+  g.fillStyle = "#fff"; g.fillRect(0, 0, 256, 256);
   const grd = g.createRadialGradient(128, 128, 0, 128, 128, 128);
   grd.addColorStop(0, "rgba(40,46,54,0.6)");
   grd.addColorStop(0.5, "rgba(40,46,54,0.24)");
@@ -112,10 +237,13 @@ function shadowBlob() {
   g.fillStyle = grd; g.fillRect(0, 0, 256, 256);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+})();
+function shadowBlob() {
   const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2),
-                           new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false }));
+    new THREE.MeshBasicMaterial({ map: blobTexture, blending: THREE.MultiplyBlending, premultipliedAlpha: true,
+                                  depthWrite: false, toneMapped: false }));
   m.position.y = 0.002;
-  m.renderOrder = -1;
   return m;
 }
 
@@ -164,7 +292,7 @@ function pebbleNormalMap(size = 512) {
   return t;
 }
 
-// het model heeft geen uv's: de korrel wordt vanaf drie kanten erop geprojecteerd
+// de modellen hebben (bruikbare) uv's niet: de korrel wordt vanaf drie kanten erop geprojecteerd
 function boxUV(geo, scale) {
   const p = geo.attributes.position, n = geo.attributes.normal;
   const uv = new Float32Array(p.count * 2);
@@ -187,57 +315,69 @@ const frost = new THREE.MeshPhysicalMaterial({
   thickness: FROST.dikte,
   ior: 1.45,
   attenuationColor: new THREE.Color(FROST.tint),
-  attenuationDistance: 1.1,
+  attenuationDistance: 0.8,   // op wit iets sterker getint, zodat overlappend glas zichtbaar blijft
   specularIntensity: 1,
   normalMap: pebbleNormalMap(),
   normalScale: new THREE.Vector2(FROST.korrel, FROST.korrel),
   side: THREE.DoubleSide,
 });
 
-// ---------- model ----------
-const holder = new THREE.Group();
-scene.add(holder);
-const status = document.getElementById("status");
-
-new OBJLoader().load(MODEL, model => {
+// ---------- modellen laden ----------
+// Elk model wordt op maat gebracht, gecentreerd en op de vloer gezet (direct in de vormen zelf,
+// zodat de glasdikte en de korrel bij alle drie even groot zijn).
+function prepare(model, o) {
+  const bb = new THREE.Box3().setFromObject(model);
+  const size = bb.getSize(new THREE.Vector3()), c = bb.getCenter(new THREE.Vector3());
+  const s = o.breedte ? o.breedte / size.x : o.hoogte / size.y;
+  const meshes = [];
   model.traverse(m => {
     if (!m.isMesh) return;
-    if (!m.geometry.attributes.normal) m.geometry.computeVertexNormals();
-    boxUV(m.geometry, FROST.korrelgrootte);
+    const g = m.geometry;
+    g.translate(-c.x, -bb.min.y, -c.z);
+    g.scale(s, s, s);
+    if (!g.attributes.normal) g.computeVertexNormals();
+    boxUV(g, FROST.korrelgrootte);
     m.material = frost;
+    meshes.push(m);
   });
-  // centreren, op de vloer zetten en schalen naar ca. 3 eenheden breed
-  const bb = new THREE.Box3().setFromObject(model);
-  const size = bb.getSize(new THREE.Vector3()), center = bb.getCenter(new THREE.Vector3());
-  model.position.set(-center.x, -bb.min.y, -center.z);
+  const holder = new THREE.Group();
   holder.add(model);
-  const s = 3 / Math.max(size.x, size.y);
-  holder.scale.setScalar(s);
+  holder.position.set(o.pos[0], 0, o.pos[1]);
+  holder.rotation.y = o.draai;
+  const sx = size.x * s, sz = size.z * s;
   const blob = shadowBlob();
-  blob.scale.set(size.x * 1.3, 1, size.z * 2.0);   // in modelmaat, iets ruimer dan de voet
+  blob.scale.set(sx * 1.2 + 0.3, 1, Math.max(sz * 2, 0.5) + 0.2);
   holder.add(blob);
+  scene.add(holder);
+  // botsvorm op de vloer, langs de lange kant
+  const along = sx >= sz ? "x" : "z";
+  const r = Math.min(sx, sz) / 2 + 0.08, h = Math.max(sx, sz) / 2 - Math.min(sx, sz) / 2;
+  return { holder, meshes, along, r, h };
+}
 
-  const h = size.y * s;
-  controls.target.set(0, h * 0.48, 0);
-  camera.position.set(-2.6, h * 0.95, 6.4);
-  controls.minDistance = 3; controls.maxDistance = 14;
+// camera zo neerzetten dat alles in beeld is, schuin van voren zodat de objecten elkaar al deels overlappen
+function frameAll() {
+  const sphere = new THREE.Box3().setFromObject(scene).getBoundingSphere(new THREE.Sphere());
+  const vfov = THREE.MathUtils.degToRad(camera.fov);
+  const hfov = 2 * Math.atan(Math.tan(vfov / 2) * camera.aspect);
+  const dist = sphere.radius / Math.sin(Math.min(vfov, hfov) / 2) * 0.78;
+  controls.target.set(sphere.center.x, sphere.center.y * 0.9, sphere.center.z);
+  camera.position.copy(controls.target).addScaledVector(new THREE.Vector3(-0.42, 0.26, 1).normalize(), dist);
+  controls.minDistance = dist * 0.4;
+  controls.maxDistance = dist * 1.8;
   controls.update();
-  status.remove();
-}, undefined, err => {
-  status.textContent = "het model kon niet geladen worden";
-  console.warn(err);
-});
+}
 
-// ---------- interactie: na loslaten weer rustig verder draaien ----------
-let idleTimer;
-controls.addEventListener("start", () => {
-  controls.autoRotate = false;
-  clearTimeout(idleTimer);
-  document.getElementById("hint").style.opacity = 0;
-});
-controls.addEventListener("end", () => {
-  clearTimeout(idleTimer);
-  idleTimer = setTimeout(() => (controls.autoRotate = true), 3500);
+const status = document.getElementById("status");
+const loader = new OBJLoader();
+Promise.allSettled(OBJECTS.map(o => loader.loadAsync(o.file))).then(results => {
+  results.forEach((res, i) => {
+    if (res.status === "fulfilled") items.push(prepare(res.value, OBJECTS[i]));
+    else console.warn("model niet geladen:", OBJECTS[i].file, res.reason);
+  });
+  if (!items.length) { status.textContent = "de modellen konden niet geladen worden"; return; }
+  frameAll();
+  status.remove();
 });
 
 renderer.setAnimationLoop(() => {

@@ -257,13 +257,13 @@ window.COLLECTIONS = [
     "slug": "dag2",
     "page": "24days",
     "title": "dag 2",
-    "question": "",
+    "question": "digitale transparantie studie1",
     "text": "",
     "folder": "images/24days",
     "images": [],
     "embeds": [
       {
-        "title": "Kasteel van matglas (3D) — sleep om te draaien",
+        "title": "Kasteel, lijst en melkpak in matglas (3D) — sleep om te draaien, sleep een object om het te verschuiven",
         "url": "images/24days/dag2/kasteel-3d.html"
       }
     ],
