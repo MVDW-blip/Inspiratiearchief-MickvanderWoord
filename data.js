@@ -260,7 +260,14 @@ window.COLLECTIONS = [
     "question": "digitale transparantie studie1",
     "text": "",
     "folder": "images/24days",
-    "images": [],
+    "images": [
+      "dag2/1.png",
+      "dag2/2.png",
+      "dag2/screenshot1.png",
+      "dag2/screenshot2.png",
+      "dag2/screenshot3.png",
+      "dag2/screenshot4.png"
+    ],
     "embeds": [
       {
         "title": "Kasteel, lijst en melkpak in matglas (3D) — sleep om te draaien, sleep een object om het te verschuiven",
