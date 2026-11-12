@@ -254,6 +254,22 @@ window.COLLECTIONS = [
     ]
   },
   {
+    "slug": "dag2",
+    "page": "24days",
+    "title": "dag 2",
+    "question": "",
+    "text": "",
+    "folder": "images/24days",
+    "images": [],
+    "embeds": [
+      {
+        "title": "Kasteel van matglas (3D) — sleep om te draaien",
+        "url": "images/24days/dag2/kasteel-3d.html"
+      }
+    ],
+    "links": []
+  },
+  {
     "slug": "presearch1",
     "page": "presearch1",
     "title": "presearch 1",

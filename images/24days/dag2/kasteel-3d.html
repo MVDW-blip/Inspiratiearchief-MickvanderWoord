@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kasteel van matglas – 3D</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #f2f2f2;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  canvas { display: block; cursor: grab; }
+  canvas:active { cursor: grabbing; }
+  .hint, .status { position: fixed; font-size: 11px; letter-spacing: .04em; color: #8a8a8a; pointer-events: none; }
+  .hint { left: 12px; bottom: 10px; transition: opacity .8s; }
+  .status { inset: 0; display: grid; place-items: center; }
+</style>
+<!-- dezelfde three.js als de rest van de site -->
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div class="status" id="status">laden…</div>
+<div class="hint" id="hint">sleep om te draaien</div>
+
+<script type="module">
+// Het kasteel uit de tekening, in matglas. Slepen = draaien; staat hij stil, dan draait hij langzaam zelf.
+// Model: kasteeltranspa.obj (geëxporteerd uit Blender). Het matglas wordt hier gemaakt, de .mtl wordt niet gebruikt.
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
+import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+
+const MODEL = "kasteeltranspa.obj";
+
+// ---------- instellingen voor het matglas (hier kun je mee spelen) ----------
+const FROST = {
+  kleur: 0xffffff,     // glaskleur
+  helderheid: 1.0,     // 0 = melkwit en dicht, 1 = zo helder mogelijk
+  mat: 0.4,            // 0 = gepolijst, 1 = heel mat (hoe vager je erdoorheen kijkt)
+  dikte: 0.9,          // hoe sterk het glas het licht buigt
+  tint: 0xc3ced9,      // kleur die het glas krijgt waar het dik is
+  korrel: 0.4,         // hoe sterk de korrelige structuur is
+  korrelgrootte: 0.9,  // kleiner getal = grotere korrels
+};
+
+// ---------- basis ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NeutralToneMapping;
+renderer.toneMappingExposure = 1.0;
+document.body.prepend(renderer.domElement);
+
+const scene = new THREE.Scene();
+
+// Achtergrond: zacht verloop van licht naar iets donkerder, zodat het glas iets heeft om te laten zien
+function gradientTexture() {
+  const c = document.createElement("canvas");
+  c.width = 4; c.height = 256;
+  const g = c.getContext("2d");
+  const grd = g.createLinearGradient(0, 0, 0, 256);
+  grd.addColorStop(0.0, "#f8f8f8");
+  grd.addColorStop(0.5, "#e4e4e4");
+  grd.addColorStop(1.0, "#b3b6ba");
+  g.fillStyle = grd; g.fillRect(0, 0, 4, 256);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+scene.background = gradientTexture();
+
+// omgeving voor zachte reflecties
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = 0.9;
+
+const camera = new THREE.PerspectiveCamera(32, innerWidth / innerHeight, 0.05, 100);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.enablePan = false;
+controls.rotateSpeed = 0.8;
+controls.maxPolarAngle = Math.PI * 0.53;   // niet onder de vloer kijken
+// zoomen alleen als de pagina los geopend is, zodat scrollen door het archief niet blijft haken
+const standalone = window.self === window.top;
+controls.enableZoom = standalone;
+if (standalone) document.getElementById("hint").textContent = "sleep om te draaien · scroll om te zoomen";
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.9;
+
+// licht
+scene.add(new THREE.HemisphereLight(0xffffff, 0xd0d4da, 0.6));
+const key = new THREE.DirectionalLight(0xffffff, 1.8);
+key.position.set(-2, 8, 5);
+scene.add(key);
+const rim = new THREE.DirectionalLight(0xe6edff, 1.6);   // koele rand van achteren
+rim.position.set(4, 2.5, -5);
+scene.add(rim);
+
+// zachte schaduw op de vloer (een vervaagde vlek, draait mee met het kasteel)
+function shadowBlob() {
+  const c = document.createElement("canvas"); c.width = c.height = 256;
+  const g = c.getContext("2d");
+  const grd = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  grd.addColorStop(0, "rgba(40,46,54,0.6)");
+  grd.addColorStop(0.5, "rgba(40,46,54,0.24)");
+  grd.addColorStop(1, "rgba(40,46,54,0)");
+  g.fillStyle = grd; g.fillRect(0, 0, 256, 256);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2),
+                           new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, toneMapped: false }));
+  m.position.y = 0.002;
+  m.renderOrder = -1;
+  return m;
+}
+
+// ---------- korrelig oppervlak: een kleine "kiezelstructuur" als normal map ----------
+function pebbleNormalMap(size = 512) {
+  let seed = 11;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+  // tegelbare voronoi: per laag een rooster met één willekeurig punt per cel
+  const layer = (cells) => {
+    const pts = new Float32Array(cells * cells * 2);
+    for (let i = 0; i < pts.length; i++) pts[i] = rnd();
+    const h = new Float32Array(size * size);
+    for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+      const u = (x + 0.5) / size * cells, v = (y + 0.5) / size * cells;
+      const ci = Math.floor(u), cj = Math.floor(v);
+      let d1 = 9;
+      for (let dj = -1; dj <= 1; dj++) for (let di = -1; di <= 1; di++) {
+        const ii = (ci + di + cells) % cells, jj = (cj + dj + cells) % cells;
+        const px = ci + di + pts[(jj * cells + ii) * 2], py = cj + dj + pts[(jj * cells + ii) * 2 + 1];
+        const d = (px - u) ** 2 + (py - v) ** 2;
+        if (d < d1) d1 = d;
+      }
+      h[y * size + x] = 1 - Math.min(1, Math.sqrt(d1) / 0.75) ** 2;   // bolletje per cel
+    }
+    return h;
+  };
+  const a = layer(40), b = layer(97);
+  const c = document.createElement("canvas"); c.width = c.height = size;
+  const g = c.getContext("2d");
+  const img = g.createImageData(size, size);
+  const H = (x, y) => { x = (x + size) % size; y = (y + size) % size; const i = y * size + x; return a[i] + 0.45 * b[i]; };
+  const k = 2.2;
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    const dx = (H(x + 1, y) - H(x - 1, y)) * k, dy = (H(x, y + 1) - H(x, y - 1)) * k;
+    const l = Math.hypot(dx, dy, 1);
+    const o = (y * size + x) * 4;
+    img.data[o] = (-dx / l * 0.5 + 0.5) * 255;
+    img.data[o + 1] = (dy / l * 0.5 + 0.5) * 255;
+    img.data[o + 2] = (1 / l * 0.5 + 0.5) * 255;
+    img.data[o + 3] = 255;
+  }
+  g.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  return t;
+}
+
+// het model heeft geen uv's: de korrel wordt vanaf drie kanten erop geprojecteerd
+function boxUV(geo, scale) {
+  const p = geo.attributes.position, n = geo.attributes.normal;
+  const uv = new Float32Array(p.count * 2);
+  for (let i = 0; i < p.count; i++) {
+    const ax = Math.abs(n.getX(i)), ay = Math.abs(n.getY(i)), az = Math.abs(n.getZ(i));
+    let u, v;
+    if (ax >= ay && ax >= az) { u = p.getZ(i); v = p.getY(i); }
+    else if (ay >= az) { u = p.getX(i); v = p.getZ(i); }
+    else { u = p.getX(i); v = p.getY(i); }
+    uv[i * 2] = u * scale; uv[i * 2 + 1] = v * scale;
+  }
+  geo.setAttribute("uv", new THREE.BufferAttribute(uv, 2));
+}
+
+const frost = new THREE.MeshPhysicalMaterial({
+  color: FROST.kleur,
+  metalness: 0,
+  roughness: FROST.mat,
+  transmission: FROST.helderheid,
+  thickness: FROST.dikte,
+  ior: 1.45,
+  attenuationColor: new THREE.Color(FROST.tint),
+  attenuationDistance: 1.1,
+  specularIntensity: 1,
+  normalMap: pebbleNormalMap(),
+  normalScale: new THREE.Vector2(FROST.korrel, FROST.korrel),
+  side: THREE.DoubleSide,
+});
+
+// ---------- model ----------
+const holder = new THREE.Group();
+scene.add(holder);
+const status = document.getElementById("status");
+
+new OBJLoader().load(MODEL, model => {
+  model.traverse(m => {
+    if (!m.isMesh) return;
+    if (!m.geometry.attributes.normal) m.geometry.computeVertexNormals();
+    boxUV(m.geometry, FROST.korrelgrootte);
+    m.material = frost;
+  });
+  // centreren, op de vloer zetten en schalen naar ca. 3 eenheden breed
+  const bb = new THREE.Box3().setFromObject(model);
+  const size = bb.getSize(new THREE.Vector3()), center = bb.getCenter(new THREE.Vector3());
+  model.position.set(-center.x, -bb.min.y, -center.z);
+  holder.add(model);
+  const s = 3 / Math.max(size.x, size.y);
+  holder.scale.setScalar(s);
+  const blob = shadowBlob();
+  blob.scale.set(size.x * 1.3, 1, size.z * 2.0);   // in modelmaat, iets ruimer dan de voet
+  holder.add(blob);
+
+  const h = size.y * s;
+  controls.target.set(0, h * 0.48, 0);
+  camera.position.set(-2.6, h * 0.95, 6.4);
+  controls.minDistance = 3; controls.maxDistance = 14;
+  controls.update();
+  status.remove();
+}, undefined, err => {
+  status.textContent = "het model kon niet geladen worden";
+  console.warn(err);
+});
+
+// ---------- interactie: na loslaten weer rustig verder draaien ----------
+let idleTimer;
+controls.addEventListener("start", () => {
+  controls.autoRotate = false;
+  clearTimeout(idleTimer);
+  document.getElementById("hint").style.opacity = 0;
+});
+controls.addEventListener("end", () => {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => (controls.autoRotate = true), 3500);
+});
+
+renderer.setAnimationLoop(() => {
+  controls.update();
+  renderer.render(scene, camera);
+});
+addEventListener("resize", () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
