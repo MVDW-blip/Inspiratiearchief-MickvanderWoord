@@ -51,10 +51,10 @@ const OBJECTS = [
 const FROST = {
   kleur: 0xffffff,     // glaskleur
   helderheid: 1.0,     // 0 = melkwit en dicht, 1 = zo helder mogelijk
-  mat: 0.4,            // 0 = gepolijst, 1 = heel mat (hoe vager je erdoorheen kijkt)
+  mat: 0.28,           // 0 = gepolijst, 1 = heel mat (hoe vager je erdoorheen kijkt)
   dikte: 0.3,          // hoe sterk het glas het licht buigt
   tint: 0xc3ced9,      // kleur die het glas krijgt waar het dik is (of waar objecten achter elkaar staan)
-  korrel: 0.4,         // hoe sterk de korrelige structuur is
+  korrel: 0.32,        // hoe sterk de korrelige structuur is
   korrelgrootte: 2.9,  // kleiner getal = grotere korrels
 };
 
@@ -315,7 +315,7 @@ const frost = new THREE.MeshPhysicalMaterial({
   thickness: FROST.dikte,
   ior: 1.45,
   attenuationColor: new THREE.Color(FROST.tint),
-  attenuationDistance: 0.8,   // op wit iets sterker getint, zodat overlappend glas zichtbaar blijft
+  attenuationDistance: 1.3,   // hoe dieper het licht door het glas moet, hoe meer tint (groter = doorzichtiger)
   specularIntensity: 1,
   normalMap: pebbleNormalMap(),
   normalScale: new THREE.Vector2(FROST.korrel, FROST.korrel),

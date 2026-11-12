@@ -262,7 +262,6 @@ window.COLLECTIONS = [
     "text": "",
     "folder": "images/24days",
     "images": [
-      "dag2/1.png",
       "dag2/2.png",
       "dag2/screenshot1.png",
       "dag2/screenshot2.png",
