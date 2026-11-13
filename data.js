@@ -2,7 +2,7 @@
 // - title / question / text / links[].title kun je hier aanpassen, of op de site via de knop "Edit"
 //   (daarna "Save" en vervang dit bestand door de download).
 // - Nieuwe afbeelding? Zet hem in de map ("folder") en voeg de bestandsnaam toe aan "images".
-// - page: op welke pagina het staat ("themas", "connectors", "24days", "presearch1" of "presearch2").
+// - page: op welke pagina het staat ("themas", "connectors", "24days" of "lessons").
 // - Pdf? Zet elke pagina als beeld in de map "pages" (naam-1.jpg, naam-2.jpg, ...) en het aantal bij "pages".
 // - Nieuwe link? Voeg { title, url, image } toe aan "links" (image mag leeg blijven).
 // - Eigen html (een test-out)? Voeg { title, url } toe aan "embeds": hij draait dan in de pagina, tussen beelden en links.
@@ -281,7 +281,7 @@ window.COLLECTIONS = [
     "slug": "dag3",
     "page": "24days",
     "title": "dag 3",
-    "question": "",
+    "question": "transparant filament test 1",
     "text": "",
     "links": [],
     "folder": "images/24days",
@@ -298,7 +298,7 @@ window.COLLECTIONS = [
   },
   {
     "slug": "presearch1",
-    "page": "presearch1",
+    "page": "lessons",
     "title": "presearch 1",
     "question": "",
     "text": "",
@@ -350,7 +350,7 @@ window.COLLECTIONS = [
   },
   {
     "slug": "presearch2",
-    "page": "presearch2",
+    "page": "lessons",
     "title": "presearch 2",
     "question": "",
     "text": "",

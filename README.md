@@ -12,11 +12,11 @@ Wijzigingen pushen met GitHub Desktop → **Push origin**; na 1–3 minuten staa
 ## Structuur
 
 - `index.html` — de index: een vierkant met willekeurig opploppende beelden uit de thema's,
-  een zwevend 3D-object (naar overige connecties) en zwevende links naar presearch 1 en 2.
+  een zwevend 3D-object (naar overige connecties) en een zwevend rood stoplicht naar lessons (wordt groen als je erover gaat).
 - `themas.html` — de thema's op één pagina, elk met titel, vraag, tekst, beelden en
   onderaan de websites. Knop rechtsonder: **Shuffle** (alles gaat zweven, **Order** zet alles terug).
 - `connectors.html` — overige connecties, met **Glue** in plaats van Shuffle.
-- `presearch1.html` en `presearch2.html` — presearch 1 en 2, op datum genummerd, zonder Shuffle. Pdf's en .ai-bestanden
+- `lessons.html` — presearch 1 en 2 onder elkaar, op datum genummerd, zonder Shuffle. Pdf's en .ai-bestanden
   kun je pagina voor pagina doorbladeren.
 
 ## Teksten aanpassen

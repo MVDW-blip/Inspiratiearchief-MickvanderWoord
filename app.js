@@ -2,7 +2,7 @@
 // plus bewerken, slepen, lightbox en de Shuffle-knop (alles gaat zweven).
 
 const all = window.COLLECTIONS || [];
-const current = document.body.dataset.page; // "index", "themas", "connectors", "24days", "presearch1" of "presearch2"
+const current = document.body.dataset.page; // "index", "themas", "connectors", "24days" of "lessons"
 const pad = (n, l = 2) => String(n).padStart(l, "0");
 const src = (c, f) => encodeURI(c.folder + "/" + f);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
@@ -194,16 +194,19 @@ function buildIndex() {
   setInterval(next, INTERVAL);
 
   // zwevende tekstlinks naar losse pagina's
-  drift("presearch 1", "presearch1.html");
-  drift("presearch 2", "presearch2.html");
+  // lessons (presearch 1 en 2): een stoplicht, rood; groen zodra je erover gaat
+  drift("lessons", "lessons.html", 0.9, true);
 }
 
 /* ---------- Zwevende tekstlink op de index (drijft om het vierkant heen) ---------- */
-function drift(label, href, speed = 0.9) {
+function drift(label, href, speed = 0.9, dot = false) {
   const a = document.createElement("a");
-  a.className = "drift";
+  a.className = "drift" + (dot ? " drift-dot" : "");
   a.href = href;
-  a.textContent = label;
+  if (dot) {
+    a.setAttribute("aria-label", label);
+    a.innerHTML = `<span class="light"></span><span class="drift-label">${esc(label)}</span>`;
+  } else a.textContent = label;
   document.body.appendChild(a);
 
   let x = innerWidth * (0.55 + Math.random() * 0.3), y = innerHeight * (0.1 + Math.random() * 0.2);
@@ -712,7 +715,7 @@ if (current === "themas") {
   buildArchief();
   buildChrome(shuffleBtn);
 }
-if (current === "presearch1" || current === "presearch2") {
+if (current === "lessons") {
   buildArchief();
   buildChrome(null); // geen Shuffle: alles blijft op volgorde
 }
