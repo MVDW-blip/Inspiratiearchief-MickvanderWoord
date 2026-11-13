@@ -113,34 +113,22 @@ body[data-page="index"] { overflow: hidden; }
 }
 .drift:hover { color: #444; }
 
-/* lessons: een stoplicht dat rood brandt en groen wordt als je erover gaat */
-.drift-dot { padding: 12px; }
+/* presearch: een wazig stoplicht, rood; groen als je erover gaat */
+.drift-dot { padding: 14px; }
 .drift-dot .light {
-  position: relative;
   display: block;
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #ffd9d2 0%, #ff3b2f 38%, #c40c04 100%);
-  box-shadow: 0 0 4px 1px rgba(255, 45, 25, 0.9), 0 0 18px 6px rgba(255, 45, 25, 0.45);
-  transition: box-shadow 0.2s ease;
-}
-/* de waas eromheen, zoals licht achter het glas van een stoplicht */
-.drift-dot .light::after {
-  content: "";
-  position: absolute;
-  inset: -14px;
-  border-radius: 50%;
-  background: rgba(255, 45, 25, 0.5);
-  filter: blur(12px);
-  z-index: -1;
-  transition: background 0.2s ease;
+  background: #ff3b2f;
+  box-shadow: 0 0 14px 7px rgba(255, 45, 25, 0.6);
+  filter: blur(5px);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 .drift-dot:hover .light {
-  background: radial-gradient(circle at 40% 35%, #dcffe4 0%, #2fe46c 38%, #08953a 100%);
-  box-shadow: 0 0 4px 1px rgba(40, 225, 100, 0.9), 0 0 18px 6px rgba(40, 225, 100, 0.45);
+  background: #2fe46c;
+  box-shadow: 0 0 14px 7px rgba(40, 225, 100, 0.6);
 }
-.drift-dot:hover .light::after { background: rgba(40, 225, 100, 0.5); }
 .drift-dot .drift-label {
   position: absolute;
   left: 100%;

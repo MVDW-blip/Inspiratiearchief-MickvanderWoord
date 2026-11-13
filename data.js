@@ -2,7 +2,7 @@
 // - title / question / text / links[].title kun je hier aanpassen, of op de site via de knop "Edit"
 //   (daarna "Save" en vervang dit bestand door de download).
 // - Nieuwe afbeelding? Zet hem in de map ("folder") en voeg de bestandsnaam toe aan "images".
-// - page: op welke pagina het staat ("themas", "connectors", "24days" of "lessons").
+// - page: op welke pagina het staat ("themas", "connectors", "24days" of "presearch").
 // - Pdf? Zet elke pagina als beeld in de map "pages" (naam-1.jpg, naam-2.jpg, ...) en het aantal bij "pages".
 // - Nieuwe link? Voeg { title, url, image } toe aan "links" (image mag leeg blijven).
 // - Eigen html (een test-out)? Voeg { title, url } toe aan "embeds": hij draait dan in de pagina, tussen beelden en links.
@@ -297,8 +297,24 @@ window.COLLECTIONS = [
     ]
   },
   {
+    "slug": "presearch2",
+    "page": "presearch",
+    "title": "presearch 2",
+    "question": "",
+    "text": "",
+    "links": [],
+    "folder": "images/presearch2",
+    "images": [
+      "01_postits.pdf",
+      "02_0001-0240_sound.mp4"
+    ],
+    "pages": {
+      "01_postits.pdf": 3
+    }
+  },
+  {
     "slug": "presearch1",
-    "page": "lessons",
+    "page": "presearch",
     "title": "presearch 1",
     "question": "",
     "text": "",
@@ -346,22 +362,6 @@ window.COLLECTIONS = [
       "26_bronnen_200woorden.pdf": 3,
       "27_tienstappen_mick.pdf": 1,
       "28_mewethey_MickvanderWoord.pdf": 1
-    }
-  },
-  {
-    "slug": "presearch2",
-    "page": "lessons",
-    "title": "presearch 2",
-    "question": "",
-    "text": "",
-    "links": [],
-    "folder": "images/presearch2",
-    "images": [
-      "01_postits.pdf",
-      "02_0001-0240_sound.mp4"
-    ],
-    "pages": {
-      "01_postits.pdf": 3
     }
   }
 ];
