@@ -2,7 +2,7 @@
 // plus bewerken, slepen, lightbox en de Shuffle-knop (alles gaat zweven).
 
 const all = window.COLLECTIONS || [];
-const current = document.body.dataset.page; // "index", "themas", "connectors", "24days" of "presearch1"
+const current = document.body.dataset.page; // "index", "themas", "connectors", "24days", "presearch1" of "presearch2"
 const pad = (n, l = 2) => String(n).padStart(l, "0");
 const src = (c, f) => encodeURI(c.folder + "/" + f);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
@@ -195,6 +195,7 @@ function buildIndex() {
 
   // zwevende tekstlinks naar losse pagina's
   drift("presearch 1", "presearch1.html");
+  drift("presearch 2", "presearch2.html");
 }
 
 /* ---------- Zwevende tekstlink op de index (drijft om het vierkant heen) ---------- */
@@ -711,7 +712,7 @@ if (current === "themas") {
   buildArchief();
   buildChrome(shuffleBtn);
 }
-if (current === "presearch1") {
+if (current === "presearch1" || current === "presearch2") {
   buildArchief();
   buildChrome(null); // geen Shuffle: alles blijft op volgorde
 }

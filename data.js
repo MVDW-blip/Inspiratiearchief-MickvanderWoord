@@ -2,7 +2,7 @@
 // - title / question / text / links[].title kun je hier aanpassen, of op de site via de knop "Edit"
 //   (daarna "Save" en vervang dit bestand door de download).
 // - Nieuwe afbeelding? Zet hem in de map ("folder") en voeg de bestandsnaam toe aan "images".
-// - page: op welke pagina het staat ("themas", "connectors", "24days" of "presearch1").
+// - page: op welke pagina het staat ("themas", "connectors", "24days", "presearch1" of "presearch2").
 // - Pdf? Zet elke pagina als beeld in de map "pages" (naam-1.jpg, naam-2.jpg, ...) en het aantal bij "pages".
 // - Nieuwe link? Voeg { title, url, image } toe aan "links" (image mag leeg blijven).
 // - Eigen html (een test-out)? Voeg { title, url } toe aan "embeds": hij draait dan in de pagina, tussen beelden en links.
@@ -262,6 +262,7 @@ window.COLLECTIONS = [
     "text": "",
     "folder": "images/24days",
     "images": [
+      "dag2/IMG_1134 2 groot.jpeg",
       "dag2/2.png",
       "dag2/screenshot1.png",
       "dag2/screenshot2.png",
@@ -275,6 +276,25 @@ window.COLLECTIONS = [
       }
     ],
     "links": []
+  },
+  {
+    "slug": "dag3",
+    "page": "24days",
+    "title": "dag 3",
+    "question": "",
+    "text": "",
+    "links": [],
+    "folder": "images/24days",
+    "images": [
+      "dag3/IMG_1138 groot.jpeg",
+      "dag3/IMG_1140 groot.jpeg",
+      "dag3/IMG_1141 groot.jpeg",
+      "dag3/IMG_1143 groot.jpeg",
+      "dag3/IMG_1144 groot.jpeg",
+      "dag3/IMG_1147 groot.jpeg",
+      "dag3/IMG_1148 groot.jpeg",
+      "dag3/IMG_1149 groot.jpeg"
+    ]
   },
   {
     "slug": "presearch1",
@@ -326,6 +346,22 @@ window.COLLECTIONS = [
       "26_bronnen_200woorden.pdf": 3,
       "27_tienstappen_mick.pdf": 1,
       "28_mewethey_MickvanderWoord.pdf": 1
+    }
+  },
+  {
+    "slug": "presearch2",
+    "page": "presearch2",
+    "title": "presearch 2",
+    "question": "",
+    "text": "",
+    "links": [],
+    "folder": "images/presearch2",
+    "images": [
+      "01_postits.pdf",
+      "02_0001-0240_sound.mp4"
+    ],
+    "pages": {
+      "01_postits.pdf": 3
     }
   }
 ];
