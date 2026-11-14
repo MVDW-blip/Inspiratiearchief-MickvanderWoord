@@ -233,25 +233,21 @@ a.corner:hover { color: #444; }
   letter-spacing: 0.04em;
 }
 
-/* Sleepbare afbeelding: positie via --x / --y (gezet in app.js) */
+/* Beeld in het raster: niet sleepbaar, een klik opent hem groot */
 .cell-img img,
 .cell-img video {
-  --x: 0px;
-  --y: 0px;
   --s: 1;
   position: relative;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  cursor: grab;
-  touch-action: none;
+  cursor: zoom-in;
   user-select: none;
   -webkit-user-drag: none;
-  transform: translate(var(--x), var(--y)) scale(var(--s));
+  transform: scale(var(--s));
   transition: transform 0.4s ease;
 }
 .cell-img img:hover, .cell-img video:hover { --s: 1.03; }
-.cell-img img.dragging, .cell-img video.dragging { --s: 1.05; cursor: grabbing; transition: none; }
 
 /* ---------- Eigen html-werk in de pagina (embeds) ---------- */
 .embed-gallery { padding-top: calc(var(--gap-y) * 1.5); }
@@ -312,15 +308,12 @@ a.corner:hover { color: #444; }
 .link-url { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
 .link-block:hover .link-title { color: #444; }
 
-/* ---------- Shuffle: zwevende stand ---------- */
+/* ---------- Glue, Replace en Shuffle: de beelden komen los van het raster ---------- */
 .link-preview.floating {
   inset: auto;
   aspect-ratio: 1;
-  cursor: grab;
-  touch-action: none;
   user-select: none;
 }
-.link-preview.dragging { cursor: grabbing; }
 .cell-img img.floating,
 .cell-img video.floating,
 .link-preview.floating {

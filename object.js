@@ -20,6 +20,8 @@ const OBJECTS = [
     link: "connectors.html", label: "overige connecties", start: [0.12, 0.65] },
   { model: "images/24days/Asset 1.obj",
     link: "24days.html", label: "24 days challenge", start: [0.78, 0.7], glass: true },
+  { model: "images/icon/container.obj",
+    link: "alles.html", label: "alle beelden", start: [0.84, 0.08], glass: true },
 ];
 
 // Model laden. Stl: online via het bestand, direct vanuit de map via de kopie in .stl.js
@@ -72,7 +74,8 @@ async function loadModel(o, metal, inner) {
   obj.position.sub(center);
   const holder = new THREE.Group();
   holder.add(obj);
-  holder.scale.setScalar(1.6 / Math.max(size.x, size.y, size.z));
+  // past in beeld, ook als hij draait: de langste kant max. 1.6, de diagonaal max. 1.95
+  holder.scale.setScalar(Math.min(1.6 / Math.max(size.x, size.y, size.z), 1.95 / size.length()));
   return holder;
 }
 
