@@ -297,6 +297,26 @@ window.COLLECTIONS = [
     ]
   },
   {
+    "slug": "dag4",
+    "page": "24days",
+    "title": "dag 4",
+    "question": "koplampen studie",
+    "text": "Met een toekomst schets?",
+    "links": [],
+    "folder": "images/24days",
+    "images": [
+      "dag4/IMG_1154 groot.jpeg",
+      "dag4/IMG_1156 groot.jpeg",
+      "dag4/IMG_1157 groot.jpeg",
+      "dag4/IMG_1158 groot.jpeg",
+      "dag4/IMG_1159 groot.jpeg",
+      "dag4/IMG_1160 groot.jpeg",
+      "dag4/IMG_1161 groot.jpeg",
+      "dag4/IMG_1162 groot.jpeg",
+      "dag3/IMG_1159 groot_bew.png"
+    ]
+  },
+  {
     "slug": "presearch2",
     "page": "presearch",
     "title": "presearch 2",
