@@ -62,7 +62,7 @@ window.COLLECTIONS = [
       "IMG_0949.jpeg",
       "IMG_0967.jpeg",
       "1.mp4",
-      "Scherm_afbeelding 2026-11-05 om 14.36.05.png",
+      "Scherm_afbeelding 2026-11-05 om 14.36.05.jpg",
       "670ac9e1f28153ca29c5b579c3196a2b.jpg",
       "69fefa1143d0f97c41b2f24f_1909 Kraupa Tuskany Zeidler4633 photo__def_image-web.jpg",
       "a6676da070cc64c31ee908159558e0e5.jpg"
@@ -117,10 +117,10 @@ window.COLLECTIONS = [
       "744b74dd441563732e87a2d65d99c166.jpg",
       "11aa9cd45ff9cb937da79eaa44e88579.jpg",
       "6d1ce9ab6044b8194f72820fb245c302.jpg",
-      "IMG_1235.png",
-      "Scherm_afbeelding 2026-09-28 om 09.58.58.png",
-      "Scherm_afbeelding 2026-10-08 om 13.08.09.png",
-      "Scherm_afbeelding 2026-11-04 om 15.48.55.png",
+      "IMG_1235.jpg",
+      "Scherm_afbeelding 2026-09-28 om 09.58.58.jpg",
+      "Scherm_afbeelding 2026-10-08 om 13.08.09.jpg",
+      "Scherm_afbeelding 2026-11-04 om 15.48.55.jpg",
       "steentijdtransparancy.png",
       "steentijdtransparancy_artefact2.png",
       "steentijdtransparancy_bot.png",
@@ -133,8 +133,8 @@ window.COLLECTIONS = [
       "21_tomputman_thisartfair2022.jpg",
       "28_tom_putman_lantern.jpg",
       "6c7e13280caf35fa6cf44566d863cf52.jpg",
-      "Scherm_afbeelding 2026-11-05 om 14.35.41.png",
-      "Scherm_afbeelding 2026-11-05 om 14.35.50.png",
+      "Scherm_afbeelding 2026-11-05 om 14.35.41.jpg",
+      "Scherm_afbeelding 2026-11-05 om 14.35.50.jpg",
       "60312ca914e5e0b2de99bce2_Katja Novitskova Approximation (2jk40 chimera surface ligand, fruit fly).jpg",
       "60312f8a56323c3bac691bf6_Katja Novitskova approximation (trail camera vision, hyena).jpg",
       "60313625bbbc281759ff3dc6_Katja Novitskova Approximation (C elegans dendrite endings AWA, AWB, AWC, AFD).jpg",
@@ -164,7 +164,7 @@ window.COLLECTIONS = [
       "c58ad0f94c2f65367055a487c776761b.jpg",
       "d35cacda8724eac04bf4d774898e1547.jpg",
       "digital-measuring-wheel-10-sdl029580156-1-9495b-500x500-4108573547.jpg",
-      "extudertutucu-591519443.png",
+      "extudertutucu-591519443.jpg",
       "Ferrofluid_in_magnetic_field.jpg",
       "Ferrofluid_simulations_for_different_parameters_of_surface_tension_and_magnetic_field_strengths.png",
       "hex-bolt.jpg",
@@ -182,7 +182,7 @@ window.COLLECTIONS = [
       "Mii-2266542084.jpeg",
       "NS_37_68648dee3ccef.jpg",
       "Nokia_7600.jpg",
-      "Scherm_afbeelding 2026-09-21 om 13.53.35.png",
+      "Scherm_afbeelding 2026-09-21 om 13.53.35.jpg",
       "Scherm_afbeelding 2026-09-21 om 15.14.45.png",
       "Scherm_afbeelding 2026-09-21 om 15.15.39.png",
       "Scherm_afbeelding 2026-09-21 om 15.16.35.png",
@@ -204,16 +204,66 @@ window.COLLECTIONS = [
     "images": []
   },
   {
-    "slug": "test",
+    "slug": "dag4",
     "page": "24days",
-    "title": "test",
-    "question": "",
+    "title": "dag 4",
+    "question": "koplampen studie",
+    "text": "Met een toekomst schets?",
+    "links": [],
+    "folder": "images/24days",
+    "images": [
+      "dag4/IMG_1154 groot.jpeg",
+      "dag4/IMG_1156 groot.jpeg",
+      "dag4/IMG_1157 groot.jpeg",
+      "dag4/IMG_1158 groot.jpeg",
+      "dag4/IMG_1159 groot.jpeg",
+      "dag4/IMG_1160 groot.jpeg",
+      "dag4/IMG_1161 groot.jpeg",
+      "dag4/IMG_1162 groot.jpeg",
+      "dag3/IMG_1159 groot_bew.jpg"
+    ]
+  },
+  {
+    "slug": "dag3",
+    "page": "24days",
+    "title": "dag 3",
+    "question": "transparant filament test 1",
     "text": "",
     "links": [],
     "folder": "images/24days",
     "images": [
-      "test.jpg"
+      "dag3/IMG_1138 groot.jpeg",
+      "dag3/IMG_1140 groot.jpeg",
+      "dag3/IMG_1141 groot.jpeg",
+      "dag3/IMG_1143 groot.jpeg",
+      "dag3/IMG_1144 groot.jpeg",
+      "dag3/IMG_1147 groot.jpeg",
+      "dag3/IMG_1148 groot.jpeg",
+      "dag3/IMG_1149 groot.jpeg"
     ]
+  },
+  {
+    "slug": "dag2",
+    "page": "24days",
+    "title": "dag 2",
+    "question": "digitale transparantie studie1",
+    "text": "",
+    "folder": "images/24days",
+    "images": [
+      "dag2/IMG_1134 2 groot.jpeg",
+      "dag2/2.png",
+      "dag2/screenshot1.jpg",
+      "dag2/screenshot2.jpg",
+      "dag2/screenshot3.jpg",
+      "dag2/screenshot4.jpg"
+    ],
+    "embeds": [
+      {
+        "title": "Kasteel, lijst en melkpak in matglas (3D) — sleep om te draaien, sleep een object om het te verschuiven",
+        "url": "images/24days/dag2/kasteel-3d.html"
+      }
+    ],
+    "links": []
   },
   {
     "slug": "dag1",
@@ -255,65 +305,15 @@ window.COLLECTIONS = [
     ]
   },
   {
-    "slug": "dag2",
+    "slug": "test",
     "page": "24days",
-    "title": "dag 2",
-    "question": "digitale transparantie studie1",
-    "text": "",
-    "folder": "images/24days",
-    "images": [
-      "dag2/IMG_1134 2 groot.jpeg",
-      "dag2/2.png",
-      "dag2/screenshot1.png",
-      "dag2/screenshot2.png",
-      "dag2/screenshot3.png",
-      "dag2/screenshot4.png"
-    ],
-    "embeds": [
-      {
-        "title": "Kasteel, lijst en melkpak in matglas (3D) — sleep om te draaien, sleep een object om het te verschuiven",
-        "url": "images/24days/dag2/kasteel-3d.html"
-      }
-    ],
-    "links": []
-  },
-  {
-    "slug": "dag3",
-    "page": "24days",
-    "title": "dag 3",
-    "question": "transparant filament test 1",
+    "title": "test",
+    "question": "",
     "text": "",
     "links": [],
     "folder": "images/24days",
     "images": [
-      "dag3/IMG_1138 groot.jpeg",
-      "dag3/IMG_1140 groot.jpeg",
-      "dag3/IMG_1141 groot.jpeg",
-      "dag3/IMG_1143 groot.jpeg",
-      "dag3/IMG_1144 groot.jpeg",
-      "dag3/IMG_1147 groot.jpeg",
-      "dag3/IMG_1148 groot.jpeg",
-      "dag3/IMG_1149 groot.jpeg"
-    ]
-  },
-  {
-    "slug": "dag4",
-    "page": "24days",
-    "title": "dag 4",
-    "question": "koplampen studie",
-    "text": "Met een toekomst schets?",
-    "links": [],
-    "folder": "images/24days",
-    "images": [
-      "dag4/IMG_1154 groot.jpeg",
-      "dag4/IMG_1156 groot.jpeg",
-      "dag4/IMG_1157 groot.jpeg",
-      "dag4/IMG_1158 groot.jpeg",
-      "dag4/IMG_1159 groot.jpeg",
-      "dag4/IMG_1160 groot.jpeg",
-      "dag4/IMG_1161 groot.jpeg",
-      "dag4/IMG_1162 groot.jpeg",
-      "dag3/IMG_1159 groot_bew.png"
+      "test.jpg"
     ]
   },
   {
