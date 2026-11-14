@@ -87,13 +87,13 @@ window.COLLECTIONS = `;
 /* ---------- Hoek + werkbalk ---------- */
 let editBtn, downloadBtn;
 
-// Klein grijs linkje terug naar de index, en de vierkante werkbalk met Glue, Replace en Shuffle.
+// Klein grijs linkje terug naar de index, en de vierkante werkbalk met Glue, Replace, Shuffle, Fly en Reset.
 // Nieuw gereedschap? Maak een knop met class "tool" en zet hem in de werkbalk.
 function buildChrome() {
   document.body.insertAdjacentHTML("afterbegin", `<a class="corner" href="index.html">inspiratiearchief Mick van der Woord</a>`);
   const bar = document.createElement("div");
   bar.className = "toolbar";
-  bar.append(glueBtn, replaceBtn, shuffleBtn);
+  bar.append(glueBtn, replaceBtn, shuffleBtn, flyBtn, resetBtn);
   document.body.append(bar);
 }
 
@@ -109,6 +109,7 @@ function tool(label, icon, onclick) {
 function makeImageBlock(c, f, i, items) {
   const cell = document.createElement("figure");
   cell.className = "cell";
+  cell.dataset.order = i; // de oorspronkelijke plek, voor Reset
   cell.innerHTML = `
     <div class="cell-img">${isVideo(f)
       ? `<video class="floater" src="${src(c, f)}" autoplay muted loop playsinline preload="metadata" draggable="false"></video>`
@@ -297,12 +298,14 @@ function buildArchief() {
   });
 }
 
-/* ---------- Glue, Replace en Shuffle ---------- */
-// Slepen kan niet meer. Op elke archiefpagina staan drie knoppen:
+/* ---------- Glue, Replace, Shuffle, Fly en Reset ---------- */
+// Slepen kan niet meer. Op elke archiefpagina staan vijf knoppen:
 //   Glue    – alle beelden plakken aan de cursor (nog eens drukken: terug in het raster)
-//   Replace – alle beelden springen naar een nieuwe, willekeurige plek; elke klik weer een andere
-//   Shuffle – alle beelden gaan zweven (nog eens drukken: terug in het raster)
-// Van de ene stand kun je meteen naar de andere; Esc zet alles altijd terug in het raster.
+//   Replace – de beelden wisselen van plek binnen het raster; elke klik een andere volgorde
+//   Shuffle – alle beelden springen naar een willekeurige plek op het scherm; elke klik een andere
+//   Fly     – alle beelden gaan zweven (nog eens drukken, "Land": terug in het raster)
+//   Reset   – alles terug op de oorspronkelijke plek en in de oorspronkelijke volgorde
+// Van de ene stand kun je meteen naar de andere; Esc zet alles terug in het raster.
 const bodies = new Map();
 let rafId = null, lastFrame = 0, mode = null, returning = false, topZ = 10;
 const rand = (a, b) => a + Math.random() * (b - a);
@@ -312,8 +315,10 @@ const clamp01 = t => Math.min(Math.max(t, 0), 1);
 const upright = r => ((r % 360) + 540) % 360 - 180; // kortste draai terug naar rechtop
 
 const glueBtn = tool("Glue", "✣", () => setMode(mode === "glue" ? null : "glue"));
-const replaceBtn = tool("Replace", "⤨", () => setMode("replace"));
-const shuffleBtn = tool("Shuffle", "⁂", () => setMode(mode === "shuffle" ? null : "shuffle"));
+const replaceBtn = tool("Replace", "⇄", () => reorder("random"));
+const shuffleBtn = tool("Shuffle", "⤨", () => setMode("shuffle"));
+const flyBtn = tool("Fly", "⁂", () => setMode(mode === "fly" ? null : "fly"));
+const resetBtn = tool("Reset", "↺", () => reorder("original"));
 
 function setMode(m) {
   if (returning) return;
@@ -324,23 +329,24 @@ function setMode(m) {
     return stopChaos();
   }
   cancelAnimationFrame(rafId);
+  settleCells(); // een Replace-animatie die nog loopt eerst afmaken
   mode = m;
   updateButtons();
   lift();
-  if (m === "shuffle") startChaos();
+  if (m === "fly") startFly();
   else if (m === "glue") startGlue();
-  else startReplace();
+  else startShuffle();
 }
 
 function updateButtons() {
   glueBtn.querySelector("span").textContent = mode === "glue" ? "Unglue" : "Glue";
-  shuffleBtn.querySelector("span").textContent = mode === "shuffle" ? "Order" : "Shuffle";
+  flyBtn.querySelector("span").textContent = mode === "fly" ? "Land" : "Fly";
   glueBtn.setAttribute("aria-pressed", mode === "glue");
-  replaceBtn.setAttribute("aria-pressed", mode === "replace");
   shuffleBtn.setAttribute("aria-pressed", mode === "shuffle");
+  flyBtn.setAttribute("aria-pressed", mode === "fly");
   document.body.classList.toggle("glued", mode === "glue");
-  document.body.classList.toggle("replaced", mode === "replace");
-  document.body.classList.toggle("chaos", mode === "shuffle");
+  document.body.classList.toggle("shuffled", mode === "shuffle");
+  document.body.classList.toggle("flying", mode === "fly");
 }
 
 // (capture: dit loopt vóór de lightbox, zodat Esc eerst alleen de lightbox sluit)
@@ -378,8 +384,8 @@ function lift() {
   });
 }
 
-/* Shuffle: alles gaat zweven */
-function startChaos() {
+/* Fly: alles gaat zweven */
+function startFly() {
   const W = viewW(), H = innerHeight, now = performance.now();
   bodies.forEach(b => {
     const toW = rand(110, Math.min(300, W * 0.35));
@@ -392,10 +398,10 @@ function startChaos() {
     };
   });
   lastFrame = now;
-  rafId = requestAnimationFrame(tick);
+  rafId = requestAnimationFrame(flyTick);
 }
 
-function tick() {
+function flyTick() {
   const now = performance.now();
   const dt = Math.min((now - lastFrame) / 16.67, 3); // 1 = één frame op 60fps
   lastFrame = now;
@@ -432,11 +438,11 @@ function tick() {
     if (b.y > H - b.h) { b.y = Math.max(0, H - b.h); b.vy = -Math.abs(b.vy); }
     place(b);
   });
-  rafId = requestAnimationFrame(tick);
+  rafId = requestAnimationFrame(flyTick);
 }
 
-/* Replace: elk beeld krijgt een nieuwe, willekeurige plek en blijft daar liggen */
-function startReplace() {
+/* Shuffle: elk beeld krijgt een willekeurige plek op het scherm en blijft daar liggen */
+function startShuffle() {
   const W = viewW(), H = innerHeight, now = performance.now();
   // ook de stapelvolgorde opnieuw husselen (vanaf onderen, zodat de knoppen er altijd boven blijven)
   topZ = 10;
@@ -449,10 +455,10 @@ function startReplace() {
       x1: rand(0, Math.max(0, W - w1)), y1: rand(0, Math.max(0, H - w1 * b.aspect)), w1
     };
   });
-  rafId = requestAnimationFrame(replaceTick);
+  rafId = requestAnimationFrame(shuffleTick);
 }
 
-function replaceTick() {
+function shuffleTick() {
   const now = performance.now();
   let busy = false;
   bodies.forEach(b => {
@@ -467,7 +473,7 @@ function replaceTick() {
     place(b);
     if (t < 1) busy = true;
   });
-  rafId = busy ? requestAnimationFrame(replaceTick) : null;
+  rafId = busy ? requestAnimationFrame(shuffleTick) : null;
 }
 
 /* Glue: alle beelden plakken aan de cursor */
@@ -570,6 +576,64 @@ function stopChaos() {
 }
 
 addEventListener("resize", () => bodies.forEach(measure));
+
+/* Replace en Reset: een andere (of de oorspronkelijke) volgorde binnen het raster */
+function reorder(how) {
+  const loose = !!mode || returning; // zweven ze, dan vliegen ze straks naar hun nieuwe vak
+  if (!loose) settleCells();
+  document.querySelectorAll(".gallery:not(.link-gallery)").forEach(g => {
+    const cells = [...g.children].filter(el => el.classList.contains("cell"));
+    if (cells.length < 2) return;
+    let next;
+    if (how === "original") next = cells.slice().sort((a, b) => a.dataset.order - b.dataset.order);
+    else {
+      // husselen, en zorgen dat het echt een andere volgorde is
+      for (let tries = 0; tries < 5; tries++) {
+        next = cells.slice();
+        for (let i = next.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [next[i], next[j]] = [next[j], next[i]];
+        }
+        if (next.some((c, i) => c !== cells[i])) break;
+      }
+    }
+    if (next.every((c, i) => c === cells[i])) return;
+    const before = loose ? null : new Map(cells.map(c => [c, c.getBoundingClientRect()]));
+    next.forEach(c => g.appendChild(c));
+    if (before) glide(cells, before);
+  });
+  if (mode) setMode(null);
+}
+
+// elk vak glijdt van zijn oude naar zijn nieuwe plek
+function glide(cells, before) {
+  const moving = [];
+  cells.forEach(c => {
+    const a = before.get(c), b = c.getBoundingClientRect();
+    const dx = a.left - b.left, dy = a.top - b.top;
+    if (!dx && !dy) return;
+    c.style.transition = "none";
+    c.style.transform = `translate(${dx}px, ${dy}px)`;
+    moving.push(c);
+  });
+  document.body.offsetWidth; // beginstand vastleggen
+  moving.forEach(c => {
+    c.style.transition = `transform ${rand(0.7, 1).toFixed(2)}s cubic-bezier(0.2, 0.7, 0.2, 1) ${rand(0, 0.15).toFixed(2)}s`;
+    c.style.transform = "";
+    c.addEventListener("transitionend", () => (c.style.transition = ""), { once: true });
+  });
+}
+
+// een glijdend vak direct op zijn plek zetten (anders kloppen de maten niet als de beelden loskomen)
+function settleCells() {
+  document.querySelectorAll(".gallery > .cell").forEach(c => {
+    if (!c.style.transform && !c.style.transition) return;
+    c.style.transition = "none";
+    c.style.transform = "";
+    c.offsetWidth;
+    c.style.transition = "";
+  });
+}
 
 /* ---------- Lightbox ---------- */
 let lb, lbImg, lbVid, lbCount, lbCap, lbPage, lbItems, lbIndex, lbP = 1;
