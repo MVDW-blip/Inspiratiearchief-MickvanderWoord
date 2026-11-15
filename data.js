@@ -25,7 +25,7 @@ window.COLLECTIONS = [
       {
         "title": "Glasmuseum – Beeldbank RCE",
         "url": "https://beeldbank.cultureelerfgoed.nl/glasmuseum/?mode=gallery&view=horizontal&sort=random%7B1793802601188%7D%20asc",
-        "image": ""
+        "image": "images/links/glasmuseum-beeldbank.jpg"
       },
       {
         "title": "Osiris",
@@ -40,7 +40,7 @@ window.COLLECTIONS = [
       {
         "title": "Peim van der Sloot",
         "url": "https://peim.cargo.site/",
-        "image": ""
+        "image": "images/links/peim-van-der-sloot.jpg"
       },
       {
         "title": "Katja Novitskova",
@@ -98,7 +98,7 @@ window.COLLECTIONS = [
       {
         "title": "McDonald's in 2002 – Web Design Museum",
         "url": "https://www.webdesignmuseum.org/gallery/mcdonalds-in-2002",
-        "image": ""
+        "image": "images/links/mcdonalds-2002.jpg"
       },
       {
         "title": "Europeana – Share3D",
@@ -234,32 +234,32 @@ window.COLLECTIONS = [
       {
         "title": "Richard Mosse: NGV Triennial 2017",
         "url": "https://www.ngv.vic.gov.au/multimedia/richard-mosse/",
-        "image": ""
+        "image": "images/links/richard-mosse-ngv.jpg"
       },
       {
         "title": "Russian troops are trying to hide from Ukraine's night vision drones",
         "url": "https://euromaidanpress.com/2025/05/17/russian-troops-are-trying-to-hide-from-ukraines-night-vision-drones/?swcfpc=1",
-        "image": ""
+        "image": "images/links/euromaidan-night-vision.jpg"
       },
       {
         "title": "Thermography",
         "url": "https://en.wikipedia.org/wiki/Thermography",
-        "image": ""
+        "image": "images/links/thermography-wikipedia.jpg"
       },
       {
         "title": "Strava Heatmap Reveals Secret Military Base Locations and Soldier Patrol Routes",
         "url": "https://bad.technology/articles/strava-heatmap-reveals-secret-military-base-locations-and-soldier-patrol-routes.html",
-        "image": ""
+        "image": "images/links/strava-heatmap.jpg"
       },
       {
         "title": "FaceCheck – face recognition search",
         "url": "https://facecheck.id/#GtNzRMr4Gk4",
-        "image": ""
+        "image": "images/links/facecheck.jpg"
       },
       {
         "title": "Mugshots.com",
         "url": "https://mugshots.com/",
-        "image": ""
+        "image": "images/links/mugshots.jpg"
       }
     ]
   },
@@ -350,17 +350,17 @@ window.COLLECTIONS = [
       {
         "title": "OPEC nudges up global oil reserves estimate despite capex fears",
         "url": "https://www.spglobal.com/energy/en/news-research/latest-news/crude-oil/070225-opec-nudges-up-global-oil-reserves-estimate-despite-capex-fears",
-        "image": ""
+        "image": "images/links/opec-reserves.jpg"
       },
       {
         "title": "Rystad: World’s proven oil reserves equal 14 years of production",
         "url": "https://dieselnet.com/news/2025/08rystad.php",
-        "image": ""
+        "image": "images/links/rystad-dieselnet.jpg"
       },
       {
         "title": "Venezuela, Saudi Arabia, and Iran hold over 50% of the world’s 1.57 trillion barrels in recoverable crude oil reserves",
         "url": "https://intelpoint.co/insights/venezuela-saudi-arabia-and-iran-hold-over-50-of-the-worlds-1-57-trillion-barrels-in-recoverable-crude-oil-reserves-with-nigeria-among-top-10/",
-        "image": ""
+        "image": "images/links/intelpoint-oil.jpg"
       }
     ]
   },
