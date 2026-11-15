@@ -886,6 +886,7 @@ function setHeat(on) {
 }
 
 const heatBtn = tool("Heatmap", "◉", () => setHeat(!heatStore.on));
+heatBtn.insertAdjacentHTML("beforeend", `<em class="tool-new">new</em>`); // klein groen "nieuw"-label
 
 /* ---------- Start ---------- */
 if (current === "index") {

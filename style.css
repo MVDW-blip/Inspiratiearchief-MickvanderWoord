@@ -357,7 +357,21 @@ a.corner:hover { color: #444; }
   text-align: left;
   transition: background 0.15s ease, color 0.15s ease;
 }
+.tool { position: relative; }
 .tool i { font-style: normal; font-size: 9px; }
+/* klein groen "new"-label op een nieuwe knop */
+.tool-new {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 1px 3px;
+  background: #2fe46c;
+  color: #fff;
+  font-style: normal;
+  font-size: 8px;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
 .tool:hover { background: var(--bg); color: #444; }
 .tool[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .tool:disabled { opacity: 0.4; cursor: default; background: var(--soft); color: var(--ink); }

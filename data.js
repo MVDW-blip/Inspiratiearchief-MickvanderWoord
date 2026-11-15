@@ -210,7 +210,7 @@ window.COLLECTIONS = [
     "page": "24days",
     "title": "dag 5",
     "question": "Hittekaart - onzichtbare sporen - facechecker",
-    "text": "Sporen van het internet wat wordt vastgelegd, waar een gebruiker is geweest is vaak onzichtbaar, vastgelegd in een datacenter, wat als iets simpels als de sporen van een muis als een soort hittemap/ tracker wordt bijgehouden op elk mogelijke site. Uitgewerkt als test op deze site.\n\nOok een bizarre site gevonden waarbij je precies iemand zijn gezicht kan vinden en hij heeft mij gelijk gevonden, ik weet nog niet zo goed wat ik ermee moet maar dit is wel te bizar.",
+    "text": "Sporen van het internet wat wordt vastgelegd, waar een gebruiker is geweest is vaak onzichtbaar, vastgelegd in een datacenter, wat als iets simpels als de sporen van een muis als een soort hittemap/ tracker wordt bijgehouden op elk mogelijke site. Uitgewerkt als test op deze site. Check nieuwe knop in de hoek.\n\nOok een bizarre site gevonden waarbij je precies iemand zijn gezicht kan vinden en hij heeft mij gelijk gevonden, ik weet nog niet zo goed wat ik ermee moet maar dit is wel te bizar.",
     "folder": "images/24days",
     "images": [
       "dag5/Scherm_afbeelding 2026-11-15 om 19.40.57.jpg",
@@ -223,7 +223,12 @@ window.COLLECTIONS = [
       "dag5/Active-Infrared-Night-Vision.jpg",
       "dag5/Wiki_snake_eats_mouse.jpg",
       "dag5/1_5YxHl5cXDyFr3RdWF2CDAw groot.jpeg",
-      "dag5/thermal-blanket-1.jpg"
+      "dag5/thermal-blanket-1.jpg",
+      "dag5/Scherm_afbeelding 2026-11-15 om 21.11.39 normaal.jpeg",
+      "dag5/Scherm_afbeelding 2026-11-15 om 21.11.52 normaal.jpeg",
+      "dag5/Scherm_afbeelding 2026-11-15 om 21.12.02 normaal.jpeg",
+      "dag5/Scherm_afbeelding 2026-11-15 om 21.15.50 normaal.jpeg",
+      "dag5/Scherm_afbeelding 2026-11-15 om 21.16.57 normaal.jpeg"
     ],
     "links": [
       {
