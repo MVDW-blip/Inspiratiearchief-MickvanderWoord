@@ -362,6 +362,33 @@ a.corner:hover { color: #444; }
 .tool[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .tool:disabled { opacity: 0.4; cursor: default; background: var(--soft); color: var(--ink); }
 
+/* ---------- Heatmap: warmtebeeld van waar de muis is geweest ---------- */
+#heatmap {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9000;            /* boven de beelden, onder de knoppen en de lightbox */
+  pointer-events: none;
+}
+.heat-route {
+  position: fixed;
+  z-index: 9001;
+  left: var(--pad);
+  bottom: var(--pad);
+  max-width: calc(100% - 2 * var(--pad) - 360px);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.85);
+  padding: 4px 8px;
+}
+.heat-route span { color: #444; }
+.heat-route b { font-weight: 700; color: #444; }
+.heat-route a:hover { color: #444; }
+@media (max-width: 560px) { .heat-route { max-width: calc(100% - 2 * var(--pad)); bottom: calc(var(--pad) + 64px); } }
+
 /* ---------- Bewerken ---------- */
 .editing [data-edit] { outline: 1px dashed var(--ink); outline-offset: 4px; cursor: text; }
 .editing [data-edit]:focus { outline-style: solid; background: var(--soft); color: #444; }

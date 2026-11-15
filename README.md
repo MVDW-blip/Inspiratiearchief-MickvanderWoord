@@ -30,6 +30,11 @@ beeld opent hem groot.
 - **Reset** — alles terug op de oorspronkelijke plek en volgorde.
 Esc zet alles terug in het raster.
 
+**Heatmap** (ook op de index): vanaf het moment dat je de site binnenkomt wordt op elke pagina
+bijgehouden waar je muis is geweest — een spoor als je beweegt, warmer waar je stilstaat. Alleen in je
+eigen browser; weg zodra je het tabblad sluit. De knop laat het zien als warmtebeeld en blijft aan op
+de volgende pagina's; linksonder staat dan je route door de site.
+
 ## Teksten aanpassen
 
 Pas titel, vraag en tekst van een thema aan in `data.js` en push de wijziging.

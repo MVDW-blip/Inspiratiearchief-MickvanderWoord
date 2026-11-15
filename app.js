@@ -87,13 +87,14 @@ window.COLLECTIONS = `;
 /* ---------- Hoek + werkbalk ---------- */
 let editBtn, downloadBtn;
 
-// Klein grijs linkje terug naar de index, en de vierkante werkbalk met Glue, Replace, Shuffle, Fly en Reset.
+// Klein grijs linkje terug naar de index, en de vierkante werkbalk met Glue, Replace, Shuffle, Fly, Reset
+// en Heatmap.
 // Nieuw gereedschap? Maak een knop met class "tool" en zet hem in de werkbalk.
 function buildChrome() {
   document.body.insertAdjacentHTML("afterbegin", `<a class="corner" href="index.html">inspiratiearchief Mick van der Woord</a>`);
   const bar = document.createElement("div");
   bar.className = "toolbar";
-  bar.append(glueBtn, replaceBtn, shuffleBtn, flyBtn, resetBtn);
+  bar.append(glueBtn, replaceBtn, shuffleBtn, flyBtn, resetBtn, heatBtn);
   document.body.append(bar);
 }
 
@@ -726,8 +727,175 @@ function buildAlles() {
   wrap.appendChild(sec);
 }
 
+/* ---------- Heatmap: waar je muis is geweest, sinds je de site binnenkwam ---------- */
+// Op elke pagina wordt bijgehouden waar de muis is: een beetje bij het bewegen, meer waar hij stil blijft
+// staan. Dat blijft in je eigen browser (sessionStorage) en verdwijnt als je het tabblad sluit.
+// De knop "Heatmap" laat het zien als een warmtebeeld; aan blijft aan, ook op de volgende pagina,
+// en linksonder staat dan je route door de site.
+const HEAT_KEY = "inspiratiearchief-heatmap";
+const HEAT_CELL = 8;      // px: zo fijn wordt de muis bijgehouden
+const HEAT_R = 36;        // px: straal van een warme vlek
+const HEAT_SCALE = 0.5;   // tekenresolutie; wazig is juist goed
+const heatPage = location.pathname.split("/").pop() || "index.html";
+const heatNames = { "index.html": "index", "themas.html": "thema's", "connectors.html": "overige connecties",
+  "24days.html": "24 days challenge", "presearch.html": "presearch", "alles.html": "alle beelden" };
+
+let heatStore = {};
+try { heatStore = JSON.parse(sessionStorage.getItem(HEAT_KEY)) || {}; } catch { heatStore = {}; }
+heatStore.pages = heatStore.pages || {};
+heatStore.route = heatStore.route || [];
+if (heatStore.route[heatStore.route.length - 1] !== heatPage) heatStore.route.push(heatPage);
+// cellen: sleutel = rij * 4096 + kolom (in pagina-coördinaten), waarde = warmte
+const heatCells = new Map(Object.entries(heatStore.pages[heatPage] || {}).map(([k, v]) => [+k, v]));
+let heatDirty = true;
+
+function heatSave() {
+  if (!heatDirty) return;
+  const obj = {};
+  heatCells.forEach((w, k) => (obj[k] = Math.round(w * 10) / 10));
+  heatStore.pages[heatPage] = obj;
+  try { sessionStorage.setItem(HEAT_KEY, JSON.stringify(heatStore)); heatDirty = false; } catch { /* vol of geblokkeerd */ }
+}
+setInterval(heatSave, 2000);
+addEventListener("pagehide", heatSave);
+document.addEventListener("visibilitychange", () => { if (document.hidden) heatSave(); });
+
+function heatAdd(docX, docY, w) {
+  const cx = Math.floor(docX / HEAT_CELL), cy = Math.floor(docY / HEAT_CELL);
+  if (cx < 0 || cy < 0 || cx >= 4096) return;
+  const k = cy * 4096 + cx;
+  heatCells.set(k, Math.min(80, (heatCells.get(k) || 0) + w));
+  heatDirty = true;
+}
+
+// muis volgen: bij bewegen een spoor (ook tussen twee metingen in), bij stilstaan steeds warmer
+let heatX = null, heatY = null, heatInside = false, heatMoved = false;
+addEventListener("pointermove", e => {
+  const x = e.clientX + scrollX, y = e.clientY + scrollY;
+  if (heatInside && heatX !== null) {
+    const px = heatX + scrollX, py = heatY + scrollY, d = Math.hypot(x - px, y - py);
+    for (let t = 16; t < d; t += 16) heatAdd(px + (x - px) * t / d, py + (y - py) * t / d, 0.3);
+  }
+  heatAdd(x, y, 0.3);
+  heatX = e.clientX; heatY = e.clientY; heatInside = true; heatMoved = true;
+  heatRequest();
+}, { passive: true });
+document.documentElement.addEventListener("mouseleave", () => (heatInside = false));
+addEventListener("blur", () => (heatInside = false));
+setInterval(() => {
+  if (heatInside && heatX !== null && !heatMoved) { heatAdd(heatX + scrollX, heatY + scrollY, 1); heatRequest(); }
+  heatMoved = false;
+}, 100);
+
+// tekenen: eerst grijze vlekken op elkaar, dan inkleuren als een warmtebeeld
+let heatCanvas = null, heatCtx, heatShadow, heatSctx, heatSprite, heatPalette, heatRoute;
+let heatQueued = false, heatLast = 0;
+
+function heatSetup() {
+  heatCanvas = document.createElement("canvas");
+  heatCanvas.id = "heatmap";
+  heatCanvas.setAttribute("aria-hidden", "true");
+  document.body.appendChild(heatCanvas);
+  heatCtx = heatCanvas.getContext("2d");
+  heatShadow = document.createElement("canvas");
+  heatSctx = heatShadow.getContext("2d", { willReadFrequently: true });
+  // één zachte vlek, die steeds opnieuw gestempeld wordt
+  const r = HEAT_R * HEAT_SCALE;
+  heatSprite = document.createElement("canvas");
+  heatSprite.width = heatSprite.height = Math.ceil(r * 2);
+  const g = heatSprite.getContext("2d"), grd = g.createRadialGradient(r, r, 0, r, r, r);
+  grd.addColorStop(0, "rgba(0,0,0,1)");
+  grd.addColorStop(0.35, "rgba(0,0,0,0.7)");
+  grd.addColorStop(0.7, "rgba(0,0,0,0.22)");
+  grd.addColorStop(1, "rgba(0,0,0,0)");
+  g.fillStyle = grd;
+  g.fillRect(0, 0, r * 2, r * 2);
+  // kleuren van een warmtecamera: van koud paars via rood en oranje naar witgeel
+  const p = document.createElement("canvas");
+  p.width = 256; p.height = 1;
+  const pg = p.getContext("2d"), lin = pg.createLinearGradient(0, 0, 256, 0);
+  [[0, "#120a30"], [0.2, "#3b0f6f"], [0.4, "#8c2981"], [0.58, "#de4968"], [0.74, "#fe9f6d"], [0.88, "#fcd25a"], [1, "#fcfdbf"]]
+    .forEach(([t, c]) => lin.addColorStop(t, c));
+  pg.fillStyle = lin;
+  pg.fillRect(0, 0, 256, 1);
+  heatPalette = pg.getImageData(0, 0, 256, 1).data;
+  for (let i = 0; i < 256; i++) heatPalette[i * 4 + 3] = Math.round(Math.min(1, (i / 255) * 2.4) * 225);
+  // route door de site
+  heatRoute = document.createElement("nav");
+  heatRoute.className = "heat-route";
+  document.body.appendChild(heatRoute);
+  addEventListener("scroll", heatRequest, { passive: true });
+  addEventListener("resize", heatRequest);
+}
+
+function heatRequest() {
+  if (!heatStore.on || heatQueued) return;
+  heatQueued = true;
+  requestAnimationFrame(() => {
+    heatQueued = false;
+    const now = performance.now();
+    if (now - heatLast < 60) return void setTimeout(heatRequest, 60 - (now - heatLast));
+    heatLast = now;
+    heatRender();
+  });
+}
+
+function heatRender() {
+  const W = Math.ceil(innerWidth * HEAT_SCALE), H = Math.ceil(innerHeight * HEAT_SCALE);
+  if (heatCanvas.width !== W || heatCanvas.height !== H) {
+    heatCanvas.width = heatShadow.width = W;
+    heatCanvas.height = heatShadow.height = H;
+  }
+  heatSctx.clearRect(0, 0, W, H);
+  const r = HEAT_R * HEAT_SCALE, d = r * 2;
+  const left = scrollX - HEAT_R, top = scrollY - HEAT_R;
+  const right = scrollX + innerWidth + HEAT_R, bottom = scrollY + innerHeight + HEAT_R;
+  heatCells.forEach((w, k) => {
+    const x = (k % 4096 + 0.5) * HEAT_CELL, y = (Math.floor(k / 4096) + 0.5) * HEAT_CELL;
+    if (x < left || x > right || y < top || y > bottom) return;
+    heatSctx.globalAlpha = 1 - Math.exp(-w * 0.35);
+    heatSctx.drawImage(heatSprite, (x - scrollX) * HEAT_SCALE - r, (y - scrollY) * HEAT_SCALE - r, d, d);
+  });
+  const img = heatSctx.getImageData(0, 0, W, H), px = img.data;
+  for (let i = 0; i < px.length; i += 4) {
+    const o = px[i + 3] * 4;
+    px[i] = heatPalette[o]; px[i + 1] = heatPalette[o + 1]; px[i + 2] = heatPalette[o + 2]; px[i + 3] = heatPalette[o + 3];
+  }
+  heatCtx.putImageData(img, 0, 0);
+}
+
+function heatRouteRender() {
+  const r = heatStore.route.slice(-12);
+  heatRoute.innerHTML = `<span>route</span> ` + (heatStore.route.length > 12 ? "… → " : "") +
+    r.map((p, i) => i === r.length - 1
+      ? `<b>${esc(heatNames[p] || p)}</b>`
+      : `<a href="${encodeURI(p)}">${esc(heatNames[p] || p)}</a>`).join(" → ");
+}
+
+function setHeat(on) {
+  heatStore.on = on;
+  heatDirty = true;
+  heatSave();
+  if (on && !heatCanvas) heatSetup();
+  if (heatCanvas) {
+    heatCanvas.hidden = !on;
+    heatRoute.hidden = !on;
+  }
+  heatBtn.setAttribute("aria-pressed", on);
+  if (on) { heatRouteRender(); heatRender(); }
+}
+
+const heatBtn = tool("Heatmap", "◉", () => setHeat(!heatStore.on));
+
 /* ---------- Start ---------- */
-if (current === "index") buildIndex();
+if (current === "index") {
+  buildIndex();
+  // op de index alleen de Heatmap-knop (er is daar geen raster om mee te spelen)
+  const bar = document.createElement("div");
+  bar.className = "toolbar";
+  bar.append(heatBtn);
+  document.body.append(bar);
+}
 if (["themas", "connectors", "24days", "presearch"].includes(current)) {
   buildArchief();
   buildChrome();
@@ -736,3 +904,6 @@ if (current === "alles") {
   buildAlles();
   buildChrome();
 }
+
+// stond de heatmap aan op de vorige pagina, dan staat hij hier ook aan
+setHeat(!!heatStore.on);

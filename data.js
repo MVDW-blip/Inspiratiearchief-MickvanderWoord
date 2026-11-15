@@ -139,7 +139,9 @@ window.COLLECTIONS = [
       "60312f8a56323c3bac691bf6_Katja Novitskova approximation (trail camera vision, hyena).jpg",
       "60313625bbbc281759ff3dc6_Katja Novitskova Approximation (C elegans dendrite endings AWA, AWB, AWC, AFD).jpg",
       "69b01409c0d9fd5ecd2adb71_SHF_eb00258266-edit-web.jpg",
-      "afebf337ebdd1513ef224dadef25f01b.jpg"
+      "afebf337ebdd1513ef224dadef25f01b.jpg",
+      "bb9d4f0b4c53f1d7a112ca9ea6325092.jpg",
+      "d35fab5ba323bc26b52fa188196849af.jpg"
     ]
   },
   {
@@ -202,6 +204,59 @@ window.COLLECTIONS = [
     "links": [],
     "folder": "images/24days",
     "images": []
+  },
+  {
+    "slug": "dag5",
+    "page": "24days",
+    "title": "dag 5",
+    "question": "Hittekaart - onzichtbare sporen - facechecker",
+    "text": "Sporen van het internet wat wordt vastgelegd, waar een gebruiker is geweest is vaak onzichtbaar, vastgelegd in een datacenter, wat als iets simpels als de sporen van een muis als een soort hittemap/ tracker wordt bijgehouden op elk mogelijke site. Uitgewerkt als test op deze site.\n\nOok een bizarre site gevonden waarbij je precies iemand zijn gezicht kan vinden en hij heeft mij gelijk gevonden, ik weet nog niet zo goed wat ik ermee moet maar dit is wel te bizar.",
+    "folder": "images/24days",
+    "images": [
+      "dag5/Scherm_afbeelding 2026-11-15 om 19.40.57.jpg",
+      "dag5/Scherm_afbeelding 2026-11-15 om 19.43.10.jpg",
+      "dag5/Scherm_afbeelding 2026-11-15 om 19.43.16.jpg",
+      "dag5/Scherm_afbeelding 2026-11-15 om 19.43.20.jpg",
+      "dag5/Passivhaus_thermogram_gedaemmt_ungedaemmt.png",
+      "dag5/ParowozIR.jpg",
+      "dag5/Scherm_afbeelding 2026-11-15 om 19.52.34.jpg",
+      "dag5/Active-Infrared-Night-Vision.jpg",
+      "dag5/Wiki_snake_eats_mouse.jpg",
+      "dag5/1_5YxHl5cXDyFr3RdWF2CDAw groot.jpeg",
+      "dag5/thermal-blanket-1.jpg"
+    ],
+    "links": [
+      {
+        "title": "Richard Mosse: NGV Triennial 2017",
+        "url": "https://www.ngv.vic.gov.au/multimedia/richard-mosse/",
+        "image": ""
+      },
+      {
+        "title": "Russian troops are trying to hide from Ukraine's night vision drones",
+        "url": "https://euromaidanpress.com/2025/05/17/russian-troops-are-trying-to-hide-from-ukraines-night-vision-drones/?swcfpc=1",
+        "image": ""
+      },
+      {
+        "title": "Thermography",
+        "url": "https://en.wikipedia.org/wiki/Thermography",
+        "image": ""
+      },
+      {
+        "title": "Strava Heatmap Reveals Secret Military Base Locations and Soldier Patrol Routes",
+        "url": "https://bad.technology/articles/strava-heatmap-reveals-secret-military-base-locations-and-soldier-patrol-routes.html",
+        "image": ""
+      },
+      {
+        "title": "FaceCheck – face recognition search",
+        "url": "https://facecheck.id/#GtNzRMr4Gk4",
+        "image": ""
+      },
+      {
+        "title": "Mugshots.com",
+        "url": "https://mugshots.com/",
+        "image": ""
+      }
+    ]
   },
   {
     "slug": "dag4",
