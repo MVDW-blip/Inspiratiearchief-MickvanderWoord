@@ -206,6 +206,31 @@ window.COLLECTIONS = [
     "images": []
   },
   {
+    "slug": "dag6",
+    "page": "24days",
+    "title": "dag 6",
+    "question": "Perspectief - a free fall",
+    "text": "360graden perspectief geinspireerd op de tekst van de theorieles (a free fall), wat gebeurd er als de grenzen vervagen van een horizon - vervolg gelegd naar oogopmeting, wat gebeurd er als je een stap kan zetten in deze gemaakte wereld.",
+    "folder": "images/24days",
+    "images": [
+      "dag6/Untitled.jpg",
+      "dag6/2.jpg",
+      "dag6/3.jpg",
+      "dag6/4.jpg",
+      "dag6/5.jpg",
+      "dag6/0001-0050.mp4",
+      "dag6/huis.mp4",
+      "dag6/0001-0240.mp4"
+    ],
+    "links": [
+      {
+        "title": "Hito Steyerl – In Free Fall: A Thought Experiment on Vertical Perspective",
+        "url": "https://www.e-flux.com/journal/24/67860/in-free-fall-a-thought-experiment-on-vertical-perspective/",
+        "image": "images/links/eflux-in-free-fall.jpg"
+      }
+    ]
+  },
+  {
     "slug": "dag5",
     "page": "24days",
     "title": "dag 5",
