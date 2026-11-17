@@ -14,7 +14,7 @@ window.COLLECTIONS = [
     "slug": "greymatterv1",
     "page": "themas",
     "title": "Grey matter V1",
-    "question": "Boodschappen doen, de hond uitlaten, naar schermen kijken. In al die dagelijkse dingen vergeten we haast dat we zelf allemaal dieren zijn, met een grijze massa die gevormd is voor een wereld die niet meer bestaat. Door de acceleratie vervaagt de grens tussen de ‘echte’ en de zelfgemaakte wereld steeds verder.\n\nWie laat hier eigenlijk wie uit?",
+    "question": "Boodschappen doen, de hond uitlaten, naar schermen kijken. In al die dagelijkse dingen vergeten we haast dat we zelf allemaal dieren zijn, met een grijze massa die gevormd is voor een wereld die niet meer bestaat. Door de acceleratie vervaagt de grens tussen de ‘echte’ en de ‘zelfgemaakte’ wereld steeds verder.\n\nHoe kan ik mensen stil laten staan bij hun innerlijke biologie in verband met deze wereld gebouwd op perceptie?",
     "text": "",
     "links": [
       {
@@ -96,6 +96,26 @@ window.COLLECTIONS = [
         "title": "Geokash",
         "url": "https://geokash.com/",
         "image": "images/links/geokash.jpg"
+      },
+      {
+        "title": "Tomoko Wada – Link Lion",
+        "url": "https://www.tomokowada.com/link-lion",
+        "image": "images/links/tomoko-wada-link-lion.jpg"
+      },
+      {
+        "title": "Daily Mail – Is there a ‘God spot’ in the brain?",
+        "url": "https://www.dailymail.com/news/article-2133032/There-God-spot-new-research-claims-instead-spirituality-exists-brain.html",
+        "image": "images/links/dailymail-god-spot.jpg"
+      },
+      {
+        "title": "Decential – ‘There is no real’ (Aww Inc.)",
+        "url": "https://www.decential.io/articles/there-is-no-real-aww-inc-co-founder-takayuki-moriya-wants-his-virtual-humans-to-change-the-world-for-the-better",
+        "image": "images/links/decential-aww.jpg"
+      },
+      {
+        "title": "Aww Inc.",
+        "url": "https://aww.tokyo/en/",
+        "image": "images/links/aww-tokyo.jpg"
       }
     ],
     "folder": "images/greymatterv1",
@@ -151,7 +171,20 @@ window.COLLECTIONS = [
       "3b022ee0f32b3970f33694bcd5090d35.jpg",
       "instagram-format.jpg",
       "393297445_262012286335926_8442102827684750700_n.jpg",
-      "d27c6976dc1910435b8df874ce55aaed.jpg"
+      "d27c6976dc1910435b8df874ce55aaed.jpg",
+      "17e626680690073aa14e66b0d955b426.jpg",
+      "download.png",
+      "0b9e945a48066a02958c541b1ffcce54.jpg",
+      "300d29c33eec6cea88ae7de87fa93e17.jpg",
+      "c0bef35ed58c1ffa52684ee6e098c42e.jpg",
+      "274d52338f976494e689fca92dda0d8d.jpg",
+      "6259b04a7c3c9b182350fc2499ba31d1.jpg",
+      "3ec2bc60ae93fb8e0fb2cf5bb28f098b.jpg",
+      "625edc391c5f6deeeae71caa8c9bf5b0.jpg",
+      "569973251fefe6297c2685131443ae77.jpg",
+      "3f77211a2bd0dcdb085b9a27cbf1a62d.jpg",
+      "9637453d5e0a0135a96f7b46650ec662.jpg",
+      "abf7b0b8bb3fdedaf7f123e89fc7e8a5.gif"
     ]
   },
   {
