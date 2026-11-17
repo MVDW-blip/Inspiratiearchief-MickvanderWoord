@@ -15,6 +15,8 @@ const pageSrc = (c, f, n) => encodeURI(c.folder + "/pages/" + f.replace(/\.(pdf|
 const view = (c, f) => isPdf(f) ? pageSrc(c, f, 1) : src(c, f);
 const pdfLink = (c, f) => /\.pdf$/i.test(f) ? ` <a class="pdf-link" href="${src(c, f)}" target="_blank" rel="noopener">pdf ↗</a>` : "";
 const isVideo = f => /\.(mp4|webm|mov)$/i.test(f);
+// eigen html (bijv. een zonsondergang in code): draait als vierkant tegeltje in het raster
+const isHtml = f => /\.html?$/i.test(f);
 // echte breedte/hoogte van een beeld of video
 const natW = el => el.naturalWidth || el.videoWidth || 0;
 const natH = el => el.naturalHeight || el.videoHeight || 0;
@@ -112,11 +114,14 @@ function makeImageBlock(c, f, i, items) {
   cell.className = "cell";
   cell.dataset.order = i; // de oorspronkelijke plek, voor Reset
   cell.innerHTML = `
-    <div class="cell-img">${isVideo(f)
+    <div class="cell-img">${isHtml(f)
+      ? `<iframe class="floater" src="${src(c, f)}" title="${esc(c.title)} – ${pad(i + 1, 3)}" loading="lazy" scrolling="no"></iframe>`
+      : isVideo(f)
       ? `<video class="floater" src="${src(c, f)}" autoplay muted loop playsinline preload="metadata" draggable="false"></video>`
       : `<img class="floater" src="${view(c, f)}" alt="" loading="lazy" draggable="false">`}</div>
-    <figcaption>${pad(i + 1, 3)}${pdfLink(c, f)}</figcaption>`;
-  cell.querySelector(".floater").addEventListener("click", () => openLightbox(items, i));
+    <figcaption>${pad(i + 1, 3)}${pdfLink(c, f)}${isHtml(f) ? ` <a class="pdf-link" href="${src(c, f)}" target="_blank" rel="noopener">open ↗</a>` : ""}</figcaption>`;
+  // een html-tegel vangt zelf de klik; daarvoor is "open ↗"
+  if (!isHtml(f)) cell.querySelector(".floater").addEventListener("click", () => openLightbox(items, i));
   return cell;
 }
 
@@ -154,7 +159,7 @@ function buildIndex() {
   // het vierkant toont de archief-thema's; connectors heeft zijn eigen zwevende 3D-object
   const items = all.filter(c => (c.page || "themas") === "themas")
     .flatMap(c => c.images.map((f, i) => ({ c, f, n: i + 1 })))
-    .filter(it => !isVideo(it.f)); // het vierkant toont alleen stilstaande beelden
+    .filter(it => !isVideo(it.f) && !isHtml(it.f)); // het vierkant toont alleen stilstaande beelden
 
   home.innerHTML = `
     <span class="corner">inspiratiearchief Mick van der Woord</span>
@@ -637,7 +642,7 @@ function settleCells() {
 }
 
 /* ---------- Lightbox ---------- */
-let lb, lbImg, lbVid, lbCount, lbCap, lbPage, lbItems, lbIndex, lbP = 1;
+let lb, lbImg, lbVid, lbFrame, lbCount, lbCap, lbPage, lbItems, lbIndex, lbP = 1;
 
 function openLightbox(items, i) {
   if (!lb) {
@@ -648,11 +653,13 @@ function openLightbox(items, i) {
       <button class="lb-prev" aria-label="Previous">←</button>
       <img alt="">
       <video controls loop playsinline hidden></video>
+      <iframe hidden title=""></iframe>
       <button class="lb-next" aria-label="Next">→</button>
       <div class="lb-foot"><span class="lb-cap"></span><span class="lb-page"></span><span class="lb-count"></span></div>`;
     document.body.appendChild(lb);
     lbImg = lb.querySelector("img");
     lbVid = lb.querySelector("video");
+    lbFrame = lb.querySelector("iframe");
     lbCount = lb.querySelector(".lb-count");
     lbCap = lb.querySelector(".lb-cap");
     lbPage = lb.querySelector(".lb-page");
@@ -679,11 +686,14 @@ function openLightbox(items, i) {
 
 function showLightbox() {
   const it = lbItems[lbIndex];
-  const vid = isVideo(it.f);
-  lbImg.hidden = vid;
+  const vid = isVideo(it.f), html = isHtml(it.f);
+  lbImg.hidden = vid || html;
   lbVid.hidden = !vid;
+  lbFrame.hidden = !html;
+  if (html) { if (lbFrame.getAttribute("src") !== src(it.c, it.f)) lbFrame.src = src(it.c, it.f); }
+  else lbFrame.removeAttribute("src");
   if (vid) { lbVid.src = src(it.c, it.f); lbVid.play().catch(() => {}); }
-  else { lbVid.pause(); lbVid.removeAttribute("src"); lbImg.src = isPdf(it.f) ? pageSrc(it.c, it.f, lbP) : src(it.c, it.f); }
+  else { lbVid.pause(); lbVid.removeAttribute("src"); if (!html) lbImg.src = isPdf(it.f) ? pageSrc(it.c, it.f, lbP) : src(it.c, it.f); }
   const pages = isPdf(it.f) ? pageCount(it.c, it.f) : 0;
   lbPage.textContent = pages ? `pagina ${lbP} / ${pages}` : "";
   lbImg.classList.toggle("lb-pdf", pages > 1);
@@ -708,6 +718,7 @@ function step(d) {
 function closeLightbox() {
   lb.classList.remove("show");
   lbVid.pause();
+  lbFrame.removeAttribute("src");
   document.body.style.overflow = "";
 }
 

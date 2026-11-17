@@ -248,6 +248,15 @@ a.corner:hover { color: #444; }
   transition: transform 0.4s ease;
 }
 .cell-img img:hover, .cell-img video:hover { --s: 1.03; }
+/* eigen html als tegel (bijv. de zonsondergang in code): vierkant, vult het vak */
+.cell-img iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  height: auto;
+  border: 0;
+  background: var(--soft);
+}
 
 /* ---------- Eigen html-werk in de pagina (embeds) ---------- */
 .embed-gallery { padding-top: calc(var(--gap-y) * 1.5); }
@@ -316,6 +325,7 @@ a.corner:hover { color: #444; }
 }
 .cell-img img.floating,
 .cell-img video.floating,
+.cell-img iframe.floating,
 .link-preview.floating {
   position: fixed;
   left: 0;
@@ -419,6 +429,7 @@ a.corner:hover { color: #444; }
 }
 .lightbox.show { display: flex; }
 .lightbox img, .lightbox video { max-width: 80vw; max-height: 78vh; object-fit: contain; }
+.lightbox iframe { width: min(80vw, 78vh); aspect-ratio: 1; border: 0; }
 .lightbox [hidden] { display: none; }
 .lightbox img.lb-pdf { cursor: pointer; }
 .lb-page { position: absolute; left: 50%; transform: translateX(-50%); }

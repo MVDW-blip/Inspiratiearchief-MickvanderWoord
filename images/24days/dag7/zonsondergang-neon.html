@@ -9,7 +9,7 @@
   .frame { position: fixed; inset: 0; overflow: hidden; }
   canvas { display: block; width: 100%; height: 100%; }
   /* matglas — dezelfde waarden als .frost op de index */
-  .frost canvas { filter: blur(18px) saturate(1.3); transform: scale(1.15); }
+  .frost canvas { filter: blur(3.2vmin) saturate(1.3); transform: scale(1.15); }
   .frost::after {
     content: ""; position: absolute; inset: 0; pointer-events: none;
     background: linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.25));
@@ -23,8 +23,9 @@
 
 <script id="fs" type="x-shader/x-fragment">
 // Neon zonsondergang boven zee — en je vliegt erop af.
-// Zee en wolken zijn twee vlakken (onder en boven je) die naar je toe schieten; vanuit de zon
-// vliegen strepen naar buiten; de horizon deint een beetje mee, alsof je in de lucht hangt.
+// Boven: neon lucht met witte wolken als een plafond dat naar je toe schuift, en strepen die uit de zon vliegen.
+// Onder: groenblauwe zee die onder je door schiet; alleen de zon spiegelt erin.
+// De horizon deint een beetje mee, alsof je in de lucht hangt.
 precision highp float;
 uniform vec2 R;
 uniform float T;
@@ -48,7 +49,7 @@ vec3 sky(float y){
   return mix(c, hue(B + .55) * 1.1, smoothstep(.6, 1., y));
 }
 
-// kunstmatige wolken: harde pixelblokken met een neon rand, als een plafond boven je dat naar je toe komt
+// witte pixelwolken, als een plafond boven je dat naar je toe komt (alleen in de lucht)
 vec4 clouds(vec2 uv, float H){
   float y = uv.y - H;
   float z = .07 / (y + .004);                         // diepte: ver weg bij de horizon
@@ -58,8 +59,8 @@ vec4 clouds(vec2 uv, float H){
   float band = smoothstep(.02, .12, y);               // vlak bij de horizon lost het op in de gloed
   float body = step(.52, n) * band;
   float core = step(.62, n) * band;
-  vec3 c = mix(hue(B + .38 + y * .6) * 1.5, vec3(1.6), core * .55);
-  return vec4(c, body);
+  vec3 c = mix(vec3(1.15), vec3(1.7), core);
+  return vec4(c, body * .9);
 }
 
 void main(){
@@ -82,7 +83,7 @@ void main(){
     // dunne horizontale scanlijnen door de zon, die naar beneden lopen
     col += sunC * step(.5, fract(uv.y * 60. + T * 1.5)) * smoothstep(.13, .0, d) * .8;
     vec4 cl = clouds(uv, H);
-    col = mix(col, cl.rgb + sunC * exp(-d * 3.) * .8, cl.a);
+    col = mix(col, cl.rgb + sunC * exp(-d * 3.) * .9, cl.a);
   } else {
     float dy = H - uv.y;
     float z = .09 / (dy + .006);
@@ -92,20 +93,23 @@ void main(){
     float wx = fbm(wp + vec2(e, 0.)) - w, wz = fbm(wp + vec2(0., e)) - w;
     vec3 n = normalize(vec3(-wx / e * .35, 1., -wz / e * .35));
 
-    // spiegeling van lucht én wolken
-    vec2 m = vec2(uv.x + n.x * .03, H + dy * 1.1 + n.z * .04);
-    vec3 refl = sky(clamp((m.y - H) / (1. - H), 0., 1.));
-    vec4 cl = clouds(m, H);
-    refl = mix(refl, cl.rgb, cl.a * .8);
-    col = refl * mix(1.05, .45, smoothstep(0., .5, dy)) * (.7 + .6 * w);
+    // zee: licht turquoise-groen in de verte, dieper groen dichtbij
+    vec3 far = vec3(.10, .95, .70), near = vec3(.00, .30, .25);
+    col = mix(far, near, smoothstep(0., .45, dy)) * (.65 + .7 * w);
+    // een vleug van de lucht vlak bij de horizon
+    col = mix(col, sky(.05) * .9, exp(-dy * 18.) * .45);
+    // golfkammen vangen wat licht
+    col += vec3(.55, 1., .85) * smoothstep(.62, .8, w) * .25;
 
     float xs = uv.x - .5 + n.x * (.02 + dy * .5);
     float path = exp(-abs(xs) / (.05 + dy * .7));
     vec2 gp = p * vec2(9., 22.) + vec2(T * .3, T * 7. * V);
     float sp = pow(vn(gp), 14.) + pow(vn(gp * 1.9 + 7.3 - T * 2.), 18.);
-    col += sunC * path * (1.3 + 26. * sp) * mix(1.7, .9, smoothstep(0., .45, dy));
-    col += hue(B + .5 + uv.x * .5) * sp * 3. * (1. - path);   // gekleurde glitters
-    col = mix(col, sky(0.) * 1.4, exp(-dy * 55.) * .7);
+    // de zon spiegelt in het water: een glinsterend pad naar je toe
+    col += sunC * path * (1.1 + 26. * sp) * mix(1.6, .8, smoothstep(0., .45, dy));
+    col += vec3(1.) * sp * 1.6 * path;
+    col += vec3(.7, 1., .9) * sp * .8 * (1. - path);              // losse glinsteringen
+    col = mix(col, sky(0.) * 1.3 + sunC * .6, exp(-dy * 60.) * .6);
   }
 
   // snelheidsstrepen: vanuit de zon naar buiten, steeds sneller naarmate ze dichterbij komen
@@ -115,7 +119,7 @@ void main(){
   float lane = step(.7, h21(vec2(k, 3.1)));
   float ph = fract(log(r + .002) * 1.4 - T * 1.1 * V + h21(vec2(k, 7.)));
   float dash = smoothstep(0., .1, ph) * smoothstep(.6, .2, ph);
-  col += mix(sunC, vec3(1.), .5) * lane * dash * smoothstep(.06, .45, r) * .9;
+  col += mix(sunC, vec3(1.), .5) * lane * dash * smoothstep(.06, .45, r) * .8 * step(H, uv.y);
 
   // de rand trekt naar binnen: een lichte tunnel richting de zon
   col *= mix(1., .82, smoothstep(.45, .95, r));

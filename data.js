@@ -8,6 +8,7 @@
 // - Eigen html (een test-out)? Voeg { title, url } toe aan "embeds": hij draait dan in de pagina, tussen beelden en links.
 //   Onder de test-out staat alleen "open ↗"; de title is niet zichtbaar (alleen voor schermlezers).
 // - In "text" en "question" maakt \n een nieuwe regel.
+// - Een .html-bestand in "images" (bijv. iets in code) draait als vierkant tegeltje in het raster, met "open ↗" eronder.
 
 window.COLLECTIONS = [
   {
@@ -275,13 +276,8 @@ window.COLLECTIONS = [
       "dag7/7954-frost.jpg",
       "dag7/52049620541_7a1378f39c-frost.jpg",
       "dag7/52049854334_bdd7987843-frost.jpg",
-      "dag7/zonsondergang-frost.jpg"
-    ],
-    "embeds": [
-      {
-        "title": "Zonsondergang in code, neon — je vliegt op de zon af (live)",
-        "url": "images/24days/dag7/zonsondergang-neon.html"
-      }
+      "dag7/zonsondergang-frost.jpg",
+      "dag7/zonsondergang-neon.html"
     ],
     "links": []
   },
