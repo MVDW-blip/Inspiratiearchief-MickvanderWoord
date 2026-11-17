@@ -1,0 +1,14 @@
+# Blender 5.2.3 LTS MTL File: 'industrial_pastic_container_1k.blend'
+# www.blender.org
+
+newmtl industrial_pastic_container
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2
+map_Kd /Users/mickvanderwoord/Downloads/industrial_pastic_container_1k.blend/textures/industrial_pastic_container_diff_1k.jpg
+map_Ns /Users/mickvanderwoord/Downloads/industrial_pastic_container_1k.blend/textures/industrial_pastic_container_rough_1k.exr
+map_refl /Users/mickvanderwoord/Downloads/industrial_pastic_container_1k.blend/textures/industrial_pastic_container_metal_1k.exr
+map_Bump -bm 1.000000 /Users/mickvanderwoord/Downloads/industrial_pastic_container_1k.blend/textures/industrial_pastic_container_nor_gl_1k.exr

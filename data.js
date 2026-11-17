@@ -249,6 +249,37 @@ window.COLLECTIONS = [
     "images": []
   },
   {
+    "slug": "dag7",
+    "page": "24days",
+    "title": "dag 7",
+    "question": "",
+    "text": "",
+    "folder": "images/24days",
+    "images": [
+      "dag7/random-person_1-frost.jpg",
+      "dag7/random-person_2-frost.jpg",
+      "dag7/random-person_3-frost.jpg",
+      "dag7/random-person_4-frost.jpg",
+      "dag7/random-person_5-frost.jpg",
+      "dag7/random-person_6-frost.jpg",
+      "dag7/random-person_7-frost.jpg",
+      "dag7/random-person_8-frost.jpg",
+      "dag7/random-person_9-frost.jpg",
+      "dag7/random-person-frost.jpg",
+      "dag7/2118-frost.jpg",
+      "dag7/2254-frost.jpg",
+      "dag7/5198-frost.jpg",
+      "dag7/5887-frost.jpg",
+      "dag7/7333-frost.jpg",
+      "dag7/7954-frost.jpg",
+      "dag7/52049620541_7a1378f39c-frost.jpg",
+      "dag7/52049854334_bdd7987843-frost.jpg",
+      "dag7/zonsondergang-frost.jpg",
+      "dag7/zonsondergang-neon-frost.jpg"
+    ],
+    "links": []
+  },
+  {
     "slug": "dag6",
     "page": "24days",
     "title": "dag 6",
