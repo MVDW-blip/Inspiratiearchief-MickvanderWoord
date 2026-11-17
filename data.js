@@ -18,6 +18,66 @@ window.COLLECTIONS = [
     "text": "",
     "links": [
       {
+        "title": "Library of Alexandria",
+        "url": "https://en.wikipedia.org/wiki/Library_of_Alexandria",
+        "image": "images/links/library-of-alexandria.jpg"
+      },
+      {
+        "title": "Glasmuseum – Beeldbank RCE",
+        "url": "https://beeldbank.cultureelerfgoed.nl/glasmuseum/?mode=gallery&view=horizontal&sort=random%7B1793802601188%7D%20asc",
+        "image": "images/links/glasmuseum-beeldbank.jpg"
+      },
+      {
+        "title": "Osiris",
+        "url": "https://osirisai.live/?layers=maritime,cctv,cctv_previews,live_news,earthquakes,global_incidents,day_night,cables,sdk_sea,sdk_air,sdk_naval,wind_controls,rain_controls",
+        "image": "images/links/osiris-ai.jpg"
+      },
+      {
+        "title": "Simon Denny",
+        "url": "https://simondenny.net/",
+        "image": "images/links/simon-denny.jpg"
+      },
+      {
+        "title": "Peim van der Sloot",
+        "url": "https://peim.cargo.site/",
+        "image": "images/links/peim-van-der-sloot.jpg"
+      },
+      {
+        "title": "Katja Novitskova",
+        "url": "https://www.katjanovi.net/",
+        "image": "images/links/katja-novitskova.jpg"
+      },
+      {
+        "title": "Banner Depot 2000",
+        "url": "https://www.banner-depot-2000.net/explore",
+        "image": "images/links/banner-depot-2000.jpg"
+      },
+      {
+        "title": "Irene Molina",
+        "url": "https://irenemolina.xyz/",
+        "image": "images/links/irene-molina.jpg"
+      },
+      {
+        "title": "Olafur Eliasson – The light setup (2005)",
+        "url": "https://olafureliasson.net/artwork/the-light-setup-2005/",
+        "image": "images/links/olafur-eliasson-light-setup.jpg"
+      },
+      {
+        "title": "Cameron's World",
+        "url": "https://www.cameronsworld.net/",
+        "image": "images/links/camerons-world.jpg"
+      },
+      {
+        "title": "McDonald's in 2002 – Web Design Museum",
+        "url": "https://www.webdesignmuseum.org/gallery/mcdonalds-in-2002",
+        "image": "images/links/mcdonalds-2002.jpg"
+      },
+      {
+        "title": "Europeana – Share3D",
+        "url": "https://www.europeana.eu/nl/item/181/share3d_1188",
+        "image": "images/links/europeana-3d.jpg"
+      },
+      {
         "title": "Éamonn Freel",
         "url": "https://eamonnfreel.com/",
         "image": "images/links/eamonn-freel.jpg"
