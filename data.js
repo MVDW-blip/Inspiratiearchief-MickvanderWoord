@@ -8,7 +8,7 @@
 // - Eigen html (een test-out)? Voeg { title, url } toe aan "embeds": hij draait dan in de pagina, tussen beelden en links.
 //   Onder de test-out staat alleen "open ↗"; de title is niet zichtbaar (alleen voor schermlezers).
 // - In "text" en "question" maakt \n een nieuwe regel.
-// - Een .html-bestand in "images" (bijv. iets in code) draait als vierkant tegeltje in het raster, met "open ↗" eronder.
+// - Een .html-bestand in "images" (bijv. iets in code) draait als vierkant tegeltje in het raster; een klik opent hem groot.
 
 window.COLLECTIONS = [
   {

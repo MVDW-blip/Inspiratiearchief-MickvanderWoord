@@ -119,9 +119,10 @@ function makeImageBlock(c, f, i, items) {
       : isVideo(f)
       ? `<video class="floater" src="${src(c, f)}" autoplay muted loop playsinline preload="metadata" draggable="false"></video>`
       : `<img class="floater" src="${view(c, f)}" alt="" loading="lazy" draggable="false">`}</div>
-    <figcaption>${pad(i + 1, 3)}${pdfLink(c, f)}${isHtml(f) ? ` <a class="pdf-link" href="${src(c, f)}" target="_blank" rel="noopener">open ↗</a>` : ""}</figcaption>`;
-  // een html-tegel vangt zelf de klik; daarvoor is "open ↗"
-  if (!isHtml(f)) cell.querySelector(".floater").addEventListener("click", () => openLightbox(items, i));
+    <figcaption>${pad(i + 1, 3)}${pdfLink(c, f)}</figcaption>`;
+  // een html-tegel laat de klik door (pointer-events: none), dus die vangen we op het vak eromheen
+  const target = isHtml(f) ? cell.querySelector(".cell-img") : cell.querySelector(".floater");
+  target.addEventListener("click", () => openLightbox(items, i));
   return cell;
 }
 

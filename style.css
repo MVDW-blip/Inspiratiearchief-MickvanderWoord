@@ -256,7 +256,12 @@ a.corner:hover { color: #444; }
   height: auto;
   border: 0;
   background: var(--soft);
+  pointer-events: none; /* een klik gaat naar het vak: opent hem groot, net als een beeld */
+  transform: scale(var(--s, 1));
+  transition: transform 0.4s ease;
 }
+.cell-img:has(> iframe) { cursor: zoom-in; }
+.cell-img:hover > iframe:not(.floating) { --s: 1.03; }
 
 /* ---------- Eigen html-werk in de pagina (embeds) ---------- */
 .embed-gallery { padding-top: calc(var(--gap-y) * 1.5); }
