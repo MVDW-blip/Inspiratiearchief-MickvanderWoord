@@ -7,48 +7,38 @@
 // - Nieuwe link? Voeg { title, url, image } toe aan "links" (image mag leeg blijven).
 // - Eigen html (een test-out)? Voeg { title, url } toe aan "embeds": hij draait dan in de pagina, tussen beelden en links.
 //   Onder de test-out staat alleen "open ↗"; de title is niet zichtbaar (alleen voor schermlezers).
-// - In "text" maakt \n een nieuwe regel.
+// - In "text" en "question" maakt \n een nieuwe regel.
 
 window.COLLECTIONS = [
   {
-    "slug": "meerisminder",
+    "slug": "greymatterv1",
     "page": "themas",
-    "title": "Informatieoverschot",
-    "question": "Wie de informatie bezit wordt gezien als degene die de macht in handen heeft. Maar hoe verhouden we ons als individuen ons tot de immense hoeveelheid informatie die dagelijks op ons wordt afgevuurd? Hoeveel kunnen we aan en hoeveel wordt er precies verwerkt in onze grijze massa? Hoever zitten wij nu in deze accelleratie en komen we in eenzelfde situatie als in de middeleeuwen waardoor door verbranding informatie werd weggenomen, nu door toe te voegen weg te nemen?",
+    "title": "Grey matter V1",
+    "question": "Boodschappen doen, de hond uitlaten, naar schermen kijken. In al die dagelijkse dingen vergeten we haast dat we zelf allemaal dieren zijn, met een grijze massa die gevormd is voor een wereld die niet meer bestaat. Door de acceleratie vervaagt de grens tussen de ‘echte’ en de zelfgemaakte wereld steeds verder.\n\nWie laat hier eigenlijk wie uit?",
     "text": "",
     "links": [
       {
-        "title": "Library of Alexandria",
-        "url": "https://en.wikipedia.org/wiki/Library_of_Alexandria",
-        "image": "images/links/library-of-alexandria.jpg"
+        "title": "Éamonn Freel",
+        "url": "https://eamonnfreel.com/",
+        "image": "images/links/eamonn-freel.jpg"
       },
       {
-        "title": "Glasmuseum – Beeldbank RCE",
-        "url": "https://beeldbank.cultureelerfgoed.nl/glasmuseum/?mode=gallery&view=horizontal&sort=random%7B1793802601188%7D%20asc",
-        "image": "images/links/glasmuseum-beeldbank.jpg"
+        "title": "Erik Kessels – 24HRS in Photos",
+        "url": "https://www.erikkessels.com/24hrs-in-photos",
+        "image": "images/links/erik-kessels-24hrs.jpg"
       },
       {
-        "title": "Osiris",
-        "url": "https://osirisai.live/?layers=maritime,cctv,cctv_previews,live_news,earthquakes,global_incidents,day_night,cables,sdk_sea,sdk_air,sdk_naval,wind_controls,rain_controls",
-        "image": "images/links/osiris-ai.jpg"
+        "title": "Supernormal stimulus",
+        "url": "https://en.wikipedia.org/wiki/Supernormal_stimulus",
+        "image": "images/links/supernormal-stimulus.jpg"
       },
       {
-        "title": "Simon Denny",
-        "url": "https://simondenny.net/",
-        "image": "images/links/simon-denny.jpg"
-      },
-      {
-        "title": "Peim van der Sloot",
-        "url": "https://peim.cargo.site/",
-        "image": "images/links/peim-van-der-sloot.jpg"
-      },
-      {
-        "title": "Katja Novitskova",
-        "url": "https://www.katjanovi.net/",
-        "image": "images/links/katja-novitskova.jpg"
+        "title": "Geokash",
+        "url": "https://geokash.com/",
+        "image": "images/links/geokash.jpg"
       }
     ],
-    "folder": "images/moreisless",
+    "folder": "images/greymatterv1",
     "images": [
       "1761500103-research_107.jpeg",
       "1c572fe13415fb603fac62afe9611480.jpg",
@@ -61,56 +51,12 @@ window.COLLECTIONS = [
       "IMG_0948.jpeg",
       "IMG_0949.jpeg",
       "IMG_0967.jpeg",
-      "1.mp4",
       "Scherm_afbeelding 2026-11-05 om 14.36.05.jpg",
       "670ac9e1f28153ca29c5b579c3196a2b.jpg",
       "69fefa1143d0f97c41b2f24f_1909 Kraupa Tuskany Zeidler4633 photo__def_image-web.jpg",
-      "a6676da070cc64c31ee908159558e0e5.jpg"
-    ]
-  },
-  {
-    "slug": "verdeeldeaandacht",
-    "page": "themas",
-    "title": "Accelleratie",
-    "question": "Hoe verhoudt de ‘gemaakte wereld’ en de ‘daadwerkelijke wereld’ zich tot elkaar en tot onszelf? Wanneer nemen we een gemaakte wereld eerder voor lief dan een 'echte' wereld?",
-    "text": "",
-    "links": [
-      {
-        "title": "Banner Depot 2000",
-        "url": "https://www.banner-depot-2000.net/explore",
-        "image": "images/links/banner-depot-2000.jpg"
-      },
-      {
-        "title": "Irene Molina",
-        "url": "https://irenemolina.xyz/",
-        "image": "images/links/irene-molina.jpg"
-      },
-      {
-        "title": "Olafur Eliasson – The light setup (2005)",
-        "url": "https://olafureliasson.net/artwork/the-light-setup-2005/",
-        "image": "images/links/olafur-eliasson-light-setup.jpg"
-      },
-      {
-        "title": "Cameron's World",
-        "url": "https://www.cameronsworld.net/",
-        "image": "images/links/camerons-world.jpg"
-      },
-      {
-        "title": "McDonald's in 2002 – Web Design Museum",
-        "url": "https://www.webdesignmuseum.org/gallery/mcdonalds-in-2002",
-        "image": "images/links/mcdonalds-2002.jpg"
-      },
-      {
-        "title": "Europeana – Share3D",
-        "url": "https://www.europeana.eu/nl/item/181/share3d_1188",
-        "image": "images/links/europeana-3d.jpg"
-      }
-    ],
-    "folder": "images/dividingattention",
-    "images": [
+      "a6676da070cc64c31ee908159558e0e5.jpg",
       "IMG_9186.jpg",
       "85131740f9f7f4ffbd10127e0ab64d95.jpg",
-      "712391155479adccfad122e49eefc386.jpg",
       "772ed9fb1282eed313a2e86501188606.jpg",
       "bc6e155f446bfe2e1ecc204d505536d8.jpg",
       "f4bc4dd9103e547498286c9543c397469c94b230-3200x4000.jpeg",
@@ -125,7 +71,6 @@ window.COLLECTIONS = [
       "steentijdtransparancy_artefact2.png",
       "steentijdtransparancy_bot.png",
       "091fe1a46b88d3fe3e95fbbe8ef0d0ab.gif",
-      "09de403d3d3980c93fb37bd372fa43c0.gif",
       "7b4e045a54dbb79054be61848c0cbd4b.gif",
       "db87c3a128e379c1d12e7125672f3719.gif",
       "f21a6c081671a070c0d8c65101631f94.gif",
@@ -141,7 +86,12 @@ window.COLLECTIONS = [
       "69b01409c0d9fd5ecd2adb71_SHF_eb00258266-edit-web.jpg",
       "afebf337ebdd1513ef224dadef25f01b.jpg",
       "bb9d4f0b4c53f1d7a112ca9ea6325092.jpg",
-      "d35fab5ba323bc26b52fa188196849af.jpg"
+      "d35fab5ba323bc26b52fa188196849af.jpg",
+      "4151f473d0071dab5e877eb0ca98ec00.jpg",
+      "3b022ee0f32b3970f33694bcd5090d35.jpg",
+      "instagram-format.jpg",
+      "393297445_262012286335926_8442102827684750700_n.jpg",
+      "d27c6976dc1910435b8df874ce55aaed.jpg"
     ]
   },
   {

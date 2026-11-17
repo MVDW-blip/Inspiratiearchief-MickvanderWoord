@@ -206,7 +206,7 @@ a.corner:hover { color: #444; }
   font-size: clamp(14px, 0.3vw + 12px, 17px);
   line-height: 1.35;
 }
-.theme-text { white-space: pre-line; } /* nieuwe regels uit data.js blijven staan */
+.theme-text, .theme-q { white-space: pre-line; } /* nieuwe regels uit data.js blijven staan */
 .theme-text:empty, .theme-q:empty { display: none; }
 .editing .theme-q:empty, .editing .theme-text:empty { display: block; min-height: 1.3em; }
 
