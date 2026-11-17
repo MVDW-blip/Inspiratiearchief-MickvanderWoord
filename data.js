@@ -184,7 +184,8 @@ window.COLLECTIONS = [
       "569973251fefe6297c2685131443ae77.jpg",
       "3f77211a2bd0dcdb085b9a27cbf1a62d.jpg",
       "9637453d5e0a0135a96f7b46650ec662.jpg",
-      "abf7b0b8bb3fdedaf7f123e89fc7e8a5.gif"
+      "abf7b0b8bb3fdedaf7f123e89fc7e8a5.gif",
+      "571afc874d69831661d0d10f9f93d8ea.jpg"
     ]
   },
   {
