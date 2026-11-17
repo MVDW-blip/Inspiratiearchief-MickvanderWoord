@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>zonsondergang, in code — neon</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #f2f2f2; }
+  .frame { position: fixed; inset: 0; overflow: hidden; }
+  canvas { display: block; width: 100%; height: 100%; }
+  /* matglas — dezelfde waarden als .frost op de index */
+  .frost canvas { filter: blur(18px) saturate(1.3); transform: scale(1.15); }
+  .frost::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.25));
+  }
+  /* zonder WebGL: het stilstaande beeld */
+  .still { background: url("zonsondergang-neon-frost.jpg") center / cover; }
+</style>
+</head>
+<body>
+<div class="frame frost" id="frame"><canvas id="c"></canvas></div>
+
+<script id="fs" type="x-shader/x-fragment">
+// Neon zonsondergang boven zee — en je vliegt erop af.
+// Zee en wolken zijn twee vlakken (onder en boven je) die naar je toe schieten; vanuit de zon
+// vliegen strepen naar buiten; de horizon deint een beetje mee, alsof je in de lucht hangt.
+precision highp float;
+uniform vec2 R;
+uniform float T;
+
+float h21(vec2 p){ p = fract(p*vec2(123.34,456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
+float vn(vec2 p){
+  vec2 i = floor(p), f = fract(p); f = f*f*(3.-2.*f);
+  return mix(mix(h21(i), h21(i+vec2(1,0)), f.x), mix(h21(i+vec2(0,1)), h21(i+1.), f.x), f.y);
+}
+float fbm(vec2 p){ float s=0., a=.5; for(int i=0;i<5;i++){ s+=a*vn(p); p=p*2.03+vec2(1.7,9.2); a*=.5; } return s; }
+
+// pure RGB-tint: volle verzadiging, h loopt 0..1 door het hele spectrum
+vec3 hue(float h){ return clamp(abs(mod(h*6. + vec3(0.,4.,2.), 6.) - 3.) - 1., 0., 1.); }
+
+float B;          // basistint, schuift langzaam door alle kleuren
+const float V = 1.;   // vliegsnelheid — hoger is sneller
+
+vec3 sky(float y){
+  vec3 c = mix(hue(B + .02) * 1.6, hue(B + .92) * 1.4, smoothstep(0., .3, y));
+  c = mix(c, hue(B + .72) * 1.3, smoothstep(.25, .65, y));
+  return mix(c, hue(B + .55) * 1.1, smoothstep(.6, 1., y));
+}
+
+// kunstmatige wolken: harde pixelblokken met een neon rand, als een plafond boven je dat naar je toe komt
+vec4 clouds(vec2 uv, float H){
+  float y = uv.y - H;
+  float z = .07 / (y + .004);                         // diepte: ver weg bij de horizon
+  vec2 p = vec2((uv.x - .5) * z, z + T * .3 * V);   // het plafond schuift naar je toe
+  vec2 g = floor(p * vec2(28., 22.)) / vec2(28., 22.);   // pixelblokken, groter naarmate ze dichterbij zijn
+  float n = fbm(g * vec2(5., 7.) + vec2(0., T * .03));
+  float band = smoothstep(.02, .12, y);               // vlak bij de horizon lost het op in de gloed
+  float body = step(.52, n) * band;
+  float core = step(.62, n) * band;
+  vec3 c = mix(hue(B + .38 + y * .6) * 1.5, vec3(1.6), core * .55);
+  return vec4(c, body);
+}
+
+void main(){
+  // vierkant beeld, in de breedte uitgerekt als het kader breder is
+  vec2 uv = (gl_FragCoord.xy - .5 * R) / R.y + .5;
+  B = fract(T * .025);
+  float H = .46 + sin(T * .9) * .004 + sin(T * 2.3) * .0015;   // deinen in de lucht
+  // de zon groeit langzaam en ademt mee: je komt dichterbij
+  float grow = 1. + .12 * (.5 + .5 * sin(T * .35));
+  vec2 sun = vec2(.5, H + .085);
+  float d = length(uv - sun) / grow;
+  vec3 sunC = hue(B + .14);
+  vec3 col;
+
+  if (uv.y > H) {
+    float y = (uv.y - H) / (1. - H);
+    col = sky(y);
+    col += sunC * exp(-d * 3.6) * 2.4;
+    col += vec3(2.6) * smoothstep(.07, .05, d);
+    // dunne horizontale scanlijnen door de zon, die naar beneden lopen
+    col += sunC * step(.5, fract(uv.y * 60. + T * 1.5)) * smoothstep(.13, .0, d) * .8;
+    vec4 cl = clouds(uv, H);
+    col = mix(col, cl.rgb + sunC * exp(-d * 3.) * .8, cl.a);
+  } else {
+    float dy = H - uv.y;
+    float z = .09 / (dy + .006);
+    vec2 p = vec2((uv.x - .5) * z, z);
+    vec2 wp = p * vec2(2.2, 4.) + vec2(T * .1, T * 1.6 * V);   // het water schiet onder je door
+    float e = .03, w = fbm(wp);
+    float wx = fbm(wp + vec2(e, 0.)) - w, wz = fbm(wp + vec2(0., e)) - w;
+    vec3 n = normalize(vec3(-wx / e * .35, 1., -wz / e * .35));
+
+    // spiegeling van lucht én wolken
+    vec2 m = vec2(uv.x + n.x * .03, H + dy * 1.1 + n.z * .04);
+    vec3 refl = sky(clamp((m.y - H) / (1. - H), 0., 1.));
+    vec4 cl = clouds(m, H);
+    refl = mix(refl, cl.rgb, cl.a * .8);
+    col = refl * mix(1.05, .45, smoothstep(0., .5, dy)) * (.7 + .6 * w);
+
+    float xs = uv.x - .5 + n.x * (.02 + dy * .5);
+    float path = exp(-abs(xs) / (.05 + dy * .7));
+    vec2 gp = p * vec2(9., 22.) + vec2(T * .3, T * 7. * V);
+    float sp = pow(vn(gp), 14.) + pow(vn(gp * 1.9 + 7.3 - T * 2.), 18.);
+    col += sunC * path * (1.3 + 26. * sp) * mix(1.7, .9, smoothstep(0., .45, dy));
+    col += hue(B + .5 + uv.x * .5) * sp * 3. * (1. - path);   // gekleurde glitters
+    col = mix(col, sky(0.) * 1.4, exp(-dy * 55.) * .7);
+  }
+
+  // snelheidsstrepen: vanuit de zon naar buiten, steeds sneller naarmate ze dichterbij komen
+  vec2 v = uv - sun;
+  float r = length(v), a = atan(v.y, v.x);
+  float k = floor(a / 6.2832 * 44.);
+  float lane = step(.7, h21(vec2(k, 3.1)));
+  float ph = fract(log(r + .002) * 1.4 - T * 1.1 * V + h21(vec2(k, 7.)));
+  float dash = smoothstep(0., .1, ph) * smoothstep(.6, .2, ph);
+  col += mix(sunC, vec3(1.), .5) * lane * dash * smoothstep(.06, .45, r) * .9;
+
+  // de rand trekt naar binnen: een lichte tunnel richting de zon
+  col *= mix(1., .82, smoothstep(.45, .95, r));
+
+  col = 1. - exp(-col * 2.1);   // fel, maar zonder hard af te kappen
+  gl_FragColor = vec4(col, 1.);
+}
+</script>
+
+<script>
+const frame = document.getElementById("frame");
+const cv = document.getElementById("c");
+const gl = cv.getContext("webgl", { antialias: false });
+if (!gl) {
+  frame.classList.add("still");
+} else {
+  const vs = "attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}";
+  const sh = (t, s) => { const o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o); return o; };
+  const pr = gl.createProgram();
+  gl.attachShader(pr, sh(gl.VERTEX_SHADER, vs));
+  gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, document.getElementById("fs").textContent));
+  gl.linkProgram(pr); gl.useProgram(pr);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+  const uR = gl.getUniformLocation(pr, "R"), uT = gl.getUniformLocation(pr, "T");
+
+  function size() {
+    // het beeld wordt toch wazig — halve resolutie is genoeg en blijft licht
+    const k = Math.min(devicePixelRatio, 2) * .5;
+    const w = Math.round(cv.clientWidth * k), h = Math.round(cv.clientHeight * k);
+    if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; gl.viewport(0, 0, w, h); }
+  }
+
+  // alleen tekenen als hij in beeld is (scheelt veel als je verder scrolt op de pagina)
+  let visible = true, running = false, t = 0, last = 0;
+  function frameLoop(now) {
+    if (!visible) { running = false; return; }
+    t += Math.min((now - last) / 1000, .1); last = now;
+    size();
+    gl.uniform2f(uR, cv.width, cv.height);
+    gl.uniform1f(uT, t);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    requestAnimationFrame(frameLoop);
+  }
+  function start() { if (!running && visible) { running = true; last = performance.now(); requestAnimationFrame(frameLoop); } }
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; start(); }).observe(cv);
+  start();
+}
+</script>
+</body>
+</html>

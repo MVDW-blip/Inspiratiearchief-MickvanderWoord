@@ -275,8 +275,13 @@ window.COLLECTIONS = [
       "dag7/7954-frost.jpg",
       "dag7/52049620541_7a1378f39c-frost.jpg",
       "dag7/52049854334_bdd7987843-frost.jpg",
-      "dag7/zonsondergang-frost.jpg",
-      "dag7/zonsondergang-neon-frost.jpg"
+      "dag7/zonsondergang-frost.jpg"
+    ],
+    "embeds": [
+      {
+        "title": "Zonsondergang in code, neon — je vliegt op de zon af (live)",
+        "url": "images/24days/dag7/zonsondergang-neon.html"
+      }
     ],
     "links": []
   },
