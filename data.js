@@ -186,7 +186,14 @@ window.COLLECTIONS = [
       "3f77211a2bd0dcdb085b9a27cbf1a62d.jpg",
       "9637453d5e0a0135a96f7b46650ec662.jpg",
       "abf7b0b8bb3fdedaf7f123e89fc7e8a5.gif",
-      "571afc874d69831661d0d10f9f93d8ea.jpg"
+      "571afc874d69831661d0d10f9f93d8ea.jpg",
+      "osso.jpg",
+      "download (1).png",
+      "941f8557ab5bcdaa5ae328a0de4ebd47.jpg",
+      "70297003a4ee3610784dc22cf4e54dd6.jpg",
+      "19769397958309a1c3cd8eb5778509e2.jpg",
+      "1761500411-research_134.webp",
+      "1761499102-research_13.webp"
     ]
   },
   {
@@ -249,6 +256,46 @@ window.COLLECTIONS = [
     "links": [],
     "folder": "images/24days",
     "images": []
+  },
+  {
+    "slug": "dag9",
+    "page": "24days",
+    "title": "dag 9",
+    "question": "",
+    "text": "",
+    "folder": "images/24days",
+    "images": [
+      "dag9/ash.png",
+      "dag9/ash2.png",
+      "dag9/ash3.png",
+      "dag9/IMG_1193 groot.jpeg",
+      "dag9/IMG_1195 groot.jpeg",
+      "dag9/IMG_1199 groot.jpeg"
+    ],
+    "links": []
+  },
+  {
+    "slug": "dag8",
+    "page": "24days",
+    "title": "dag 8",
+    "question": "",
+    "text": "",
+    "folder": "images/24days",
+    "images": [
+      "dag8/Scherm­afbeelding 2026-11-19 om 15.50.20.png",
+      "dag8/WhatsApp Image 2026-11-19 at 14.45.00.jpeg",
+      "dag8/WhatsApp Image 2026-11-19 at 14.45.00 (1).jpeg",
+      "dag8/WhatsApp Image 2026-11-19 at 14.45.00 (2).jpeg",
+      "dag8/WhatsApp Image 2026-11-19 at 14.45.00 (3).jpeg",
+      "dag8/WhatsApp Image 2026-11-19 at 14.45.00 (4).jpeg",
+      "dag8/WhatsApp Image 2026-11-19 at 14.45.00 (5).jpeg",
+      "dag8/WhatsApp Image 2026-11-19 at 14.45.00 (6).jpeg",
+      "dag8/WhatsApp Image 2026-11-19 at 14.46.24.jpeg",
+      "dag8/WhatsApp Video 2026-11-19 at 14.45.00.mp4",
+      "dag8/WhatsApp Video 2026-11-19 at 14.45.00 (1).mp4",
+      "dag8/WhatsApp Video 2026-11-19 at 14.45.00 (2).mp4"
+    ],
+    "links": []
   },
   {
     "slug": "dag7",
