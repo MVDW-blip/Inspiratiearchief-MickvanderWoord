@@ -193,7 +193,8 @@ window.COLLECTIONS = [
       "70297003a4ee3610784dc22cf4e54dd6.jpg",
       "19769397958309a1c3cd8eb5778509e2.jpg",
       "1761500411-research_134.webp",
-      "1761499102-research_13.webp"
+      "1761499102-research_13.webp",
+      "nonlinear-condition.00_01_57_19.Imagen-fija024-1536x864.png"
     ]
   },
   {
@@ -256,6 +257,47 @@ window.COLLECTIONS = [
     "links": [],
     "folder": "images/24days",
     "images": []
+  },
+  {
+    "slug": "dag11",
+    "page": "24days",
+    "title": "dag 11",
+    "question": "",
+    "text": "",
+    "folder": "images/24days",
+    "images": [
+      "dag11/WhatsApp Image 2026-11-21 at 15.57.png",
+      "dag11/teeth_white_background.png",
+      "dag11/Scherm­afbeelding 2026-11-22 om 11.07.04.png"
+    ],
+    "links": []
+  },
+  {
+    "slug": "dag10",
+    "page": "24days",
+    "title": "dag 10",
+    "question": "",
+    "text": "",
+    "folder": "images/24days",
+    "images": [
+      "dag10/8df132612392d0201c6399ded5851195.jpg",
+      "dag10/Seawifs_global_biosphere.jpg",
+      "dag10/WhatsApp Image 2026-11-21 at 15.15.32.jpeg",
+      "dag10/WhatsApp Image 2026-11-21 at 15.15.32 (1).jpeg",
+      "dag10/WhatsApp Image 2026-11-21 at 15.15.33.jpeg",
+      "dag10/WhatsApp Image 2026-11-21 at 15.15.33 (1).jpeg",
+      "dag10/WhatsApp Image 2026-11-21 at 15.15.33 (2).jpeg",
+      "dag10/WhatsApp Image 2026-11-21 at 15.15.33 (4).jpeg",
+      "dag10/WhatsApp Image 2026-11-21 at 15.15.png",
+      "dag10/1.png",
+      "dag10/1.2.png",
+      "dag10/1.3.png",
+      "dag10/1.4.png",
+      "dag10/2.png",
+      "dag10/2.2.png",
+      "dag10/2.3.png"
+    ],
+    "links": []
   },
   {
     "slug": "dag9",
