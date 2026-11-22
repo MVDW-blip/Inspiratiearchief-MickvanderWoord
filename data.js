@@ -259,6 +259,29 @@ window.COLLECTIONS = [
     "images": []
   },
   {
+    "slug": "dag12",
+    "page": "24days",
+    "title": "dag 12",
+    "question": "Waarom voelt een object als 2 keer zoveel waard als het in een doorzichtig luchtdichte verpakking zit?",
+    "text": "",
+    "folder": "images/24days",
+    "images": [
+      "dag12/WhatsApp Image 2026-11-22 at 21.07.14.jpeg",
+      "dag12/WhatsApp Image 2026-11-22 at 21.07.14 (1).jpeg",
+      "dag12/WhatsApp Image 2026-11-22 at 21.07.14 (2).jpeg",
+      "dag12/WhatsApp Image 2026-11-22 at 21.07.14 (3).jpeg",
+      "dag12/WhatsApp Image 2026-11-22 at 21.07.14 (4).jpeg",
+      "dag12/WhatsApp Image 2026-11-22 at 21.07.14 (5).jpeg",
+      "dag12/WhatsApp Image 2026-11-22 at 21.07.14 (6).jpeg",
+      "dag12/WhatsApp Image 2026-11-22 at 21.07.15.jpeg",
+      "dag12/WhatsApp Image 2026-11-22 at 21.07.15 (1).jpeg",
+      "dag12/WhatsApp Image 2026-11-22 at 21.07.15 (2).jpeg",
+      "dag12/WhatsApp Video 2026-11-22 at 21.07.15.mp4",
+      "dag12/WhatsApp Video 2026-11-22 at 21.07.15 (1).mp4"
+    ],
+    "links": []
+  },
+  {
     "slug": "dag11",
     "page": "24days",
     "title": "dag 11",
@@ -268,7 +291,11 @@ window.COLLECTIONS = [
     "images": [
       "dag11/WhatsApp Image 2026-11-21 at 15.57.png",
       "dag11/teeth_white_background.png",
-      "dag11/Scherm­afbeelding 2026-11-22 om 11.07.04.png"
+      "dag11/Scherm­afbeelding 2026-11-22 om 11.07.04.png",
+      "dag11/teeth_white_background2.png",
+      "dag11/teeth_white_background3.png",
+      "dag11/teeth_white_background4.png",
+      "dag11/teeth_white_background5.png"
     ],
     "links": []
   },
