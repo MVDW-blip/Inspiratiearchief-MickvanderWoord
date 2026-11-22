@@ -322,7 +322,7 @@ a.corner:hover { color: #444; }
 .link-url { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
 .link-block:hover .link-title { color: #444; }
 
-/* ---------- Glue, Replace en Shuffle: de beelden komen los van het raster ---------- */
+/* ---------- Glue, Replace en Fly: de beelden komen los van het raster ---------- */
 .link-preview.floating {
   inset: auto;
   aspect-ratio: 1;

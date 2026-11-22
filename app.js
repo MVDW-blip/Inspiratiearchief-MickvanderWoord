@@ -1,5 +1,5 @@
 // Bouwt de index en de archiefpagina op basis van data.js,
-// plus bewerken, slepen, lightbox en de Shuffle-knop (alles gaat zweven).
+// plus bewerken, lightbox en de knoppen Glue, Replace, Fly en Reset.
 
 const all = window.COLLECTIONS || [];
 const current = document.body.dataset.page; // "index", "themas", "connectors", "24days", "presearch" of "alles"
@@ -89,14 +89,14 @@ window.COLLECTIONS = `;
 /* ---------- Hoek + werkbalk ---------- */
 let editBtn, downloadBtn;
 
-// Klein grijs linkje terug naar de index, en de vierkante werkbalk met Glue, Replace, Shuffle, Fly, Reset
+// Klein grijs linkje terug naar de index, en de vierkante werkbalk met Glue, Replace, Fly, Reset
 // en Heatmap.
 // Nieuw gereedschap? Maak een knop met class "tool" en zet hem in de werkbalk.
 function buildChrome() {
   document.body.insertAdjacentHTML("afterbegin", `<a class="corner" href="index.html">inspiratiearchief Mick van der Woord</a>`);
   const bar = document.createElement("div");
   bar.className = "toolbar";
-  bar.append(glueBtn, replaceBtn, shuffleBtn, flyBtn, resetBtn, heatBtn);
+  bar.append(glueBtn, replaceBtn, flyBtn, resetBtn, heatBtn);
   document.body.append(bar);
 }
 
@@ -145,7 +145,7 @@ function makeLinkBlock(c, link, i) {
     </div>`;
   const title = a.querySelector(".link-title");
   editable(title, `${c.slug}.link.${i}`, v => (link.title = v));
-  // het voorbeeld doet mee met Glue, Replace en Shuffle; in de Edit-stand opent een klik de link niet
+  // het voorbeeld doet mee met Glue, Replace en Fly; in de Edit-stand opent een klik de link niet
   a.addEventListener("click", e => {
     if (document.body.classList.contains("editing")) e.preventDefault();
   });
@@ -305,11 +305,10 @@ function buildArchief() {
   });
 }
 
-/* ---------- Glue, Replace, Shuffle, Fly en Reset ---------- */
-// Slepen kan niet meer. Op elke archiefpagina staan vijf knoppen:
+/* ---------- Glue, Replace, Fly en Reset ---------- */
+// Slepen kan niet meer. Op elke archiefpagina staan vier knoppen:
 //   Glue    – alle beelden plakken aan de cursor (nog eens drukken: terug in het raster)
 //   Replace – de beelden wisselen van plek binnen het raster; elke klik een andere volgorde
-//   Shuffle – alle beelden springen naar een willekeurige plek op het scherm; elke klik een andere
 //   Fly     – alle beelden gaan zweven (nog eens drukken, "Land": terug in het raster)
 //   Reset   – alles terug op de oorspronkelijke plek en in de oorspronkelijke volgorde
 // Van de ene stand kun je meteen naar de andere; Esc zet alles terug in het raster.
@@ -323,7 +322,6 @@ const upright = r => ((r % 360) + 540) % 360 - 180; // kortste draai terug naar 
 
 const glueBtn = tool("Glue", "✣", () => setMode(mode === "glue" ? null : "glue"));
 const replaceBtn = tool("Replace", "⇄", () => reorder("random"));
-const shuffleBtn = tool("Shuffle", "⤨", () => setMode("shuffle"));
 const flyBtn = tool("Fly", "⁂", () => setMode(mode === "fly" ? null : "fly"));
 const resetBtn = tool("Reset", "↺", () => reorder("original"));
 
@@ -341,18 +339,15 @@ function setMode(m) {
   updateButtons();
   lift();
   if (m === "fly") startFly();
-  else if (m === "glue") startGlue();
-  else startShuffle();
+  else startGlue();
 }
 
 function updateButtons() {
   glueBtn.querySelector("span").textContent = mode === "glue" ? "Unglue" : "Glue";
   flyBtn.querySelector("span").textContent = mode === "fly" ? "Land" : "Fly";
   glueBtn.setAttribute("aria-pressed", mode === "glue");
-  shuffleBtn.setAttribute("aria-pressed", mode === "shuffle");
   flyBtn.setAttribute("aria-pressed", mode === "fly");
   document.body.classList.toggle("glued", mode === "glue");
-  document.body.classList.toggle("shuffled", mode === "shuffle");
   document.body.classList.toggle("flying", mode === "fly");
 }
 
@@ -446,41 +441,6 @@ function flyTick() {
     place(b);
   });
   rafId = requestAnimationFrame(flyTick);
-}
-
-/* Shuffle: elk beeld krijgt een willekeurige plek op het scherm en blijft daar liggen */
-function startShuffle() {
-  const W = viewW(), H = innerHeight, now = performance.now();
-  // ook de stapelvolgorde opnieuw husselen (vanaf onderen, zodat de knoppen er altijd boven blijven)
-  topZ = 10;
-  [...bodies.values()].sort(() => Math.random() - 0.5).forEach(b => (b.el.style.zIndex = ++topZ));
-  bodies.forEach(b => {
-    const w1 = rand(90, Math.min(260, W * 0.3));
-    b.go = {
-      t0: now + rand(0, 200), dur: rand(700, 1100),
-      x0: b.x, y0: b.y, w0: b.w, r0: upright(b.r),
-      x1: rand(0, Math.max(0, W - w1)), y1: rand(0, Math.max(0, H - w1 * b.aspect)), w1
-    };
-  });
-  rafId = requestAnimationFrame(shuffleTick);
-}
-
-function shuffleTick() {
-  const now = performance.now();
-  let busy = false;
-  bodies.forEach(b => {
-    const g = b.go;
-    const t = clamp01((now - g.t0) / g.dur), e = ease(t);
-    b.x = g.x0 + (g.x1 - g.x0) * e;
-    b.y = g.y0 + (g.y1 - g.y0) * e;
-    b.w = g.w0 + (g.w1 - g.w0) * e;
-    b.h = b.w * b.aspect;
-    b.r = g.r0 * (1 - e);
-    b.el.style.width = b.w + "px";
-    place(b);
-    if (t < 1) busy = true;
-  });
-  rafId = busy ? requestAnimationFrame(shuffleTick) : null;
 }
 
 /* Glue: alle beelden plakken aan de cursor */

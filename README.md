@@ -21,11 +21,10 @@ Wijzigingen pushen met GitHub Desktop → **Push origin**; na 1–3 minuten staa
 - `presearch.html` — presearch 2 en daaronder presearch 1, op datum genummerd. Pdf's en .ai-bestanden
   kun je pagina voor pagina doorbladeren.
 
-Op elke pagina behalve de index staan rechtsonder vijf knoppen. Slepen kan niet; een klik op een
+Op elke pagina behalve de index staan rechtsonder vier knoppen. Slepen kan niet; een klik op een
 beeld opent hem groot.
 - **Glue** — alle beelden plakken aan de cursor (**Unglue** zet ze terug).
 - **Replace** — de beelden wisselen van plek binnen het raster; elke klik een andere volgorde.
-- **Shuffle** — alle beelden springen naar een willekeurige plek op het scherm; elke klik een andere.
 - **Fly** — alle beelden gaan zweven (**Land** zet ze terug).
 - **Reset** — alles terug op de oorspronkelijke plek en volgorde.
 Esc zet alles terug in het raster.
