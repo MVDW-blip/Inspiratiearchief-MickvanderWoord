@@ -374,7 +374,7 @@ a.corner:hover { color: #444; }
 }
 .tool { position: relative; }
 .tool i { font-style: normal; font-size: 9px; }
-/* klein groen "new"-label op een nieuwe knop */
+/* klein groen "new"-label op een nieuwe knop (zet <em class="tool-new">new</em> in de knop) */
 .tool-new {
   position: absolute;
   top: 4px;
@@ -387,6 +387,21 @@ a.corner:hover { color: #444; }
   letter-spacing: 0.04em;
   line-height: 1.2;
 }
+.tool span { hyphens: manual; line-height: 1.15; }
+
+/* Transparent en Invert: alle beelden (raster, websites, 3D, lightbox) */
+.look-transparent .cell-img > .floater,
+.look-transparent .link-preview img,
+.look-transparent .embed-frame iframe,
+.look-transparent .lightbox img,
+.look-transparent .lightbox video,
+.look-transparent .lightbox iframe { opacity: 0.5; }
+.look-invert .cell-img > .floater,
+.look-invert .link-preview img,
+.look-invert .embed-frame iframe,
+.look-invert .lightbox img,
+.look-invert .lightbox video,
+.look-invert .lightbox iframe { filter: invert(1); }
 .tool:hover { background: var(--bg); color: #444; }
 .tool[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .tool:disabled { opacity: 0.4; cursor: default; background: var(--soft); color: var(--ink); }
@@ -459,4 +474,7 @@ a.corner:hover { color: #444; }
 /* het raster schaalt vanzelf mee (zie --tile); alleen de lightbox krijgt op kleine schermen meer ruimte */
 @media (max-width: 560px) {
   .lightbox img, .lightbox video { max-width: 92vw; max-height: 72vh; }
+  /* zeven knoppen passen niet op 56px: de werkbalk vult de breedte */
+  .toolbar { left: var(--pad); grid-auto-columns: 1fr; grid-auto-rows: 50px; }
+  .tool { padding: 5px; font-size: 9px; }
 }

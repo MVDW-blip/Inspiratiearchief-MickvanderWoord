@@ -1,5 +1,5 @@
 // Bouwt de index en de archiefpagina op basis van data.js,
-// plus bewerken, lightbox en de knoppen Glue, Replace, Fly en Reset.
+// plus bewerken, lightbox en de knoppen Glue, Replace, Fly, Transparent, Invert en Reset.
 
 const all = window.COLLECTIONS || [];
 const current = document.body.dataset.page; // "index", "themas", "connectors", "24days", "presearch" of "alles"
@@ -89,14 +89,14 @@ window.COLLECTIONS = `;
 /* ---------- Hoek + werkbalk ---------- */
 let editBtn, downloadBtn;
 
-// Klein grijs linkje terug naar de index, en de vierkante werkbalk met Glue, Replace, Fly, Reset
+// Klein grijs linkje terug naar de index, en de vierkante werkbalk met Glue, Replace, Fly, Transparent, Invert, Reset
 // en Heatmap.
 // Nieuw gereedschap? Maak een knop met class "tool" en zet hem in de werkbalk.
 function buildChrome() {
   document.body.insertAdjacentHTML("afterbegin", `<a class="corner" href="index.html">inspiratiearchief Mick van der Woord</a>`);
   const bar = document.createElement("div");
   bar.className = "toolbar";
-  bar.append(glueBtn, replaceBtn, flyBtn, resetBtn, heatBtn);
+  bar.append(glueBtn, replaceBtn, flyBtn, transBtn, invertBtn, resetBtn, heatBtn);
   document.body.append(bar);
 }
 
@@ -305,12 +305,14 @@ function buildArchief() {
   });
 }
 
-/* ---------- Glue, Replace, Fly en Reset ---------- */
-// Slepen kan niet meer. Op elke archiefpagina staan vier knoppen:
-//   Glue    – alle beelden plakken aan de cursor (nog eens drukken: terug in het raster)
-//   Replace – de beelden wisselen van plek binnen het raster; elke klik een andere volgorde
-//   Fly     – alle beelden gaan zweven (nog eens drukken, "Land": terug in het raster)
-//   Reset   – alles terug op de oorspronkelijke plek en in de oorspronkelijke volgorde
+/* ---------- Glue, Replace, Fly, Transparent, Invert en Reset ---------- */
+// Slepen kan niet meer. Op elke archiefpagina staan zes knoppen:
+//   Glue        – alle beelden plakken aan de cursor (nog eens drukken: terug in het raster)
+//   Replace     – de beelden wisselen van plek binnen het raster; elke klik een andere volgorde
+//   Fly         – alle beelden gaan zweven (nog eens drukken, "Land": terug in het raster)
+//   Transparent – alle beelden half doorzichtig (50%); nog eens drukken: weer dicht
+//   Invert      – alle beelden in negatief (kleuren omgedraaid); nog eens drukken: weer normaal
+//   Reset       – alles terug op de oorspronkelijke plek en volgorde, en Transparent en Invert uit
 // Van de ene stand kun je meteen naar de andere; Esc zet alles terug in het raster.
 const bodies = new Map();
 let rafId = null, lastFrame = 0, mode = null, returning = false, topZ = 10;
@@ -323,7 +325,17 @@ const upright = r => ((r % 360) + 540) % 360 - 180; // kortste draai terug naar 
 const glueBtn = tool("Glue", "✣", () => setMode(mode === "glue" ? null : "glue"));
 const replaceBtn = tool("Replace", "⇄", () => reorder("random"));
 const flyBtn = tool("Fly", "⁂", () => setMode(mode === "fly" ? null : "fly"));
-const resetBtn = tool("Reset", "↺", () => reorder("original"));
+const transBtn = tool("Trans\u00ADparent", "◌", () => setLook("transparent", !document.body.classList.contains("look-transparent")));
+const invertBtn = tool("Invert", "◐", () => setLook("invert", !document.body.classList.contains("look-invert")));
+const resetBtn = tool("Reset", "↺", () => { setLook("transparent", false); setLook("invert", false); reorder("original"); });
+
+// Transparent en Invert: een klasse op de body, de css doet de rest (zie style.css)
+function setLook(name, on) {
+  document.body.classList.toggle("look-" + name, on);
+  (name === "transparent" ? transBtn : invertBtn).setAttribute("aria-pressed", on);
+}
+transBtn.setAttribute("aria-pressed", false);
+invertBtn.setAttribute("aria-pressed", false);
 
 function setMode(m) {
   if (returning) return;
@@ -858,7 +870,6 @@ function setHeat(on) {
 }
 
 const heatBtn = tool("Heatmap", "◉", () => setHeat(!heatStore.on));
-heatBtn.insertAdjacentHTML("beforeend", `<em class="tool-new">new</em>`); // klein groen "nieuw"-label
 
 /* ---------- Start ---------- */
 if (current === "index") {
