@@ -295,7 +295,8 @@ window.COLLECTIONS = [
       "dag11/teeth_white_background2.png",
       "dag11/teeth_white_background3.png",
       "dag11/teeth_white_background4.png",
-      "dag11/teeth_white_background5.png"
+      "dag11/teeth_white_background5.png",
+      "dag11/tandenbloot.png"
     ],
     "links": []
   },
