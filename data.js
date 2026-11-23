@@ -15,8 +15,8 @@ window.COLLECTIONS = [
     "slug": "greymatterv1",
     "page": "themas",
     "title": "Grey matter V1",
-    "question": "Het gebeurd steeds vaker. Je ziet wat nep, Je kijkt net de andere kant op en je gelooft het gewoon. Vandaag is het de 'boomer' die trapt in een AI-beeld. Morgen zijn wij het.",
-    "text": "Tussen alle dagelijkse dingen door vergeten we haast dat we zelf ook dieren zijn, met een grijze massa die gevormd is voor een wereld die niet meer bestaat.\n\nDoordat alles steeds sneller gaat, vervaagt de grens tussen de 'echte' en de 'gemaakte' wereld steeds verder.\nOm dat bij te benen, zoeken we houvast in wat we al kennen. We bijvoorbeeld het nieuwe in een oud jasje: een disc die nog steeds 'opslaan' betekent, een belletje voor een melding, het klikgeluid van een sluiter in een telefoon die geen sluiter heeft. Dit skeuomorfisme stelt ons gerust en doet alsof er niets veranderd is.\n\nTegelijk zijn we nog altijd animisten. We zien gezichten in stopcontacten en wolken, voelen iets voor een schoen met een glimlach en herkennen onszelf in mascottes, virtuele influencers en chatbots. We leggen ons eigen binnenste in de dingen om ons heen, om onszelf te kunnen begrijpen. Zo maken we het onbekende vertrouwd en het levenloze levend.\nWat is onze relatie met deze neppe narratieven? Waarom gaan we erin mee, juist om onszelf te begrijpen? En is het eigenlijk wel zo erg dat we hier een uitweg voor zoeken?\n\nMisschien ligt het antwoord niet in het ontmaskeren van het neppe. Omdat we gebouwd zijn om overal gedachten en bedoelingen te zien, is nep herkennen alleen niet genoeg. We moeten vertrouwen opnieuw opbouwen, met elkaar in gesprek blijven en accepteren dat fictie altijd al een manier was om onszelf te begrijpen",
+    "question": "Het gebeurd steeds vaker. Je ziet wat nep, Je kijkt net de andere kant op en je gelooft het gewoon. Vandaag is het de 'boomer' die trapt in een AI-beeld. Morgen zijn wij het.\n\nTussen alle dagelijkse dingen door vergeten we haast dat we zelf ook dieren zijn, met een grijze massa die gevormd is voor een wereld die niet meer bestaat.\n\nOm dat bij te benen, zoeken we houvast in wat we al kennen: een diskette die nog steeds 'opslaan' betekent, een belletje voor een melding, een gezicht aan een chatbot. Het stelt ons gerust en doet alsof er niets veranderd is (skeuomorfisme). Tegelijk zijn we nog altijd animisten. We zien gezichten in stopcontacten en wolken, voelen iets voor een schoen met een glimlach en herkennen onszelf in mascottes en virtuele influencers. We leggen ons eigen binnenste in de dingen om ons heen en zien onszelf daarin terug. Zo maken we het onbekende vertrouwd en het levenloze levend. Maar wat is onze relatie met deze neppe narratieven? Waarom gaan we erin mee, juist om onszelf te begrijpen? En is het eigenlijk wel zo erg dat we hier een uitweg voor zoeken?\n\nMisschien ligt het antwoord niet in het ontmaskeren van het neppe. Omdat we gebouwd zijn om overal gedachten en bedoelingen te zien, is nep herkennen alleen niet genoeg. We moeten vertrouwen opnieuw opbouwen, met elkaar in gesprek blijven en accepteren dat fictie altijd al een manier was om onszelf te begrijpen",
+    "text": "",
     "links": [
       {
         "title": "Library of Alexandria",
@@ -117,6 +117,11 @@ window.COLLECTIONS = [
         "title": "Aww Inc.",
         "url": "https://aww.tokyo/en/",
         "image": "images/links/aww-tokyo.jpg"
+      },
+      {
+        "title": "Silvia Dal Dosso – The Deep Mellow Valley",
+        "url": "https://networkcultures.org/longform/2024/01/11/the-deep-mellow-valley/",
+        "image": "images/links/deep-mellow-valley.jpg"
       }
     ],
     "folder": "images/greymatterv1",
