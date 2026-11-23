@@ -49,10 +49,14 @@
   document.addEventListener("DOMContentLoaded", () => {
     const IA = window.IA;
     if (!IA || !IA.editable) return;
-    if (location.hash === "#edit") {
+    // #edit achter het adres opent het sleutel-venster (ook als je het achter een open pagina typt)
+    const checkHash = () => {
+      if (location.hash !== "#edit") return;
       history.replaceState(null, "", location.pathname + location.search);
       openSetup();
-    }
+    };
+    checkHash();
+    addEventListener("hashchange", checkHash);
     if (token()) addEditButton();
   });
 
