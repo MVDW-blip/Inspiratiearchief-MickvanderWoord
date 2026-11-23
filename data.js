@@ -142,6 +142,11 @@ window.COLLECTIONS = [
         "title": "Stine Deja – Last Resort (Refresh, ZHdK)",
         "url": "https://refresh.zhdk.ch/refresh-4/keynotes/stine-deja/",
         "image": "images/links/stine-deja-refresh.jpg"
+      },
+      {
+        "title": "Paumen & Gabriels – Never say goodbye: ‘normal’ grief and AI grief technologies",
+        "url": "https://research-portal.uu.nl/en/publications/never-say-goodbye-assumptions-of-normal-grief-in-framings-and-por/",
+        "image": "images/links/never-say-goodbye.jpg"
       }
     ],
     "folder": "images/greymatterv1",
