@@ -122,6 +122,26 @@ window.COLLECTIONS = [
         "title": "Silvia Dal Dosso – The Deep Mellow Valley",
         "url": "https://networkcultures.org/longform/2024/01/11/the-deep-mellow-valley/",
         "image": "images/links/deep-mellow-valley.jpg"
+      },
+      {
+        "title": "Anicka Yi – Hyundai Commission (Tate Modern)",
+        "url": "https://artlab.hyundai.com/project/hyundai-commission-anicka-yi",
+        "image": "images/links/anicka-yi-hyundai.jpg"
+      },
+      {
+        "title": "Jordan Wolfson – Eye Contact (Design Milk)",
+        "url": "https://design-milk.com/eye-contact-jordan-wolfsons-high-tech-sculpture/",
+        "image": "images/links/jordan-wolfson-eye-contact.jpg"
+      },
+      {
+        "title": "Stine Deja",
+        "url": "https://www.stinedeja.com/",
+        "image": "images/links/stine-deja.jpg"
+      },
+      {
+        "title": "Stine Deja – Last Resort (Refresh, ZHdK)",
+        "url": "https://refresh.zhdk.ch/refresh-4/keynotes/stine-deja/",
+        "image": "images/links/stine-deja-refresh.jpg"
       }
     ],
     "folder": "images/greymatterv1",
