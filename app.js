@@ -4,8 +4,7 @@
 const all = window.COLLECTIONS || [];
 const current = document.body.dataset.page; // "index", "themas", "connectors", "24days", "presearch" of "alles"
 const pad = (n, l = 2) => String(n).padStart(l, "0");
-// net toegevoegd via Edit en nog niet online: dan komt het bestand uit de browser zelf (zie editor.js)
-const src = (c, f) => (window.IA_PENDING && window.IA_PENDING[c.folder + "/" + f]) || encodeURI(c.folder + "/" + f);
+const src = (c, f) => encodeURI(c.folder + "/" + f);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
 // pdf en illustrator (.ai, pdf-compatibel): bladeren door de pagina's
 const isPdf = f => /\.(pdf|ai)$/i.test(f);
@@ -23,15 +22,73 @@ const natW = el => el.naturalWidth || el.videoWidth || 0;
 const natH = el => el.naturalHeight || el.videoHeight || 0;
 const domain = url => { try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; } };
 
-/* ---------- Bewerken op de site (zie editor.js) ---------- */
-// editable() markeert een tekst als bewerkbaar. In de Edit-stand zet editor.js hem aan
-// en bewaart hij de wijziging via apply in de data.
+/* ---------- Eigen bewerkingen (opgeslagen in deze browser) ---------- */
+const EDIT_KEY = "inspiratiearchief-edits";
+// De Edit-knop is van de site gehaald: oude bewerkingen uit de browser worden niet meer toegepast,
+// zodat iedereen precies de teksten uit data.js ziet.
+const edits = {};
+
+// Pas opgeslagen bewerkingen toe op de data. Sleutels: "slug.title", "slug.text", "slug.link.0"
+all.forEach(c => {
+  if (edits[c.slug + ".title"] != null) c.title = edits[c.slug + ".title"];
+  if (edits[c.slug + ".text"] != null) c.text = edits[c.slug + ".text"];
+  if (edits[c.slug + ".question"] != null) c.question = edits[c.slug + ".question"];
+  (c.links || []).forEach((l, i) => {
+    if (edits[`${c.slug}.link.${i}`] != null) l.title = edits[`${c.slug}.link.${i}`];
+  });
+});
+
+function saveEdit(key, value, apply) {
+  edits[key] = value;
+  localStorage.setItem(EDIT_KEY, JSON.stringify(edits));
+  apply(value);
+  updateDownload();
+}
+
+// Maakt een element bewerkbaar zodra de Edit-stand aan staat
 function editable(el, key, apply) {
   el.dataset.edit = key;
-  el._apply = apply;
+  el.addEventListener("blur", () => {
+    const v = el.textContent.trim();
+    saveEdit(key, v, apply);
+  });
+  el.addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); el.blur(); }
+  });
+}
+
+function setEditMode(on) {
+  document.body.classList.toggle("editing", on);
+  document.querySelectorAll("[data-edit]").forEach(el => (el.contentEditable = on ? "plaintext-only" : "false"));
+  editBtn.querySelector("span").textContent = on ? "Klaar" : "Edit";
+  editBtn.setAttribute("aria-pressed", on);
+  updateDownload();
+}
+
+function updateDownload() {
+  if (!downloadBtn) return;
+  downloadBtn.disabled = !Object.keys(edits).length;
+}
+
+function downloadData() {
+  const head = `// Alle inhoud van het archief.
+// - title / text / links[].title kun je hier aanpassen, of op de site via de knop "Edit"
+//   (daarna "Save" en vervang dit bestand door de download).
+// - Nieuwe afbeelding? Zet hem in de map ("folder") en voeg de bestandsnaam toe aan "images".
+// - Nieuwe link? Voeg { title, url, image } toe aan "links" (image mag leeg blijven).
+
+window.COLLECTIONS = `;
+  const blob = new Blob([head + JSON.stringify(all, null, 2) + ";\n"], { type: "text/javascript" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "data.js";
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 /* ---------- Hoek + werkbalk ---------- */
+let editBtn, downloadBtn;
+
 // Klein grijs linkje terug naar de index, en de vierkante werkbalk met Glue, Replace, Fly, Transparent, Invert, Reset
 // en Heatmap.
 // Nieuw gereedschap? Maak een knop met class "tool" en zet hem in de werkbalk.
@@ -65,7 +122,7 @@ function makeImageBlock(c, f, i, items) {
     <figcaption>${pad(i + 1, 3)}${pdfLink(c, f)}</figcaption>`;
   // een html-tegel laat de klik door (pointer-events: none), dus die vangen we op het vak eromheen
   const target = isHtml(f) ? cell.querySelector(".cell-img") : cell.querySelector(".floater");
-  target.addEventListener("click", () => { if (!document.body.classList.contains("editing")) openLightbox(items, i); });
+  target.addEventListener("click", () => openLightbox(items, i));
   return cell;
 }
 
@@ -197,58 +254,55 @@ function drift(label, href, speed = 0.9, dot = false) {
 /* ---------- Archief: alles op één pagina ---------- */
 function buildArchief() {
   const wrap = document.getElementById("archief");
-  all.filter(c => (c.page || "themas") === current).forEach(c => wrap.appendChild(buildSection(c)));
-}
 
-// Eén thema of dag: titel, vraag, tekst, beelden, eigen html en websites.
-// Los aan te roepen, zodat editor.js na een wijziging alleen dat stuk opnieuw opbouwt.
-function buildSection(c) {
-  const items = c.images.map(f => ({ c, f }));
-  const links = c.links || [];
+  all.filter(c => (c.page || "themas") === current).forEach((c, ci) => {
+    const items = c.images.map(f => ({ c, f }));
+    const links = c.links || [];
 
-  const sec = document.createElement("section");
-  sec.className = "theme";
-  sec.id = c.slug;
-  sec.innerHTML = `
-    <h2 class="theme-title"></h2>
-    <p class="theme-q"></p>
-    <p class="theme-text"></p>
-    <div class="gallery"></div>`;
-  const h = sec.querySelector(".theme-title");
-  const p = sec.querySelector(".theme-text");
-  h.textContent = c.title;
-  p.textContent = c.text || "";
-  const q = sec.querySelector(".theme-q");
-  q.textContent = c.question || "";
-  editable(q, c.slug + ".question", v => (c.question = v));
-  editable(h, c.slug + ".title", v => (c.title = v));
-  editable(p, c.slug + ".text", v => (c.text = v));
+    const sec = document.createElement("section");
+    sec.className = "theme";
+    sec.id = c.slug;
+    sec.innerHTML = `
+      <h2 class="theme-title"></h2>
+      <p class="theme-q"></p>
+      <p class="theme-text"></p>
+      <div class="gallery"></div>`;
+    const h = sec.querySelector(".theme-title");
+    const p = sec.querySelector(".theme-text");
+    h.textContent = c.title;
+    p.textContent = c.text || "";
+    const q = sec.querySelector(".theme-q");
+    q.textContent = c.question || "";
+    editable(q, c.slug + ".question", v => (c.question = v));
+    editable(h, c.slug + ".title", v => (c.title = v));
+    editable(p, c.slug + ".text", v => (c.text = v));
 
-  const grid = sec.querySelector(".gallery");
-  items.forEach((it, i) => grid.appendChild(makeImageBlock(c, it.f, i, items)));
-  // eigen html-werk (bijv. een test-out): draait gewoon in de pagina, na de beelden.
-  // Geen tekst eronder, alleen "open ↗"; de titel is er alleen voor schermlezers.
-  if (c.embeds && c.embeds.length) {
-    const eg = document.createElement("div");
-    eg.className = "embed-gallery";
-    c.embeds.forEach(e => {
-      const fig = document.createElement("figure");
-      fig.className = "embed";
-      fig.innerHTML = `
-        <div class="embed-frame"><iframe src="${encodeURI(e.url)}" title="${esc(e.title)}" loading="lazy" allowfullscreen></iframe></div>
-        <figcaption><a href="${encodeURI(e.url)}" target="_blank" rel="noopener" aria-label="${esc(e.title)} – open los">open ↗</a></figcaption>`;
-      eg.appendChild(fig);
-    });
-    sec.appendChild(eg);
-  }
-  // websites onderaan het thema, in een eigen rij
-  if (links.length) {
-    const linkGrid = document.createElement("div");
-    linkGrid.className = "gallery link-gallery";
-    links.forEach((l, i) => linkGrid.appendChild(makeLinkBlock(c, l, i)));
-    sec.appendChild(linkGrid);
-  }
-  return sec;
+    const grid = sec.querySelector(".gallery");
+    items.forEach((it, i) => grid.appendChild(makeImageBlock(c, it.f, i, items)));
+    // eigen html-werk (bijv. een test-out): draait gewoon in de pagina, na de beelden.
+    // Geen tekst eronder, alleen "open ↗"; de titel is er alleen voor schermlezers.
+    if (c.embeds && c.embeds.length) {
+      const eg = document.createElement("div");
+      eg.className = "embed-gallery";
+      c.embeds.forEach(e => {
+        const fig = document.createElement("figure");
+        fig.className = "embed";
+        fig.innerHTML = `
+          <div class="embed-frame"><iframe src="${encodeURI(e.url)}" title="${esc(e.title)}" loading="lazy" allowfullscreen></iframe></div>
+          <figcaption><a href="${encodeURI(e.url)}" target="_blank" rel="noopener" aria-label="${esc(e.title)} – open los">open ↗</a></figcaption>`;
+        eg.appendChild(fig);
+      });
+      sec.appendChild(eg);
+    }
+    // websites onderaan het thema, in een eigen rij
+    if (links.length) {
+      const linkGrid = document.createElement("div");
+      linkGrid.className = "gallery link-gallery";
+      links.forEach((l, i) => linkGrid.appendChild(makeLinkBlock(c, l, i)));
+      sec.appendChild(linkGrid);
+    }
+    wrap.appendChild(sec);
+  });
 }
 
 /* ---------- Glue, Replace, Fly, Transparent, Invert en Reset ---------- */
@@ -837,10 +891,3 @@ if (current === "alles") {
 
 // stond de heatmap aan op de vorige pagina, dan staat hij hier ook aan
 setHeat(!!heatStore.on);
-
-// voor editor.js (bewerken op de site): de data, een stuk opnieuw opbouwen, alles terug in het raster
-window.IA = {
-  all, current, buildSection,
-  reset: () => resetBtn.onclick(),
-  editable: ["themas", "connectors", "24days", "presearch"].includes(current),
-};

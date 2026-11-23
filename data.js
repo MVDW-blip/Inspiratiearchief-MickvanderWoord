@@ -1,6 +1,6 @@
 // Alle inhoud van het archief.
-// - title / question / text / links[].title en de beelden kun je hier aanpassen, of op de site met de knop "Edit"
-//   (zie editor.js): "Save" zet het meteen op GitHub en binnen 1–3 minuten staat het online.
+// - title / question / text / links[].title kun je hier aanpassen, of op de site via de knop "Edit"
+//   (daarna "Save" en vervang dit bestand door de download).
 // - Nieuwe afbeelding? Zet hem in de map ("folder") en voeg de bestandsnaam toe aan "images".
 // - page: op welke pagina het staat ("themas", "connectors", "24days" of "presearch").
 // - Pdf? Zet elke pagina als beeld in de map "pages" (naam-1.jpg, naam-2.jpg, ...) en het aantal bij "pages".

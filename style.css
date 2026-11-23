@@ -433,70 +433,9 @@ a.corner:hover { color: #444; }
 .heat-route a:hover { color: #444; }
 @media (max-width: 560px) { .heat-route { max-width: calc(100% - 2 * var(--pad)); bottom: calc(var(--pad) + 64px); } }
 
-/* ---------- Bewerken op de site (editor.js) ---------- */
+/* ---------- Bewerken ---------- */
 .editing [data-edit] { outline: 1px dashed var(--ink); outline-offset: 4px; cursor: text; }
 .editing [data-edit]:focus { outline-style: solid; background: var(--soft); color: #444; }
-.editing .theme-title:empty::before { content: "+ title"; color: #c4c4c4; }
-.editing .theme-q:empty::before { content: "+ question"; color: #c4c4c4; }
-.editing .theme-text:empty::before { content: "+ text"; color: #c4c4c4; }
-/* in de Edit-stand doen de andere knoppen even niet mee */
-.editing .toolbar .tool:not(.tool-edit) { opacity: 0.35; pointer-events: none; }
-
-/* per beeld: ← → ✕ */
-.ed-cell, .ed-add { display: none; }
-.editing .cell { position: relative; }
-.editing .ed-cell { display: flex; position: absolute; top: 6px; right: 6px; z-index: 3; gap: 2px; }
-.ed-cell button {
-  width: 28px; height: 28px; padding: 0;
-  background: rgba(255, 255, 255, 0.94); border: 1px solid var(--mid);
-  color: #444; font-size: 12px; cursor: pointer;
-}
-.ed-cell button:hover:not(:disabled) { background: var(--ink); border-color: var(--ink); color: var(--bg); }
-.ed-cell button:disabled { opacity: 0.3; cursor: default; }
-.ed-new figcaption::after { content: " · new, not saved yet"; color: #22b455; }
-
-/* + Add images: een vak aan het eind van het raster */
-.editing .ed-add {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-  aspect-ratio: 1; border: 1px dashed var(--ink); color: var(--ink);
-  font-size: 12px; letter-spacing: 0.04em; cursor: pointer; text-align: center; padding: 10px;
-}
-.ed-add small { font-size: 10px; }
-.ed-add:hover, .ed-add.drag { background: var(--soft); color: #444; }
-
-/* balk bovenaan: status, Discard, Save */
-.ed-bar {
-  position: fixed; top: var(--pad); left: 50%; transform: translateX(-50%); z-index: 10000;
-  display: none; align-items: center; gap: 2px; padding: 2px;
-  background: var(--mid); font-size: 11px; letter-spacing: 0.04em; max-width: calc(100% - 2 * var(--pad));
-}
-.ed-bar.show { display: flex; }
-.ed-status { padding: 8px 10px; background: var(--soft); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-.ed-status[data-kind="ok"] { color: #22b455; }
-.ed-status[data-kind="error"] { color: #d33; white-space: normal; }
-.ed-bar button { padding: 8px 12px; background: var(--soft); color: var(--ink); font-size: 11px; letter-spacing: 0.04em; cursor: pointer; }
-.ed-bar button:hover:not(:disabled) { background: var(--bg); color: #444; }
-.ed-bar .ed-save:not(:disabled) { background: var(--ink); color: var(--bg); }
-.ed-bar button:disabled { opacity: 0.4; cursor: default; }
-
-/* sleutel instellen */
-.ed-setup {
-  position: fixed; inset: 0; z-index: 10002; display: flex; align-items: center; justify-content: center;
-  background: rgba(255, 255, 255, 0.86); padding: var(--pad);
-}
-.ed-panel {
-  position: relative; width: min(440px, 100%); max-height: 100%; overflow: auto;
-  background: var(--bg); border: 1px solid var(--mid); padding: 22px; font-size: 13px; line-height: 1.45; color: #444;
-}
-.ed-panel h3 { margin: 0 0 10px; font-size: 16px; }
-.ed-panel ol { padding-left: 18px; margin: 8px 0; }
-.ed-panel a { color: #444; text-decoration: underline; }
-.ed-panel input { width: 100%; padding: 8px; border: 1px solid var(--mid); font: inherit; }
-.ed-panel button { padding: 8px 12px; background: var(--soft); color: #444; cursor: pointer; font-size: 12px; }
-.ed-panel .ed-connect { background: var(--ink); color: var(--bg); }
-.ed-panel .ed-msg { color: #d33; min-height: 1em; margin: 4px 0; }
-.ed-panel .ed-small { font-size: 11px; color: var(--ink); }
-.ed-panel .ed-close { position: absolute; top: 8px; right: 8px; background: none; font-size: 11px; color: var(--ink); }
 
 /* ---------- Lightbox ---------- */
 .lightbox {
