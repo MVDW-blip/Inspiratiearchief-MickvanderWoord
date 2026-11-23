@@ -36,7 +36,28 @@ bijgehouden waar je muis is geweest — een spoor als je beweegt, warmer waar je
 eigen browser; weg zodra je het tabblad sluit. De knop laat het zien als warmtebeeld en blijft aan op
 de volgende pagina's; linksonder staat dan je route door de site.
 
-## Teksten aanpassen
+## Bewerken op de site (knop Edit)
+
+Teksten en beelden kun je op de site zelf aanpassen; **Save** zet het meteen op GitHub en binnen 1–3 minuten
+staat het online. Geen GitHub Desktop nodig.
+
+**Eenmalig instellen (per browser):**
+1. Ga naar een pagina met `#edit` erachter, bijv. `https://mvdw-blip.github.io/Inspiratiearchief-MickvanderWoord/24days.html#edit`.
+2. Maak op GitHub een *fine-grained token* (de link staat in het venster): alleen de repository
+   `Inspiratiearchief-MickvanderWoord`, met **Contents: Read and write**.
+3. Plak de sleutel in het venster → **Connect**. Daarna staat de knop **Edit** in de werkbalk.
+
+**Bewerken:**
+- **Edit** → klik op een titel, vraag of tekst en typ. In vraag en tekst maakt Enter een nieuwe regel.
+- Bij elk beeld: **←  →** verschuiven, **✕** van de pagina halen (het bestand blijft in de map).
+- Onderaan elk raster: **+ Add images** (of sleep foto's en video's erop). Grote foto's worden verkleind.
+- **Save** bovenaan zet alles in één keer online; **Discard** gooit de wijzigingen weg.
+
+De sleutel staat alleen in die browser. Weghalen: **Key** in de balk bovenaan → *Remove the key*.
+Werk je daarna ook lokaal (of via Claude), haal dan eerst de nieuwste versie op (GitHub Desktop → **Fetch/Pull**),
+want Save zet de wijzigingen direct op `main`.
+
+## Teksten aanpassen in data.js
 
 Pas titel, vraag en tekst van het thema aan in `data.js` en push de wijziging.
 
