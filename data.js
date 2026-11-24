@@ -9,6 +9,7 @@
 //   Onder de test-out staat alleen "open ↗"; de title is niet zichtbaar (alleen voor schermlezers).
 // - In "text" en "question" maakt \n een nieuwe regel.
 // - Een .html-bestand in "images" (bijv. iets in code) draait als vierkant tegeltje in het raster; een klik opent hem groot.
+// - 24 days: nieuwe dagen (vanaf dag 15) komen tussen "24days-2" (de nieuwe vraag) en "24days" (dag 1 t/m 14), nieuwste bovenaan.
 
 window.COLLECTIONS = [
   {
@@ -287,9 +288,19 @@ window.COLLECTIONS = [
     ]
   },
   {
+    "slug": "24days-2",
+    "page": "24days",
+    "title": "24 days challenge — vanaf dag 15",
+    "question": "Elke dag een ander stukje menselijke biologie op een technologisch object projecteren. Wanneer voelt het vertrouwd, wanneer levend en wanneer juist nep?",
+    "text": "",
+    "links": [],
+    "folder": "images/24days",
+    "images": []
+  },
+  {
     "slug": "24days",
     "page": "24days",
-    "title": "24 days challenge",
+    "title": "24 days challenge — dag 1 t/m 14",
     "question": "Elke dag spelen met de overgang van transparantie, deels transparantie of totaal geen transparantie, en daarbij kijken hoe dit kan spelen met onze verwachtingen / de context.",
     "text": "",
     "links": [],
