@@ -297,6 +297,38 @@ window.COLLECTIONS = [
     "images": []
   },
   {
+    "slug": "dag14",
+    "page": "24days",
+    "title": "dag 14",
+    "question": "",
+    "text": "",
+    "folder": "images/24days",
+    "images": [
+      "dag14/WhatsApp Image 2026-11-24 at 12.33.55.jpeg",
+      "dag14/WhatsApp Image 2026-11-24 at 12.33.55 (1).jpeg",
+      "dag14/WhatsApp Image 2026-11-24 at 12.33.55 (2).jpeg",
+      "dag14/WhatsApp Image 2026-11-24 at 12.33.55 (3).jpeg",
+      "dag14/WhatsApp Image 2026-11-24 at 12.33.55 (4).jpeg",
+      "dag14/WhatsApp Image 2026-11-24 at 12.33.55 (5).jpeg",
+      "dag14/WhatsApp Image 2026-11-24 at 12.33.55 (6).jpeg",
+      "dag14/WhatsApp Video 2026-11-24 at 12.33.55.mp4",
+      "dag14/WhatsApp Video 2026-11-24 at 12.33.55 (1).mp4"
+    ],
+    "links": []
+  },
+  {
+    "slug": "dag13",
+    "page": "24days",
+    "title": "dag 13",
+    "question": "",
+    "text": "",
+    "folder": "images/24days",
+    "images": [
+      "dag13/WhatsApp Image 2026-11-24 at 12.29.34.jpeg"
+    ],
+    "links": []
+  },
+  {
     "slug": "dag12",
     "page": "24days",
     "title": "dag 12",
