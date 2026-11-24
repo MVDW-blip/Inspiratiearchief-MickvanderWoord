@@ -151,6 +151,14 @@ window.COLLECTIONS = [
     ],
     "folder": "images/greymatterv1",
     "images": [
+      "Micro_management_Stine_Deja__1600.png",
+      "Micro_management_Stine_Deja_3_1600.png",
+      "Micro_management_Stine_Deja_6_1600.png",
+      "Stine_Deja_DC_web_1_1600.png",
+      "Scherm_afbeelding 2026-11-23 om 10.32.15.png",
+      "Scherm_afbeelding 2026-11-23 om 17.01.51.png",
+      "f8448dec2d0f1d3f213baa6368915100.jpg",
+      "magic-mirror-shrek-5-3482911957.jpg",
       "1761500103-research_107.jpeg",
       "1c572fe13415fb603fac62afe9611480.jpg",
       "9b43f934bd129c2957aa3c58e27773ee.jpg",
@@ -224,15 +232,7 @@ window.COLLECTIONS = [
       "19769397958309a1c3cd8eb5778509e2.jpg",
       "1761500411-research_134.webp",
       "1761499102-research_13.webp",
-      "nonlinear-condition.00_01_57_19.Imagen-fija024-1536x864.png",
-      "Micro_management_Stine_Deja__1600.png",
-      "Micro_management_Stine_Deja_3_1600.png",
-      "Micro_management_Stine_Deja_6_1600.png",
-      "Stine_Deja_DC_web_1_1600.png",
-      "Scherm_afbeelding 2026-11-23 om 10.32.15.png",
-      "Scherm_afbeelding 2026-11-23 om 17.01.51.png",
-      "f8448dec2d0f1d3f213baa6368915100.jpg",
-      "magic-mirror-shrek-5-3482911957.jpg"
+      "nonlinear-condition.00_01_57_19.Imagen-fija024-1536x864.png"
     ]
   },
   {
@@ -327,6 +327,7 @@ window.COLLECTIONS = [
     "text": "",
     "folder": "images/24days",
     "images": [
+      "dag11/teeth_white_background6.png",
       "dag11/WhatsApp Image 2026-11-21 at 15.57.png",
       "dag11/teeth_white_background.png",
       "dag11/Scherm­afbeelding 2026-11-22 om 11.07.04.png",
@@ -334,8 +335,7 @@ window.COLLECTIONS = [
       "dag11/teeth_white_background3.png",
       "dag11/teeth_white_background4.png",
       "dag11/teeth_white_background5.png",
-      "dag11/tandenbloot.png",
-      "dag11/teeth_white_background6.png"
+      "dag11/tandenbloot.png"
     ],
     "links": []
   },
