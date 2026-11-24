@@ -15,7 +15,7 @@ window.COLLECTIONS = [
     "slug": "greymatterv1",
     "page": "themas",
     "title": "Grey matter V1",
-    "question": "Het gebeurd steeds vaker. Je ziet wat nep, Je kijkt net de andere kant op en je gelooft het gewoon. Vandaag is het de 'boomer' die trapt in een AI-beeld. Morgen zijn wij het.\n\nTussen alle dagelijkse dingen door vergeten we haast dat we zelf ook dieren zijn, met een grijze massa die gevormd is voor een wereld die niet meer bestaat.\n\nOm dat bij te benen, zoeken we houvast in wat we al kennen: een landschap als laptop achtergrond, een belletje voor een melding, een gezicht aan een chatbot. Het stelt ons gerust en doet alsof er niets veranderd is (skeuomorfisme). Tegelijk zijn we nog altijd animisten. We zien gezichten in stopcontacten en wolken, voelen iets voor een schoen met een glimlach en herkennen onszelf in mascottes en virtuele influencers. We leggen ons eigen binnenste in de dingen om ons heen en zien onszelf daarin terug. Zo maken we het onbekende vertrouwd en het levenloze levend. Maar wat is onze relatie met deze neppe narratieven? Waarom gaan we erin mee, juist om onszelf te begrijpen? En is het eigenlijk wel zo erg dat we hier een uitweg voor zoeken?\n\nMisschien ligt het antwoord niet in het ontmaskeren van het neppe. Omdat we gebouwd zijn om overal gedachten en bedoelingen te zien, is nep herkennen alleen niet genoeg. We moeten vertrouwen opnieuw opbouwen, met elkaar in gesprek blijven en accepteren dat fictie altijd al een manier was om onszelf te begrijpen",
+    "question": "Tussen het dagelijks leven door vergeten we haast dat we zelf ook dieren zijn, met een grijze massa die ontstaan is voor een wereld die niet meer bestaat. Door de acceleratie vervaagt de grens tussen de ‘echte’ en de ‘zelfgemaakte’ wereld steeds verder.\n\nIn een wereld die we steeds minder begrijpen vertalen we ons eigen binnenste naar de dingen om ons heen en zien onszelf daarin terug. Zo maken we het onbekende vertrouwd en het levenloze levend.\n\nMaar wat is onze relatie met deze neppe narratieven? Gaan we hierin mee om onszelf te begrijpen? Hoe verhoudt de menselijke biologie zich tegenover deze versnellende technologie? Moeten we een uitweg vinden of is overgave ook een weg?",
     "text": "",
     "links": [
       {
@@ -224,7 +224,15 @@ window.COLLECTIONS = [
       "19769397958309a1c3cd8eb5778509e2.jpg",
       "1761500411-research_134.webp",
       "1761499102-research_13.webp",
-      "nonlinear-condition.00_01_57_19.Imagen-fija024-1536x864.png"
+      "nonlinear-condition.00_01_57_19.Imagen-fija024-1536x864.png",
+      "Micro_management_Stine_Deja__1600.png",
+      "Micro_management_Stine_Deja_3_1600.png",
+      "Micro_management_Stine_Deja_6_1600.png",
+      "Stine_Deja_DC_web_1_1600.png",
+      "Scherm_afbeelding 2026-11-23 om 10.32.15.png",
+      "Scherm_afbeelding 2026-11-23 om 17.01.51.png",
+      "f8448dec2d0f1d3f213baa6368915100.jpg",
+      "magic-mirror-shrek-5-3482911957.jpg"
     ]
   },
   {
@@ -326,7 +334,8 @@ window.COLLECTIONS = [
       "dag11/teeth_white_background3.png",
       "dag11/teeth_white_background4.png",
       "dag11/teeth_white_background5.png",
-      "dag11/tandenbloot.png"
+      "dag11/tandenbloot.png",
+      "dag11/teeth_white_background6.png"
     ],
     "links": []
   },
