@@ -152,6 +152,8 @@ window.COLLECTIONS = [
     ],
     "folder": "images/greymatterv1",
     "images": [
+      "015.jpg",
+      "047.jpg",
       "Micro_management_Stine_Deja__1600.png",
       "Micro_management_Stine_Deja_3_1600.png",
       "Micro_management_Stine_Deja_6_1600.png",
@@ -296,6 +298,38 @@ window.COLLECTIONS = [
     "links": [],
     "folder": "images/24days",
     "images": []
+  },
+  {
+    "slug": "dag15",
+    "page": "24days",
+    "title": "dag 15",
+    "question": "water als levensmiddel maar ook als koopmiddel - vol cirkel moment, we kopen glim doordat in ons brein een pad ligt naar water, maar de glim komt vervolgens weer in het water en ecosysteem - alles wat gemarket is als waterpret / dit aanraakt interessant - test: is verpakt water onweerstaanbaar - nee want dat komt weer te dichtbij.",
+    "text": "",
+    "folder": "images/24days",
+    "images": [
+      "dag15/lucia-giron-s-algae-based-biocells-showcase-a-sustainable-fu-freeyork-6-800x529-jpg.webp",
+      "dag15/iStock-1346716155-scaled-4228331193.jpg",
+      "dag15/30-Pack-Sensory-Jelly-Water-Growing-Sea-Life-Creatures-Animals-Amazing-Fun-Educational-Learning-Toy-for-Kids-Boys-Girls_f3e85812-21ba-411c-9db2-8dc09ae59df3.3bb2a3be5498c7990b07ba6aa8c20555-2440980319.jpg",
+      "dag15/2e6e4c17840a764c96da540fc79f9f82-384693862.jpg",
+      "dag15/c6e79648-2dc3-4a5f-a3f8-0e67265a031c.b9df87c939d60e23c4f4e001f0771a78-377012724.jpg",
+      "dag15/WhatsApp Image 2026-11-25 at 16.28.52.jpeg",
+      "dag15/WhatsApp Image 2026-11-25 at 16.28.52 (1).jpeg",
+      "dag15/WhatsApp Image 2026-11-25 at 16.28.52 (2).jpeg",
+      "dag15/WhatsApp Image 2026-11-25 at 16.28.52 (3).jpeg",
+      "dag15/WhatsApp Image 2026-11-25 at 16.28.52 (4).jpeg"
+    ],
+    "links": [
+      {
+        "title": "The Effect of Decorative Foil Stamping on Consumer Attention (Journal of Applied Packaging Research, 2016)",
+        "url": "https://repository.rit.edu/japr/vol8/iss2/5/",
+        "image": ""
+      },
+      {
+        "title": "Why Do People Like Jewelry? It May Have to Do With Water (JCK)",
+        "url": "https://www.jckonline.com/editorial-article/why-do-people-like-jewelry-it-may-have-to-do-with-water/",
+        "image": "images/links/jck-jewelry-water.jpg"
+      }
+    ]
   },
   {
     "slug": "24days",
