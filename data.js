@@ -148,10 +148,43 @@ window.COLLECTIONS = [
         "title": "Paumen & Gabriels – Never say goodbye: ‘normal’ grief and AI grief technologies",
         "url": "https://research-portal.uu.nl/en/publications/never-say-goodbye-assumptions-of-normal-grief-in-framings-and-por/",
         "image": "images/links/never-say-goodbye.jpg"
+      },
+      {
+        "title": "Talk to AI Jesus for Prayer (PrayWithJesus.ai)",
+        "url": "https://praywithjesus.ai/",
+        "image": "images/links/praywithjesus.jpg"
+      },
+      {
+        "title": "Jesus AI",
+        "url": "https://www.thejesusai.com/",
+        "image": "images/links/jesus-ai.jpg"
+      },
+      {
+        "title": "Robot Priest at Kyoto Temple Spreads Buddhist Teachings (Science Times)",
+        "url": "https://www.sciencetimes.com/articles/45073/20230726/robot-priest-kyoto-temple-spreads-buddhist-teachings-ai-workers-demonstrate.html",
+        "image": "images/links/robot-priest-kyoto.jpg"
+      },
+      {
+        "title": "'Deus in machina': Swiss church installs AI Jesus (NBC News)",
+        "url": "https://www.nbcnews.com/news/world/deus-machina-swiss-church-installs-ai-jesus-connect-digital-divine-rcna182973",
+        "image": "images/links/deus-in-machina.jpg"
+      },
+      {
+        "title": "Father Justin, a Chatbot, is Absolving Sinners (Mind Matters)",
+        "url": "https://mindmatters.ai/2024/04/father-justin-a-chatbot-is-absolving-sinners/",
+        "image": "images/links/father-justin.jpg"
+      },
+      {
+        "title": "KD19 Basketbalschoenen (Nike)",
+        "url": "https://www.nike.com/nl/t/kd19-basketbalschoenen-kHLnTNgP",
+        "image": "images/links/nike-kd19.jpg"
       }
     ],
     "folder": "images/greymatterv1",
     "images": [
+      "schermopname-2026-11-25.mp4",
+      "Scherm_afbeelding 2026-11-25 om 17.43.59.png",
+      "lucia-giron-s-algae-based-biocells-showcase-a-sustainable-fu-freeyork-6-800x529-jpg.webp",
       "015.jpg",
       "047.jpg",
       "Micro_management_Stine_Deja__1600.png",
@@ -307,7 +340,6 @@ window.COLLECTIONS = [
     "text": "",
     "folder": "images/24days",
     "images": [
-      "dag15/lucia-giron-s-algae-based-biocells-showcase-a-sustainable-fu-freeyork-6-800x529-jpg.webp",
       "dag15/iStock-1346716155-scaled-4228331193.jpg",
       "dag15/30-Pack-Sensory-Jelly-Water-Growing-Sea-Life-Creatures-Animals-Amazing-Fun-Educational-Learning-Toy-for-Kids-Boys-Girls_f3e85812-21ba-411c-9db2-8dc09ae59df3.3bb2a3be5498c7990b07ba6aa8c20555-2440980319.jpg",
       "dag15/2e6e4c17840a764c96da540fc79f9f82-384693862.jpg",
