@@ -355,6 +355,7 @@ window.COLLECTIONS = [
       "dag16/Scherm_afbeelding 2026-11-26 om 11.16.23.png",
       "dag16/Scherm_afbeelding 2026-11-26 om 11.21.13.png",
       "dag16/beest_culture_v2.html",
+      "dag16/beest_culture_v3.html",
       "dag16/IMG_1352.mp4",
       "dag16/IMG_1353.jpg",
       "dag16/IMG_1354.jpg",
