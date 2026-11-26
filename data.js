@@ -178,10 +178,21 @@ window.COLLECTIONS = [
         "title": "KD19 Basketbalschoenen (Nike)",
         "url": "https://www.nike.com/nl/t/kd19-basketbalschoenen-kHLnTNgP",
         "image": "images/links/nike-kd19.jpg"
+      },
+      {
+        "title": "Chat with God | AI Spiritual Guidance for Every Faith Tradition",
+        "url": "https://chatwithgod.ai/",
+        "image": "images/links/chatwithgod.png"
+      },
+      {
+        "title": "Cortical Labs – CL1",
+        "url": "https://corticallabs.com/cl1.html",
+        "image": "images/links/cortical-labs-cl1.jpg"
       }
     ],
     "folder": "images/greymatterv1",
     "images": [
+      "Scherm_afbeelding 2026-11-26 om 10.29.46.png",
       "schermopname-2026-11-25.mp4",
       "Scherm_afbeelding 2026-11-25 om 17.43.59.png",
       "lucia-giron-s-algae-based-biocells-showcase-a-sustainable-fu-freeyork-6-800x529-jpg.webp",
