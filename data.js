@@ -348,7 +348,7 @@ window.COLLECTIONS = [
     "page": "24days",
     "title": "dag 16",
     "question": "expiriment op het gebruik van breinweefsel als opslag, hoe kan ik hier een beeld aangeven en een emotionele waarde bij mensen opwekken aan iets 'doods' maar wel soort gefabriceerd stukje mens.",
-    "text": "",
+    "text": "Neuronen zoeken voorspelbaarheid. Ze passen zich aan om chaos te vermijden, en dat is leren. Naar het DishBrain-experiment (Kagan, Neuron 2022).",
     "folder": "images/24days",
     "images": [
       "dag16/Scherm_afbeelding 2026-11-26 om 11.00.39.png",
