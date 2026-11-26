@@ -365,7 +365,11 @@ window.COLLECTIONS = [
       "dag16/IMG_1362.jpg",
       "dag16/IMG_1365.mp4",
       "dag16/IMG_1367.mp4",
-      "dag16/Scherm_afbeelding 2026-11-26 om 13.06.32.png"
+      "dag16/Scherm_afbeelding 2026-11-26 om 13.06.32.png",
+      "dag16/IMG_1372.mp4",
+      "dag16/IMG_1373.mp4",
+      "dag16/IMG_1374.mp4",
+      "dag16/IMG_1375.jpg"
     ],
     "links": [
       {
