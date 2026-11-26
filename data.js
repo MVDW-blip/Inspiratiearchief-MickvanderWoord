@@ -344,6 +344,37 @@ window.COLLECTIONS = [
     "images": []
   },
   {
+    "slug": "dag16",
+    "page": "24days",
+    "title": "dag 16",
+    "question": "expiriment op het gebruik van breinweefsel als opslag, hoe kan ik hier een beeld aangeven en een emotionele waarde bij mensen opwekken aan iets 'doods' maar wel soort gefabriceerd stukje mens.",
+    "text": "",
+    "folder": "images/24days",
+    "images": [
+      "dag16/Scherm_afbeelding 2026-11-26 om 11.00.39.png",
+      "dag16/Scherm_afbeelding 2026-11-26 om 11.16.23.png",
+      "dag16/Scherm_afbeelding 2026-11-26 om 11.21.13.png",
+      "dag16/beest_culture_v2.html",
+      "dag16/IMG_1352.mp4",
+      "dag16/IMG_1353.jpg",
+      "dag16/IMG_1354.jpg",
+      "dag16/IMG_1355.jpg",
+      "dag16/IMG_1357.mp4",
+      "dag16/IMG_1359.mp4",
+      "dag16/IMG_1362.jpg",
+      "dag16/IMG_1365.mp4",
+      "dag16/IMG_1367.mp4",
+      "dag16/Scherm_afbeelding 2026-11-26 om 13.06.32.png"
+    ],
+    "links": [
+      {
+        "title": "Cortical Labs – CL1",
+        "url": "https://corticallabs.com/cl1.html",
+        "image": "images/links/cortical-labs-cl1.jpg"
+      }
+    ]
+  },
+  {
     "slug": "dag15",
     "page": "24days",
     "title": "dag 15",
