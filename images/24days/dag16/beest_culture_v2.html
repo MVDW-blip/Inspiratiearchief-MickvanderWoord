@@ -174,13 +174,13 @@ const U = {
   uNeck: { value: NECK },
   uHipY: { value: HIP_Y },
   uAntlerY: { value: ANTLER_Y },
-  uSkin: { value: new THREE.Color('#e4889d') },
-  uSkin2: { value: new THREE.Color('#f2b1b5') },
-  uGroove: { value: new THREE.Color('#8e1f3f') },
+  uSkin: { value: new THREE.Color('#efa4b5') },
+  uSkin2: { value: new THREE.Color('#f8c9d0') },
+  uGroove: { value: new THREE.Color('#c9718a') },
   uFlush: { value: new THREE.Color('#ff3d64') },
   uGlow: { value: new THREE.Color('#ff5a7d') },
   uZapCol: { value: new THREE.Color(0.22, 0.55, 1.0) },
-  uBump: { value: 0.006 },
+  uBump: { value: 0.0025 },
 };
 
 // ---------------------------------------------------------------- shaders
@@ -325,9 +325,10 @@ bEye = step(2.5, vPart);
   vec3 skin = mix(uSkin, uSkin2, blot*0.8);
   skin *= 1.0 + vState.w*vec3(0.05, -0.06, 0.02);
   skin = mix(skin, uFlush, clamp(vState.x*0.78, 0.0, 1.0));
-  vec3 col = mix(skin, uGroove * (1.0 + vState.x*0.4), bSulcus*0.75);
-  col *= 0.86 + 0.14*crown;
+  vec3 col = mix(skin, uGroove * (1.0 + vState.x*0.4), bSulcus*0.3);   // folds only faintly visible
+  col *= 0.96 + 0.04*crown;
   diffuseColor.rgb = mix(col, vec3(0.004, 0.003, 0.004), bEye);
+  diffuseColor.a = mix(0.6, 1.0, bEye);                                  // frosted see-through body
 }
 `;
 const SKIN_ROUGH = /* glsl */`
@@ -355,8 +356,10 @@ const SKIN_EMISSIVE = /* glsl */`
 `;
 
 const skinMat = new THREE.MeshPhysicalMaterial({
-  color: 0xffffff, roughness: 0.46, metalness: 0,
-  clearcoat: 0.85, clearcoatRoughness: 0.05,
+  color: 0xffffff, roughness: 0.6, metalness: 0,
+  // frosted, see-through pink: the body is half transparent (alpha set in SKIN_COLOR), the eyes stay solid
+  transparent: true, depthWrite: false,
+  clearcoat: 0.45, clearcoatRoughness: 0.3,
   sheen: 0.3, sheenColor: new THREE.Color('#ffb3c6'), sheenRoughness: 0.4,
 });
 skinMat.onBeforeCompile = sh => {
@@ -374,7 +377,7 @@ skinMat.onBeforeCompile = sh => {
     .replace('#include <clearcoat_normal_fragment_maps>', SKIN_CC_NORMAL)
     .replace('#include <emissivemap_fragment>', SKIN_EMISSIVE);
 };
-skinMat.customProgramCacheKey = () => 'beest-skin-v2';
+skinMat.customProgramCacheKey = () => 'beest-skin-v3';
 
 const depthMat = new THREE.MeshDepthMaterial({ depthPacking: THREE.RGBADepthPacking });
 depthMat.onBeforeCompile = sh => {
