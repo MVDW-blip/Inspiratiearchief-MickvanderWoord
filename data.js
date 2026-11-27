@@ -188,10 +188,35 @@ window.COLLECTIONS = [
         "title": "Cortical Labs – CL1",
         "url": "https://corticallabs.com/cl1.html",
         "image": "images/links/cortical-labs-cl1.jpg"
+      },
+      {
+        "title": "Whatsappen met Jezus via chatbot JesusPT (Computable)",
+        "url": "https://www.computable.nl/2023/05/26/whatsappen-met-jezus-via-chatbot-jesuspt/",
+        "image": "images/links/computable-jesuspt.jpg"
+      },
+      {
+        "title": "Anthony Levandowski closes his Church of AI (TechCrunch)",
+        "url": "https://techcrunch.com/2021/02/18/anthony-levandowski-closes-his-church-of-ai/",
+        "image": ""
+      },
+      {
+        "title": "Researchers simulate an entire fly brain on a laptop. Is a human brain next? (Berkeley News)",
+        "url": "https://news.berkeley.edu/2024/10/02/researchers-simulate-an-entire-fly-brain-on-a-laptop-is-a-human-brain-next/",
+        "image": "images/links/berkeley-fly-brain.jpg"
+      },
+      {
+        "title": "Meta Ray-Ban Display-bril en Neural Band (Meta)",
+        "url": "https://www.meta.com/nl/ai-glasses/meta-ray-ban-display/",
+        "image": "images/links/meta-rayban-display.jpg"
       }
     ],
     "folder": "images/greymatterv1",
     "images": [
+      "danielle-smit-ai-als-god.pdf",
+      "all_neurons_Flywire_MRC_LMB_UniversityofCambridge-crop-1536x878.jpg",
+      "img-7c654451f0324768-3381411089380146.webp",
+      "img-c5a2c284f6a41c5a-3381407381313204.webp",
+      "img-fe3a82adbf4f69b4-3381407585236036.webp",
       "Scherm_afbeelding 2026-11-26 om 10.29.46.png",
       "schermopname-2026-11-25.mp4",
       "Scherm_afbeelding 2026-11-25 om 17.43.59.png",
@@ -280,7 +305,10 @@ window.COLLECTIONS = [
       "1c572fe13415fb603fac62afe9611480.jpg",
       "9b43f934bd129c2957aa3c58e27773ee.jpg",
       "LAS-BESTIAS-SUAVE--PLA-200X150X10---IRENE-MOLINA--MAQUINAS-DESEANTES.jpg"
-    ]
+    ],
+    "pages": {
+      "danielle-smit-ai-als-god.pdf": 9
+    }
   },
   {
     "slug": "connectors",
@@ -798,6 +826,7 @@ window.COLLECTIONS = [
     "links": [],
     "folder": "images/presearch2",
     "images": [
+      "WhatsApp Image 2026-11-27 at 15.31.48.jpeg",
       "01_postits.pdf",
       "02_0001-0240_sound.mp4"
     ],
