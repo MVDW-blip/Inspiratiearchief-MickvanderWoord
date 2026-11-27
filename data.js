@@ -208,6 +208,11 @@ window.COLLECTIONS = [
         "title": "Meta Ray-Ban Display-bril en Neural Band (Meta)",
         "url": "https://www.meta.com/nl/ai-glasses/meta-ray-ban-display/",
         "image": "images/links/meta-rayban-display.jpg"
+      },
+      {
+        "title": "Human Or Animal Faces Associated With At Least 90 Percent Of Cars By One-third Of Population (ScienceDaily)",
+        "url": "https://www.sciencedaily.com/releases/2008/09/080922100156.htm",
+        "image": "images/links/sciencedaily-car-faces.png"
       }
     ],
     "folder": "images/greymatterv1",
